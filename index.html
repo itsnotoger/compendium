@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Domain of Shared Breath</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap');
+
+  :root {
+    --ink: #1a1612;
+    --ink-faded: #4a3f36;
+    --parchment: #f5efe3;
+    --parchment-dark: #ede3d1;
+    --parchment-shadow: #d4c5ab;
+    --accent-red: #7c2a1e;
+    --accent-red-light: #a33a2b;
+    --accent-gold: #8a6a1e;
+    --accent-gold-light: #c4973a;
+    --accent-teal: #1e5a5a;
+    --border: #b8a07a;
+    --border-faint: #d4c5ab;
+    --rule: #8a7456;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--parchment);
+    color: var(--ink);
+    font-family: 'Crimson Text', 'Georgia', serif;
+    font-size: 17px;
+    line-height: 1.65;
+    padding: 0;
+  }
+
+  .page {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 52px 52px 80px;
+    position: relative;
+  }
+
+  /* Subtle parchment texture via repeating gradient */
+  .page::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 28px,
+      rgba(0,0,0,0.012) 28px,
+      rgba(0,0,0,0.012) 29px
+    );
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── Header ── */
+  .header {
+    text-align: center;
+    border-bottom: 2.5px double var(--rule);
+    padding-bottom: 28px;
+    margin-bottom: 36px;
+  }
+
+  .domain-eyebrow {
+    font-family: 'Crimson Text', serif;
+    font-size: 13px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-faded);
+    margin-bottom: 10px;
+  }
+
+  .domain-title {
+    font-family: 'IM Fell English', 'Georgia', serif;
+    font-size: 46px;
+    line-height: 1.1;
+    color: var(--accent-red);
+    margin-bottom: 8px;
+    letter-spacing: 0.01em;
+  }
+
+  .domain-subtitle {
+    font-style: italic;
+    color: var(--ink-faded);
+    font-size: 16px;
+    margin-bottom: 18px;
+  }
+
+  .stat-line {
+    display: inline-flex;
+    gap: 32px;
+    font-size: 13.5px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-faded);
+  }
+
+  .stat-line span strong {
+    color: var(--ink);
+    font-weight: 600;
+  }
+
+  /* ── Section Headers ── */
+  .section-eyebrow {
+    font-family: 'Crimson Text', serif;
+    font-size: 12px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--accent-gold);
+    margin-bottom: 4px;
+  }
+
+  /* ── Ability Cards ── */
+  .ability-card {
+    border: 1px solid var(--border);
+    border-top: 3px solid var(--accent-red);
+    background: var(--parchment-dark);
+    border-radius: 3px;
+    padding: 28px 32px;
+    margin-bottom: 28px;
+    position: relative;
+  }
+
+  .ability-card.level6 { border-top-color: var(--accent-teal); }
+  .ability-card.level8 { border-top-color: var(--accent-gold); }
+  .ability-card.flaw   { border-top-color: var(--ink-faded); background: #f0e9d8; }
+
+  .ability-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 4px;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .ability-name {
+    font-family: 'IM Fell English', 'Georgia', serif;
+    font-size: 26px;
+    color: var(--accent-red);
+    line-height: 1.15;
+  }
+
+  .level6 .ability-name { color: var(--accent-teal); }
+  .level8 .ability-name { color: var(--accent-gold); }
+  .flaw   .ability-name { color: var(--ink-faded); }
+
+  .level-badge {
+    font-size: 12px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--ink-faded);
+    border: 1px solid var(--border-faint);
+    padding: 2px 9px;
+    border-radius: 2px;
+    white-space: nowrap;
+  }
+
+  .ability-tagline {
+    font-style: italic;
+    color: var(--ink-faded);
+    font-size: 15.5px;
+    margin-bottom: 18px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--border-faint);
+  }
+
+  .ability-body p {
+    margin-bottom: 12px;
+  }
+
+  /* ── Sub-rules ── */
+  .sub-rules {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin: 18px 0;
+  }
+
+  .rule-block {
+    border-left: 3px solid var(--border-faint);
+    padding: 10px 16px;
+    background: rgba(255,255,255,0.35);
+    border-radius: 0 3px 3px 0;
+  }
+
+  .rule-block.danger { border-left-color: var(--accent-red-light); }
+  .rule-block.good   { border-left-color: var(--accent-teal); }
+  .rule-block.gold   { border-left-color: var(--accent-gold-light); }
+  .rule-block.dark   { border-left-color: var(--ink-faded); }
+
+  .rule-name {
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--ink);
+    display: block;
+    margin-bottom: 4px;
+    font-family: 'Crimson Text', serif;
+    letter-spacing: 0.03em;
+  }
+
+  .rule-block p {
+    font-size: 15.5px;
+    margin: 0;
+    color: var(--ink-faded);
+  }
+
+  /* ── Mechanic Callouts (inline highlight) ── */
+  .callout {
+    background: rgba(255,255,255,0.5);
+    border: 1px solid var(--border-faint);
+    border-radius: 3px;
+    padding: 14px 18px;
+    margin: 16px 0;
+    font-size: 15px;
+    color: var(--ink-faded);
+    font-style: italic;
+  }
+
+  /* ── Divider ── */
+  .ornament-divider {
+    text-align: center;
+    color: var(--border);
+    font-size: 22px;
+    margin: 32px 0;
+    letter-spacing: 0.3em;
+    opacity: 0.6;
+  }
+
+  /* ── Design Note callout ── */
+  .design-note {
+    background: rgba(138, 106, 30, 0.07);
+    border: 1px dashed var(--border-faint);
+    border-radius: 3px;
+    padding: 14px 18px;
+    font-size: 14.5px;
+    color: var(--ink-faded);
+    margin-top: 16px;
+    font-style: italic;
+  }
+
+  .design-note strong {
+    font-style: normal;
+    color: var(--accent-gold);
+    font-weight: 600;
+  }
+
+  /* ── Keywords / inline tags ── */
+  kw {
+    font-weight: 600;
+    color: var(--ink);
+    font-style: normal;
+  }
+
+  em { color: var(--ink-faded); }
+
+  /* ── Backstory block ── */
+  .backstory {
+    padding: 22px 28px;
+    border: 1px solid var(--border-faint);
+    background: rgba(255,255,255,0.3);
+    border-radius: 3px;
+    margin-bottom: 36px;
+    font-style: italic;
+    font-size: 16px;
+    color: var(--ink-faded);
+    line-height: 1.75;
+  }
+
+  .backstory strong {
+    font-style: normal;
+    color: var(--ink);
+    font-weight: 600;
+  }
+
+  /* ── Progression Overview table ── */
+  .overview-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 15px;
+    margin-bottom: 36px;
+  }
+
+  .overview-table th {
+    font-family: 'Crimson Text', serif;
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-faded);
+    font-weight: 600;
+    text-align: left;
+    padding: 8px 12px;
+    border-bottom: 2px solid var(--border);
+  }
+
+  .overview-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border-faint);
+    vertical-align: top;
+  }
+
+  .overview-table tr:last-child td {
+    border-bottom: none;
+  }
+
+  .overview-table td:first-child {
+    font-weight: 600;
+    font-size: 14px;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+    color: var(--ink-faded);
+  }
+
+  .tier-pill {
+    display: inline-block;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border-radius: 2px;
+    font-weight: 600;
+    border: 1px solid;
+  }
+
+  .tier-pill.t4 { color: var(--accent-red); border-color: var(--accent-red-light); background: rgba(124,42,30,0.06); }
+  .tier-pill.t6 { color: var(--accent-teal); border-color: var(--accent-teal); background: rgba(30,90,90,0.06); }
+  .tier-pill.t8 { color: var(--accent-gold); border-color: var(--accent-gold-light); background: rgba(138,106,30,0.06); }
+
+  /* ── Ritual Block ── */
+  .ritual-block {
+    border: 1px solid var(--border);
+    border-top: 2px solid var(--accent-gold);
+    background: rgba(138, 106, 30, 0.05);
+    border-radius: 3px;
+    padding: 24px 28px;
+    margin: 22px 0;
+  }
+
+  .ritual-title {
+    font-family: 'IM Fell English', 'Georgia', serif;
+    font-size: 18px;
+    color: var(--accent-gold);
+    margin-bottom: 4px;
+    letter-spacing: 0.02em;
+  }
+
+  .ritual-subtitle {
+    font-size: 13px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-faded);
+    margin-bottom: 18px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--border-faint);
+  }
+
+  .ritual-block p {
+    font-size: 15.5px;
+    color: var(--ink-faded);
+    margin-bottom: 12px;
+  }
+
+  .ritual-block p:last-child { margin-bottom: 0; }
+
+  .ritual-speech {
+    border-left: 2px solid var(--border-faint);
+    margin: 18px 0;
+    padding: 12px 18px;
+    font-style: italic;
+    font-size: 15px;
+    color: var(--ink-faded);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .ritual-speech .speaker {
+    font-style: normal;
+    font-size: 12px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--border);
+    margin-bottom: 2px;
+    display: block;
+  }
+
+  .ritual-speech .beat {
+    font-style: normal;
+    font-size: 13px;
+    color: var(--border);
+    letter-spacing: 0.05em;
+    text-align: center;
+    padding: 4px 0;
+  }
+
+  /* ── Footer ── */
+  .footer {
+    border-top: 1px solid var(--border-faint);
+    margin-top: 60px;
+    padding-top: 18px;
+    text-align: center;
+    font-size: 13px;
+    color: var(--border);
+    letter-spacing: 0.1em;
+    font-style: italic;
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="domain-eyebrow">Cleric &mdash; Custom Domain</div>
+    <div class="domain-title">Domain of Shared Breath</div>
+    <div class="domain-subtitle">"You reach into the wound, not to close it — but to share it."</div>
+    <div class="stat-line">
+      <span><strong>Primary Stat:</strong> Constitution</span>
+      <span><strong>Class:</strong> Cleric</span>
+      <span><strong>Abilities:</strong> Levels 4, 6, 8</span>
+    </div>
+  </div>
+
+  <!-- Backstory Flavour -->
+  <div class="backstory">
+    <strong>Character soul:</strong> A loneliness so practiced it became a personality. The cleric learned early that closeness had to be <em>earned through utility</em> — so they gave everything, absorbed everything, smiled through everything. Their magic did not arrive as a gift. It arrived as a consequence. The Aspect did not grant them power over death. It simply made visible what they had always been doing: bleeding quietly for people who called it kindness.
+  </div>
+
+  <!-- Progression Overview -->
+  <div class="section-eyebrow">Progression at a glance</div>
+  <table class="overview-table">
+    <thead>
+      <tr>
+        <th>Level</th>
+        <th>Name</th>
+        <th>Bond Mechanic</th>
+        <th>Core Ability</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="tier-pill t4">Lv. 4</span></td>
+        <td>The Anchor's Exchange</td>
+        <td>Touch to establish; 60 ft range</td>
+        <td>Life Transfer — take damage for the Anchor as Psychic</td>
+      </tr>
+      <tr>
+        <td><span class="tier-pill t6">Lv. 6</span></td>
+        <td>Shared Vitality Pool</td>
+        <td>30 ft range (prior touch required)</td>
+        <td>A shared HP pool buffers Life Transfer; both gain death save advantage</td>
+      </tr>
+      <tr>
+        <td><span class="tier-pill t8">Lv. 8</span></td>
+        <td>The Eternal Tether</td>
+        <td>Permanent; no range limit</td>
+        <td>Stasis instead of 0 HP; Resonance bonuses; risk of Eternal Stasis</td>
+      </tr>
+      <tr>
+        <td><span class="tier-pill" style="color:var(--ink-faded);border-color:var(--border);background:rgba(0,0,0,0.03)">Flaw</span></td>
+        <td>Hollow Without You</td>
+        <td>Aspect-granted; always active</td>
+        <td>Compulsive sacrifice + neglect-triggered absence penalty + separation anxiety + discovery consequence</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="ornament-divider">✦ &nbsp; ✦ &nbsp; ✦</div>
+
+  <!-- ═══════════════════ LEVEL 4 ═══════════════════ -->
+  <div class="ability-card">
+    <div class="ability-header">
+      <div class="ability-name">The Anchor's Exchange</div>
+      <div class="level-badge">Level 4 &nbsp;·&nbsp; Aspect Ability</div>
+    </div>
+    <div class="ability-tagline">People-pleasing as self-harm. You give your life force freely, and call it love.</div>
+
+    <div class="ability-body">
+      <p>You gain the ability to forge a <kw>Bond</kw> with one willing creature. As an <kw>Action</kw>, make physical contact with a creature within reach. That creature becomes your <kw>Anchor</kw>. You may only have one Anchor at a time.</p>
+
+      <div class="sub-rules">
+
+        <div class="rule-block">
+          <span class="rule-name">Bond Conditions</span>
+          <p>The Bond persists as long as: you remain conscious, the Anchor is alive, and neither of you moves more than <kw>60 feet</kw> from the other. If any condition is broken, the Bond shatters silently. You may dissolve it voluntarily as a <kw>free action</kw> on your turn.</p>
+        </div>
+
+        <div class="rule-block good">
+          <span class="rule-name">Life Transfer <em>(Reaction)</em></span>
+          <p>When your Anchor takes damage from any source, you may use your <kw>Reaction</kw> to intercept it. You take that damage instead of the Anchor. You must declare this <em>after</em> seeing the total damage dealt, but <em>before</em> the Anchor's resistances or immunities are applied. The damage you receive becomes <kw>Psychic</kw>, regardless of its original type — representing the emotional toll of absorbing another's pain. The Anchor takes no damage from the intercepted hit. This is visible: the cleric may flinch, pale, or physically absorb the impact while the Anchor feels nothing. Witnesses who notice this pattern consistently may, over time, piece together what the cleric is doing — and in doing so, trigger the discovery consequences under The Secret.</p>
+        </div>
+
+        <div class="rule-block danger">
+          <span class="rule-name">The Breaking Point</span>
+          <p>When Life Transfer activates, the cleric takes the full intercepted damage first. If that damage exceeds <kw>half their maximum hit points</kw>, the Bond shatters immediately afterward — as a consequence of the strain, not a prevention of it. The damage is never reduced or undone by the break. The cleric absorbed everything, and the connection broke from the weight of it. The cleric is immediately <kw>Frightened</kw> until the end of their next turn — the Anchor is the source. This fear is not rational. That is the point. <em>At Level 8, the Permanent Bond cannot be shattered — but the Frightened condition still triggers. The tether holds. The cleric is afraid of the person they cannot leave.</em></p>
+        </div>
+
+      </div>
+
+      <div class="design-note"><strong>Design note:</strong> The Psychic typing is load-bearing. It bypasses most physical damage resistances the cleric might have, ensuring the sacrifice is always felt. A Barbarian's Rage does not protect them from absorbing a friend's grief.</div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════ LEVEL 6 ═══════════════════ -->
+  <div class="ability-card level6">
+    <div class="ability-header">
+      <div class="ability-name">Shared Vitality Pool</div>
+      <div class="level-badge">Level 6 &nbsp;·&nbsp; Aspect Ability</div>
+    </div>
+    <div class="ability-tagline">You learn that love does not have to mean destruction. But you haven't learned to stop yet.</div>
+
+    <div class="ability-body">
+      <p>Your understanding of the Bond deepens. You no longer need proximity to initiate it — and you learn to weave a third presence into the connection: a living reserve of shared vitality drawn from both of you at once.</p>
+
+      <div class="sub-rules">
+
+        <div class="rule-block good">
+          <span class="rule-name">Extended Range</span>
+          <p>You may now establish the Bond as an <kw>Action</kw> with a creature up to <kw>30 feet</kw> away — but only with a creature you have previously bonded with through direct touch. The Bond's persistence conditions from Level 4 still apply (conscious, alive, within 60 ft). To bond with someone entirely new, physical touch is still required.</p>
+        </div>
+
+        <div class="rule-block good">
+          <span class="rule-name">The Vitality Pool</span>
+          <p>The cleric carries a <kw>Shared Vitality Pool</kw> — a reservoir of life force belonging to the cleric, not to any specific Bond. Its maximum is equal to <kw>(your Constitution modifier + the Anchor's Constitution modifier) × your proficiency bonus</kw>, and recalculates whenever a new Anchor is bonded. The Pool <kw>starts empty</kw> when this ability is first gained, and persists across re-links, combat, and rest — it does not reset when the Bond changes. Both characters sense its current value instinctively, like knowing how full your lungs are, requiring no explanation and violating no secret. The Pool is not tied to either character's hit points — it is a third resource entirely.</p>
+        </div>
+
+        <div class="rule-block good">
+          <span class="rule-name">Life Transfer (Upgraded)</span>
+          <p>When you trigger Life Transfer, damage is drawn from the <kw>Pool first</kw>. Only the amount that exceeds the Pool's remaining value is taken from your own hit points — and only that remainder deals Psychic damage to you. If the Pool absorbs everything, you feel nothing. If the Pool was already empty, the full damage hits you as before.</p>
+        </div>
+
+        <div class="rule-block">
+          <span class="rule-name">Donate <em>(Bonus Action)</em></span>
+          <p>Either bonded character may use a <kw>Bonus Action</kw> to voluntarily donate hit points into the Pool. You may donate up to your <kw>Constitution modifier</kw> in hit points this way. The Pool cannot exceed its maximum. There is no minimum — you may donate 1 HP if you choose. The Anchor may do this on their own turn.</p>
+        </div>
+
+        <div class="rule-block good">
+          <span class="rule-name">Withdraw <em>(Bonus Action)</em></span>
+          <p>Either bonded character may use a <kw>Bonus Action</kw> to draw hit points <em>from</em> the Pool, healing themselves for up to their <kw>Constitution modifier</kw> in hit points. The Pool decreases by the amount withdrawn. A character may not withdraw more than the Pool currently holds. This makes the Pool a genuinely shared reserve — both characters decide together whether to spend it offensively (buffering Life Transfer) or defensively (spot healing in a pinch). Donating and withdrawing cannot both occur on the same turn.</p>
+        </div>
+
+        <div class="rule-block danger">
+          <span class="rule-name">Pool Collapse</span>
+          <p>If the Bond breaks while the Pool contains any hit points, the pooled life force has nowhere to go — and backlashes. Both the cleric and the former Anchor immediately take <kw>Psychic damage equal to the Pool's current HP</kw> at the moment of rupture (no saving throw). The Pool then empties. A Pool with 2 HP remaining barely stings. A Pool with 15 HP loaded is a genuine detonation — and the cleric who kept it full paid the highest price for losing the connection.</p>
+          <p>Collapse triggers on: <kw>voluntary Bond dissolution</kw> (the cleric drops the Bond willingly, including to re-link to a new Anchor); and <kw>Flaw-triggered breaks</kw> — the Breaking Point shattering the Bond, or the Ache of Absence dissolving it at dawn from neglect.</p>
+          <p>Collapse does <em>not</em> trigger on involuntary breaks caused by outside forces — enemy dispels, forced movement beyond range, environmental effects. These break the Bond painlessly. Losing the Bond mid-fight to an enemy is already significant punishment. The Collapse is reserved for ruptures that come from within the relationship: choices, compulsions, and failures of care. A smart cleric who anticipates a re-link will drain the Pool through Withdraw actions first, reducing or eliminating the cost of switching Anchors.</p>
+        </div>
+
+        <div class="rule-block good">
+          <span class="rule-name">Passive: Held Aloft</span>
+          <p>While the Pool contains at least <kw>1 hit point</kw>, both bonded characters have <kw>advantage on death saving throws</kw>. The connection is a lifeline in more ways than one.</p>
+        </div>
+
+      </div>
+
+      <div class="callout">
+        At proficiency +3 with two characters both at +3 CON, the Pool holds 18 HP. It starts empty and builds through investment — donations during downtime, hit dice on short rests, the slow accumulation of shared danger. A cleric entering a fight with a full Pool has been tending that reserve deliberately, and has the most to lose if the Bond breaks. A cleric who needs to re-link mid-combat to save someone else will want to drain the Pool first — the cost of switching Anchors is exactly what remains inside when they let go.
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════ ANCHOR KNOWLEDGE SIDEBAR ═══════════════════ -->
+  <div style="border:1px solid var(--border-faint); border-left: 3px solid var(--accent-gold); background: rgba(138,106,30,0.04); border-radius:3px; padding:22px 28px; margin-bottom:28px;">
+    <div style="font-size:12px;letter-spacing:0.22em;text-transform:uppercase;color:var(--accent-gold);margin-bottom:12px;">Reference — What the Anchor knows</div>
+    <p style="font-size:15px;color:var(--ink-faded);margin-bottom:10px;">The Anchor's understanding of the Bond grows only through what they can observe or feel — never through explanation. This table is the canonical baseline for DMs and players. Discovery consequences under The Secret apply when the Anchor learns anything beyond their current tier.</p>
+    <table style="width:100%;border-collapse:collapse;font-size:14.5px;">
+      <thead>
+        <tr>
+          <th style="text-align:left;padding:7px 10px;border-bottom:1px solid var(--border);color:var(--ink-faded);font-size:12px;letter-spacing:0.12em;text-transform:uppercase;font-weight:600;">Level</th>
+          <th style="text-align:left;padding:7px 10px;border-bottom:1px solid var(--border);color:var(--ink-faded);font-size:12px;letter-spacing:0.12em;text-transform:uppercase;font-weight:600;">What the Anchor feels</th>
+          <th style="text-align:left;padding:7px 10px;border-bottom:1px solid var(--border);color:var(--ink-faded);font-size:12px;letter-spacing:0.12em;text-transform:uppercase;font-weight:600;">What the Anchor does not know</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="padding:8px 10px;border-bottom:1px solid var(--border-faint);color:var(--ink-faded);white-space:nowrap;">Level 4</td>
+          <td style="padding:8px 10px;border-bottom:1px solid var(--border-faint);color:var(--ink);">A vague warmth from the touch. Nothing more unless they notice they took no damage from a hit.</td>
+          <td style="padding:8px 10px;border-bottom:1px solid var(--border-faint);color:var(--ink-faded);">That the cleric is absorbing their damage. That the damage becomes Psychic. That the bond can shatter.</td>
+        </tr>
+        <tr>
+          <td style="padding:8px 10px;border-bottom:1px solid var(--border-faint);color:var(--ink-faded);white-space:nowrap;">Level 6</td>
+          <td style="padding:8px 10px;border-bottom:1px solid var(--border-faint);color:var(--ink);">The Pool instinctively — like knowing how full your lungs are. The ability to Donate and Withdraw through an act of will.</td>
+          <td style="padding:8px 10px;border-bottom:1px solid var(--border-faint);color:var(--ink-faded);">Where the Pool comes from. What it costs the cleric to maintain. That Pool Collapse harms them both.</td>
+        </tr>
+        <tr>
+          <td style="padding:8px 10px;color:var(--ink-faded);white-space:nowrap;">Level 8</td>
+          <td style="padding:8px 10px;color:var(--ink);">That something permanent happened during The Asking. The weight of it. When the Stased character enters Stasis: the bond going one-directional, the felt weight of someone trusting them completely and waiting. Emotional impressions pushed outward by the Stased character — calm, waiting, <em>not yet</em>. The instinctive understanding that reaching in costs something real.</td>
+          <td style="padding:8px 10px;color:var(--ink-faded);">That this bond cannot be dissolved. That Eternal Stasis is the failure condition. The exact cost of Breaking Stasis. What they agreed to.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ═══════════════════ LEVEL 8 ═══════════════════ -->
+  <div class="ability-card level8">
+    <div class="ability-header">
+      <div class="ability-name">The Eternal Tether</div>
+      <div class="level-badge">Level 8 &nbsp;·&nbsp; Aspect Ability</div>
+    </div>
+    <div class="ability-tagline">You wanted someone who would never leave. You found a way to make it impossible.</div>
+
+    <div class="ability-body">
+      <p>The Bond transcends choice. It settles into the fabric of you both — permanent, unbreakable by distance or circumstance. You gain abilities of extraordinary power, and risks of extraordinary consequence.</p>
+
+      <div class="sub-rules">
+
+        <div class="rule-block gold">
+          <span class="rule-name">Permanent Bond</span>
+          <p>The Level 8 Bond is not established automatically on leveling up. Instead, the cleric unlocks the ability to perform <kw>The Asking</kw> — a ritual that, if completed, makes the current Bond permanent. Until The Asking is performed and completed, the cleric retains full use of all Level 6 mechanics. The Level 8 abilities — Resonance, Shared Fortitude, and Stasis — remain locked until the ritual succeeds. Once permanent, the Bond persists regardless of distance, unconsciousness, or temporary death states. It cannot be broken by outside forces. <kw>This bond cannot be dissolved.</kw> You may no longer bond with a new creature by any means.</p>
+        </div>
+
+      </div>
+
+      <div class="ritual-block">
+        <div class="ritual-title">The Asking</div>
+        <div class="ritual-subtitle">Ritual &nbsp;·&nbsp; 10 minutes &nbsp;·&nbsp; Requires an active Level 6 Bond with the intended Anchor &nbsp;·&nbsp; Completes the Permanent Bond</div>
+
+        <p>The cleric must have an active Bond with their intended Anchor before beginning. The ritual cannot create a new Bond — it transforms an existing one. If no Bond is active, the cleric must establish one through normal Level 6 mechanics first.</p>
+
+        <p>The cleric initiates by making a small wound on their palm — a blade, a clasp, a sharp edge, anything that draws blood — and extending their open hand toward the Anchor without a word. If the Anchor takes the hand and mirrors the wound, the ritual begins. Neither character needs to understand what is happening. One of them does.</p>
+
+        <p>The cleric then performs something: traces a symbol on the Anchor's wrist with their blood, or simply holds the joined hands in silence, or presses them briefly to their own chest — over the heart, over the sternum, somewhere close. The gesture is the cleric's to choose. What matters is that it feels like a threshold. Like something being offered that cannot be taken back. The ritual has no words because the cleric cannot speak the truth of what this is.</p>
+
+        <p>Then the cleric goes still. And waits.</p>
+
+        <p>The ritual completes when the Anchor, of their own will, asks the cleric something <em>personal</em> — directed at them, about them, for them. Not logistics. Not tactics. Something that treats the cleric as a person whose inner life matters. The same question that sustains the bond in life is what seals it into permanence. If the Anchor does not ask — pulls away, fills the silence with chatter, or simply doesn't — the ritual quietly fails. No penalty. No announcement. The cleric's hand closes around nothing, and the night continues.</p>
+
+        <p>If the Anchor has previously discovered the Flaw and normally requires verbal consent to form a Bond, the personal question during The Asking serves as that consent. The ritual supersedes the verbal requirement. The Anchor's question is their yes.</p>
+
+        <div class="ritual-speech">
+          <div>
+            <span class="speaker">— example, before the ritual —</span>
+            "There is something I want to give you. I need you to let me."
+          </div>
+          <div class="beat">[ the cleric draws the blade. extends their hand. ]</div>
+          <div>
+            <span class="speaker">— example, mid-ritual, if the anchor speaks first —</span>
+            "You don't have to explain. I just — is this what you want?"
+          </div>
+          <div class="beat">[ the ritual completes. the cleric cannot answer. ]</div>
+          <div>
+            <span class="speaker">— example, if the anchor hesitates —</span>
+            "I don't know what this means."
+            <br><br>
+            [ silence. the cleric does not fill it. they have been trained their whole life not to. ]
+            <br><br>
+            "...are you alright?"
+          </div>
+          <div class="beat">[ the ritual completes. ]</div>
+        </div>
+
+        <p style="font-size:14.5px; font-style:italic; color:var(--border);">The Anchor does not need to know what they have agreed to. They only need to ask. The cleric, bound by the Secret, cannot tell them what the answer means. What the Anchor reads in the cleric's face in that moment — the relief, the grief, the gratitude — is all the truth they are going to get. It is, in the end, enough. It has always been enough for people to look at this cleric and not quite understand what they are seeing, and decide to stay anyway.</p>
+      </div>
+
+      <div class="sub-rules">
+
+        <div class="rule-block gold">
+          <span class="rule-name">Resonance <em>(Passive)</em></span>
+          <p>The permanent Bond creates a resonance between your constitutions. Both bonded characters add the <em>other</em> character's <kw>Constitution modifier</kw> to their <kw>hit point maximum</kw>. Additionally, the Shared Vitality Pool's maximum <kw>doubles</kw> permanently, and the Pool regenerates <kw>1d6 hit points</kw> at the start of each of your turns (up to the maximum).</p>
+        </div>
+
+        <div class="rule-block gold">
+          <span class="rule-name">Shared Fortitude <em>(Reaction)</em></span>
+          <p>Once per round, when either bonded character fails a <kw>Constitution saving throw</kw>, the other may use their <kw>Reaction</kw> to share the burden. Both characters use the <kw>higher</kw> of their two rolls for the save. This may be triggered after both rolls are revealed.</p>
+        </div>
+
+      </div>
+
+      <p style="margin-top: 18px; margin-bottom: 4px;"><strong>Stasis</strong></p>
+
+      <div class="sub-rules">
+
+        <div class="rule-block good">
+          <span class="rule-name">Into Stasis</span>
+          <p>When either bonded character is reduced to <kw>0 hit points</kw>, they do not fall unconscious. Instead, they enter <kw>Stasis</kw>. While in Stasis: the character is <kw>Incapacitated</kw>, immune to all damage, cannot be targeted by spells or abilities, and does not make death saving throws. Time does not end them. They persist indefinitely, suspended.</p>
+          <p>If both bonded characters would be reduced to 0 hit points by the <kw>same triggering effect</kw> — a single spell, breath weapon, or ability — only the character with fewer current hit points enters Stasis. The other is reduced to <kw>1 hit point</kw> instead. If both have equal hit points, the cleric enters Stasis. The bond cannot suspend both at once; one must remain.</p>
+          <p><strong style="font-weight:600;color:var(--ink);">What the Stased character experiences:</strong> The bond does not go dark. It simplifies. The constant monitoring, the anxious reading of every signal — gone. What remains is presence without obligation: the Anchor exists, warm and continuous, somewhere beyond reach. The Stased character floats in that warmth, unable to act, unable to perform, unable to lose anyone. For the cleric specifically, this is the closest thing to peace they have ever known. They would later describe it, if asked, as restful. Which is the most complicated thing they could say.</p>
+          <p>The Stased character may <kw>push impressions outward</kw> through the bond — not words, not images, but emotional texture. A sense of calm. A sense of waiting. Perhaps, if they choose, a sense of <em>not yet.</em> They cannot demand, cannot warn, cannot instruct. Whatever they emit is unfiltered and true. The Anchor receives it as a mood, not a message.</p>
+          <p><strong style="font-weight:600;color:var(--ink);">What the Anchor experiences:</strong> The bond changes texture. What was a two-way current becomes one-directional — they feel the Stased character faintly, present but unreachable. The DM should describe this to the Anchor as: <em>something is waiting for you.</em> Not urgency. Not pain. Weight. The specific weight of someone who trusts them completely and cannot say so. Through this same channel, the Anchor instinctively understands that reaching in to pull them back will cost something real. The bond communicates this without words. It always has. <em>This is the dialog. The Anchor does not need to be told the rules — they need to feel the cost before they choose.</em></p>
+        </div>
+
+        <div class="rule-block danger">
+          <span class="rule-name">Breaking Stasis</span>
+          <p>The other bonded character must use their <kw>Action</kw> and make physical contact with the Stased character. Upon touch, the rescuer takes Psychic damage equal to <kw>3d10 + the cleric's Constitution modifier</kw> — the cost of pulling someone back from that threshold. The Stased character immediately exits Stasis, returns to <kw>1 hit point</kw>, and all conditions from before Stasis are removed.</p>
+          <p><strong style="font-weight:600;color:var(--ink);">On timing:</strong> Breaking Stasis mid-combat is almost never the correct decision. The Stased character is immune to all damage and untargetable — they are safer inside Stasis than anywhere else on the battlefield. The correct play is almost always to let them wait until the fight resolves, then rescue from a position of safety. The danger of attempting rescue mid-combat is cascading: if the rescuer takes more Psychic damage than their remaining hit points, they enter Stasis themselves. If the now-freed character then drops to 0 before the rescuer can be helped, both are in Stasis simultaneously — Eternal Stasis. Before attempting rescue, the rescuer should confirm their current hit points comfortably exceed the maximum possible cost (30 + CON modifier). The bond's felt weight during Stasis is itself a warning. Trust it.</p>
+        </div>
+
+        <div class="rule-block danger">
+          <span class="rule-name">Eternal Stasis</span>
+          <p>If both bonded characters enter Stasis simultaneously — or if the second enters Stasis before the first has been rescued — both are locked into <kw>Eternal Stasis</kw>. Neither can rescue the other. For all practical purposes, they are dead. Only a ritual of extreme difficulty (DC 30, requiring rare and specific components, determined by the DM) could theoretically free them — and even then, it is a kindness, not a given.</p>
+          <p><em>This is not a tragedy that announces itself. It arrives like the last word in a very long silence.</em></p>
+          <p><strong style="font-weight:600;color:var(--ink);">For the DM:</strong> What Eternal Stasis feels like from the inside is deliberately left undefined. Neither character can ever report it. The question cannot be answered. Note only this, for your own understanding of what you are holding: <em>something persists between them.</em> Whether that is a mercy is not for the rules to say. The party buries two people who are not quite dead, and no one ever finds out what that means.</p>
+        </div>
+
+      </div>
+
+      <div class="callout">
+        <strong style="font-style:normal; color:var(--ink);">Interaction — Compulsive Sacrifice into Stasis:</strong> If Compulsive Sacrifice triggers automatically and reduces the cleric to 0 hit points, they enter Stasis. The Anchor — just protected by that sacrifice — must now spend their Action, touch the cleric, and absorb 3d10 Psychic damage to bring them back. The one who was shielded becomes the one who must pay. Note that at Level 8 the Breaking Point no longer shatters the Permanent Bond — but it still triggers the Frightened condition. If Breaking Point fires while the Pool has HP remaining, Collapse also fires: the cleric, already going into Stasis, takes proportional Psychic damage from their own Bond rupturing. The compulsion does not protect them from the consequences of the compulsion.
+      </div>
+
+      <div class="design-note"><strong>On the balance:</strong> The Permanent Bond cannot be dissolved — this is not an oversight. The Asking produces something irreversible by design, and removing the dissolution option closes the loophole of cycling back to flexible Level 6 bonds while retaining Level 8 mechanics. The only exits from the Permanent Bond are Eternal Stasis, or the Anchor's true final death in the window before The Asking is completed (in which case Ache of Absence activates and the cleric must find a new Anchor through Level 6 mechanics). The Resonance, doubled Pool, passive regeneration, and Shared Fortitude are substantial precisely because optionality has been surrendered permanently — the cleric is not powerful in spite of the bond, they are powerful <em>because</em> of it. The danger of Eternal Stasis is the cost of Stasis existing at all.</div>
+    </div>
+  </div>
+
+  <div class="ornament-divider">✦ &nbsp; ✦ &nbsp; ✦</div>
+
+  <!-- ═══════════════════ FLAW ═══════════════════ -->
+  <div class="ability-card flaw">
+    <div class="ability-header">
+      <div class="ability-name">Flaw: Hollow Without You</div>
+      <div class="level-badge">Aspect-Granted &nbsp;·&nbsp; Permanent</div>
+    </div>
+    <div class="ability-tagline">Gained at the Aspect. Cannot be removed. Offsets the power of all three Bond abilities.</div>
+
+    <div class="ability-body">
+      <p>The Aspect did not give the cleric their abilities cleanly. It revealed the pattern that was already there, and made it mechanical. The Flaw has four manifestations — each covering a different context, ensuring the cleric cannot simply optimise around it.</p>
+
+      <div class="sub-rules">
+
+        <div class="rule-block dark">
+          <span class="rule-name">Compulsive Sacrifice</span>
+          <p>When your Anchor takes damage, you are within range to trigger Life Transfer, and you are physically able to do so (conscious, with hit points remaining), you must make a <kw>DC 12 Wisdom saving throw</kw>. On a failure, Life Transfer triggers automatically, as a Reaction — even if you had already used your Reaction this round (the compulsion supersedes the limit), and even if you did not wish it to. You cannot choose to fail this save. This is not a decision. It never was.</p>
+        </div>
+
+        <div class="rule-block dark">
+          <span class="rule-name">The Ache of Absence</span>
+          <p>The Bond requires something quiet to survive: the Anchor must ask the cleric something <em>personal</em> at least once per long rest — their opinion, their feelings, what they think, whether they are alright. A logistical question does not qualify. Being treated as a function does not qualify. What is required is a moment of the Anchor caring what exists inside the cleric's head, not merely what the cleric can do. If a long rest passes without it, the Bond breaks silently at dawn. While no Bond is active, the cleric's <kw>hit point maximum</kw> is reduced by their <kw>proficiency bonus × 2</kw>, and they have <kw>disadvantage on Wisdom saving throws</kw>. These penalties lift only when a new Bond is established. The cleric cannot ask for this question. Asking dissolves the thing they need. They have to wait. They are very good at waiting.</p>
+        </div>
+
+        <div class="rule-block dark">
+          <span class="rule-name">Separation Anxiety</span>
+          <p>While bonded, if the Anchor has been more than <kw>30 feet</kw> away from the cleric for longer than <kw>1 minute</kw> (10 rounds), the cleric must make a <kw>DC 12 Wisdom saving throw</kw> or become <kw>Frightened</kw> — the Anchor is the source. The save repeats at the end of each of the cleric's turns. On a success, the effect ends. Note that the D&amp;D Frightened condition prevents the affected creature from willingly moving <em>closer</em> to the source of their fear — meaning the cleric freezes rather than pursues. This is intentional. The person they fear losing most is the one who locks them in place by walking away. At Level 8, the Permanent Bond removes the distance-break condition entirely, so the Bond never shatters — but Separation Anxiety still fires. The cleric will periodically become frightened of their bonded partner whenever they step too far away, save out of it after a turn or two, and carry on. This is not a bug.</p>
+        </div>
+
+        <div class="rule-block dark">
+          <span class="rule-name">The Secret</span>
+          <p>The cleric cannot directly explain the Flaw — the compulsions, the bond, the need — to anyone. If they attempt to do so, they are immediately <kw>Silenced</kw> until the end of their next turn. They cannot find the words. They never could. If an Anchor <em>discovers</em> the Flaw on their own — witnesses Compulsive Sacrifice trigger, pieces together the pattern, or the cleric breaks and confesses despite the silence — the dynamic of the Bond shifts permanently for that Anchor. They now understand what they are part of. From that point forward, the cleric cannot establish the Bond with that Anchor unilaterally: the Anchor must <kw>consciously and verbally consent</kw> each time. A hesitation, a refusal, an "I need a moment" — any of these cause the Bond to fail to form. No save. No retry until the Anchor is willing. The cleric used to be able to reach out and simply take the connection. Now they have to ask for it, without being able to explain why, and wait to see if the answer is yes.</p>
+        </div>
+
+      </div>
+
+      <div class="callout">
+        Note on Compulsive Sacrifice: if the automatic Reaction triggers the Level 4 Breaking Point (damage exceeding half max HP), the Break still occurs. The compulsion does not protect the cleric from the consequences of the compulsion. That, too, is the point.
+      </div>
+
+      <div class="design-note"><strong>On design intent:</strong> Each clause covers a different context. Compulsive Sacrifice fires in combat, removing agency at the worst moment. The Ache of Absence fires from emotional neglect — not hostility, just the Anchor treating the cleric as useful rather than known. Separation Anxiety fires during normal bonded play, whenever distance opens up. The Secret fires from intimacy — the closer the relationship becomes, the more exposed the cleric is, and the more the bond shifts from something they hold to something they have to be granted. The Level 8 Permanent Bond resolves the consent problem for a discovered Anchor in a way that is both mechanically significant and quietly devastating as a character beat.</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    Domain of Shared Breath &nbsp;·&nbsp; Constitution-primary Cleric &nbsp;·&nbsp; Homebrew
+  </div>
+
+</div>
+</body>
+</html>
