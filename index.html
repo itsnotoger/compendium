@@ -23,9 +23,9 @@
     --rule: #8a7456;
     /* ── Layout Dimensions ── */
     --page-width: 780px;
+    --page-padding-inline: 52px;
     --sidebar-width: 300px;
-    --sidebar-gap: 32px;
-    --breakpoint: 1355px; /* Derived: 676px inner page (780-52*2 padding) + 300px sidebar + 32px gap + 2*24px viewport scrollbar */
+    --breakpoint: 1355px; /* Derived: 676px inner page (780-52*2 padding) + 300px sidebar + 52px gap + 2*24px viewport scrollbar */
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -41,7 +41,7 @@
   .page {
     max-width: var(--page-width);
     margin: 0 auto;
-    padding: 52px 52px 80px;
+    padding: var(--page-padding-inline) var(--page-padding-inline) 80px;
     position: relative;
   }
 
@@ -193,10 +193,10 @@
   .anchor-sidebar tr:last-child td { border-bottom: none; }
 
    /* ── Wide viewport: absolute outside the page to the right ── */
-   @media (min-width: 1355px /* --breakpoint */) {
+   @media (min-width: 1395px /* --breakpoint */) {
      .anchor-sidebar {
        position: absolute;
-       left: calc(100% + var(--sidebar-gap));
+       left: calc(100% + var(--page-padding-inline));
        top: 0;
        width: var(--sidebar-width);
        box-shadow: 0 2px 10px rgba(0,0,0,0.07);
@@ -205,7 +205,7 @@
    }
 
    /* ── Narrow viewport: fixed overlay, collapsed by default ── */
-   @media (max-width: 1354px /* --breakpoint */) {
+   @media (max-width: 1394px /* --breakpoint */) {
      .anchor-sidebar {
        display: none;
        position: fixed;
