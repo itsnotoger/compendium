@@ -25,7 +25,7 @@
     --page-width: 780px;
     --page-padding-inline: 52px;
     --sidebar-width: 300px;
-    --breakpoint: 1355px; /* Derived: 676px inner page (780-52*2 padding) + 300px sidebar + 52px gap + 2*24px viewport scrollbar */
+    --breakpoint: 1395px; /* Derived: 676px inner page (780-52*2 padding) + 300px sidebar + 52px gap + 2*24px viewport scrollbar */
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -383,9 +383,9 @@
         </div>
         <div class="rule-block danger">
           <span class="rule-name">Pool Collapse</span>
-          <p>If the Bond breaks while the Pool contains any hit points, the pooled life force has nowhere to go — and backlashes. Both the cleric and the former Anchor immediately take <kw>Psychic damage equal to the Pool's current HP</kw> at the moment of rupture (no saving throw). The Pool then empties. A Pool with 2 HP remaining barely stings. A Pool with 15 HP loaded is a genuine detonation — and the cleric who kept it full paid the highest price for losing the connection.</p>
-          <p>Collapse triggers on: <kw>voluntary Bond dissolution</kw> (the cleric drops the Bond willingly, including to re-link to a new Anchor); and <kw>Flaw-triggered breaks</kw> — the Breaking Point shattering the Bond, or the Ache of Absence dissolving it at dawn from neglect.</p>
-          <p>Collapse does <em>not</em> trigger on involuntary breaks caused by outside forces — enemy dispels, forced movement beyond range, environmental effects. The Collapse is reserved for ruptures that come from within the relationship: choices, compulsions, and failures of care. A smart cleric who anticipates a re-link will drain the Pool through Withdraw actions first, reducing or eliminating the cost of switching Anchors.</p>
+          <p>If the Bond breaks while the Pool contains any hit points, the pooled life force has nowhere to go — and backlashes. Both the cleric and the former Anchor immediately take <kw>Psychic damage equal to the Pool's current HP at the moment of rupture</kw> (no saving throw). The Pool then empties. A Pool with 2 HP remaining barely stings. A Pool with 15 HP loaded is a genuine detonation — and the cleric who kept it full paid the highest price for losing the connection.</p>
+          <p>Collapse triggers on: <kw>voluntary dissolution without re-linking</kw> (the cleric drops the Bond and does not immediately establish a new one); and <kw>Flaw-triggered breaks</kw> — the Breaking Point shattering the Bond, or the Ache of Absence dissolving it at dawn from neglect.</p>
+          <p>Collapse does <em>not</em> trigger on <kw>Re-link</kw>: if the cleric drops the Bond and establishes a new one with a different creature as part of the same Action, the Pool carries across intact. The life force finds a new vessel before it can backlash. A smart cleric who needs to switch Anchors mid-combat can do so freely — but one who simply lets go, with no one to reach toward, pays the price of that emptiness. Collapse also does not trigger on involuntary breaks caused by outside forces — enemy dispels, forced movement beyond range, environmental effects. These break the Bond without rupturing the Pool. The Collapse is reserved for breaks that come from within: failures of care, the compulsion misfiring, or the cleric choosing to let go without reaching for anyone else.</p>
         </div>
         <div class="rule-block good">
           <span class="rule-name">Passive: Held Aloft</span>
@@ -410,7 +410,7 @@
       <div class="sub-rules">
         <div class="rule-block gold">
           <span class="rule-name">Permanent Bond</span>
-          <p>The Level 8 Bond is not established automatically on leveling up. Instead, the cleric unlocks the ability to perform <kw>The Asking</kw> — a ritual that, if completed, makes the current Bond permanent. Until The Asking is performed and completed, the cleric retains full use of all Level 6 mechanics. The Level 8 abilities — Resonance, Shared Fortitude, and Stasis — remain locked until the ritual succeeds. Once permanent, the Bond persists regardless of distance, unconsciousness, or temporary death states. It cannot be broken by outside forces. <kw>This bond cannot be dissolved.</kw> You may no longer bond with a new creature by any means.</p>
+          <p>The Level 8 Bond is not established automatically on leveling up. Instead, the cleric unlocks the ability to perform <kw>The Asking</kw> — a ritual that, if completed, makes the current Bond permanent. Until The Asking is performed and completed, the cleric retains full use of all Level 6 mechanics. The Level 8 abilities — Resonance, Shared Fortitude, and Stasis — remain locked until the ritual succeeds. Once permanent, the Bond persists regardless of distance, unconsciousness, or temporary death states. It cannot be broken by outside forces. <kw>This bond cannot be dissolved.</kw> You may no longer bond with a new creature by any means — including Re-link. The flexibility of Levels 4 and 6, the ability to drop one Bond and reach toward someone else, ends here. There is no new Anchor. There is no tactical re-link. There is only this person, and whatever comes next.</p>
         </div>
       </div>
 
@@ -482,7 +482,7 @@
       <div class="callout">
         <strong style="font-style:normal;color:var(--ink);">Interaction — Compulsive Sacrifice into Stasis:</strong> If Compulsive Sacrifice triggers automatically and reduces the cleric to 0 hit points, they enter Stasis. The Anchor — just protected by that sacrifice — must now spend their Action, touch the cleric, and absorb 3d10 Psychic damage to bring them back. The one who was shielded becomes the one who must pay. Note that at Level 8 the Breaking Point no longer shatters the Permanent Bond — but it still triggers the Frightened condition. The compulsion does not protect them from the consequences of the compulsion.
       </div>
-      <div class="design-note"><strong>On the balance:</strong> The Permanent Bond cannot be dissolved — this is not an oversight. The Asking produces something irreversible by design, and removing the dissolution option closes the loophole of cycling back to flexible Level 6 bonds while retaining Level 8 mechanics. The only exits from the Permanent Bond are Eternal Stasis, or the Anchor's true final death before The Asking is completed (in which case Ache of Absence activates and the cleric must find a new Anchor through Level 6 mechanics). The Resonance, doubled Pool, passive regeneration, and Shared Fortitude are substantial precisely because optionality has been surrendered permanently — the cleric is not powerful in spite of the bond, they are powerful <em>because</em> of it. The danger of Eternal Stasis is the cost of Stasis existing at all.</div>
+      <div class="design-note"><strong>On the balance:</strong> The Permanent Bond cannot be dissolved — this is not an oversight. The Asking produces something irreversible by design, and removing dissolution and Re-link closes the loophole of cycling back to flexible Level 6 bonds while retaining Level 8 mechanics. The only exits from the Permanent Bond are Eternal Stasis, or the Anchor's true final death before The Asking is completed (in which case Ache of Absence activates and the cleric must find a new Anchor through Level 6 mechanics). The Resonance, doubled Pool, passive regeneration, and Shared Fortitude are substantial precisely because optionality has been surrendered permanently — the cleric is not powerful in spite of the bond, they are powerful <em>because</em> of it. The danger of Eternal Stasis is the cost of Stasis existing at all.</div>
     </div>
   </div>
 
