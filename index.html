@@ -193,7 +193,7 @@
   .anchor-sidebar tr:last-child td { border-bottom: none; }
 
    /* ── Wide viewport: absolute outside the page to the right ── */
-   @media (min-width: var(--breakpoint)) {
+   @media (min-width: 1112px /* --breakpoint */) {
      .anchor-sidebar {
        position: absolute;
        left: calc(100% + var(--sidebar-gap));
@@ -205,7 +205,7 @@
    }
 
    /* ── Narrow viewport: fixed overlay, collapsed by default ── */
-   @media (max-width: calc(var(--breakpoint) - 0.01px)) {
+   @media (max-width: 1111.99px /* --breakpoint */) {
      .anchor-sidebar {
        display: none;
        position: fixed;
