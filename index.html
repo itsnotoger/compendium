@@ -137,7 +137,11 @@
   .rule-block.good   { border-left-color: var(--accent-teal); }
   .rule-block.gold   { border-left-color: var(--accent-gold-light); }
   .rule-block.dark   { border-left-color: var(--ink-faded); }
-  .rule-name { font-weight: 600; font-size: 15px; color: var(--ink); display: block; margin-bottom: 6px; letter-spacing: 0.03em; }
+  .rule-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px; gap: 10px; }
+  .rule-name { font-weight: 600; font-size: 15px; color: var(--ink); letter-spacing: 0.03em; }
+  .rule-pill { display: inline-block; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 600; padding: 1px 7px; border-radius: 2px; border: 1px solid; white-space: nowrap; flex-shrink: 0; }
+  .rule-pill.passive { color: var(--accent-teal); border-color: var(--accent-teal); background: rgba(30,90,90,0.06); }
+  .rule-pill.active  { color: var(--accent-red); border-color: var(--accent-red-light); background: rgba(124,42,30,0.06); }
   .rule-block p { font-size: 15.5px; margin: 0 0 10px; color: var(--ink-faded); }
   .rule-block p:last-child { margin-bottom: 0; }
 
@@ -401,16 +405,16 @@
       <p>As an <kw>Action</kw>, make physical contact with a willing creature within reach. That creature becomes your <kw>Anchor</kw>. You may only have one Anchor at a time.</p>
       <div class="sub-rules">
         <div class="rule-block">
-          <span class="rule-name">Bond Conditions</span>
+          <div class="rule-head"><span class="rule-name">Bond Conditions</span><span class="rule-pill passive">Passive · State</span></div>
           <p>The Bond persists as long as you remain conscious, the Anchor is alive, and neither of you is more than <kw>60 feet</kw> from the other. If any condition breaks, the Bond shatters silently. You may dissolve it voluntarily as a <kw>free action</kw> on your turn.</p>
         </div>
         <div class="rule-block good">
-          <span class="rule-name">Life Transfer <em>(Reaction)</em></span>
+          <div class="rule-head"><span class="rule-name">Life Transfer</span><span class="rule-pill active">Active · Reaction</span></div>
           <p>When your Anchor takes damage, you may use your <kw>Reaction</kw> to intercept it — you take the damage instead. Declare after seeing the total, but before the Anchor's resistances or immunities are applied. The damage becomes <kw>Psychic</kw> regardless of its original type. The Anchor takes none.</p>
           <p class="flavor">This is visible. The cleric flinches, pales, absorbs the impact while the Anchor feels nothing. Witnesses who notice this pattern consistently may eventually piece it together — triggering discovery consequences under The Secret.</p>
         </div>
         <div class="rule-block danger">
-          <span class="rule-name">The Breaking Point</span>
+          <div class="rule-head"><span class="rule-name">The Breaking Point</span><span class="rule-pill passive">Passive · Trigger</span></div>
           <p>If intercepted damage exceeds <kw>half your maximum HP</kw>, the Bond shatters immediately afterward — after the damage is dealt, not before. The damage is never reduced by the break. You are immediately <kw>Frightened</kw> (Anchor is the source) until the end of your next turn.</p>
           <p class="flavor">This fear is not rational. That is the point.</p>
           <p class="xref">At Level 8, the Permanent Bond cannot be shattered — but the Frightened condition still triggers. The tether holds. The cleric is afraid of the person they cannot leave.</p>
@@ -431,35 +435,35 @@
       <p>Your understanding of the Bond deepens. You no longer need proximity to initiate it — and you learn to weave a third presence into the connection: a living reserve of shared vitality drawn from both of you at once.</p>
       <div class="sub-rules">
         <div class="rule-block good">
-          <span class="rule-name">Extended Range</span>
+          <div class="rule-head"><span class="rule-name">Extended Range</span><span class="rule-pill passive">Passive · Range</span></div>
           <p>You may establish the Bond as an <kw>Action</kw> with a creature up to <kw>30 feet</kw> away — but only with someone you have previously bonded with through direct touch. Level 4 persistence conditions still apply. To bond with someone entirely new, physical touch is still required.</p>
         </div>
         <div class="rule-block good">
-          <span class="rule-name">The Vitality Pool</span>
+          <div class="rule-head"><span class="rule-name">The Vitality Pool</span><span class="rule-pill passive">Passive · Resource</span></div>
           <p>The cleric carries a <kw>Shared Vitality Pool</kw> — a third resource, separate from either character's hit points. Maximum = <kw>(your CON modifier + Anchor's CON modifier) × proficiency bonus</kw>; recalculates whenever a new Anchor is bonded. Starts <kw>empty</kw> when first gained and persists across re-links, rests, and combat. Both characters sense its current value instinctively — no explanation required.</p>
         </div>
         <div class="rule-block good">
-          <span class="rule-name">Life Transfer (Upgraded)</span>
+          <div class="rule-head"><span class="rule-name">Life Transfer (Upgraded)</span><span class="rule-pill active">Active · Reaction</span></div>
           <p>When Life Transfer triggers, damage is drawn from the <kw>Pool first</kw>. Only the excess beyond the Pool's remaining value is taken from your HP as Psychic damage. If the Pool absorbs everything, you feel nothing. If the Pool was empty, the full damage hits you as before.</p>
         </div>
         <div class="rule-block">
-          <span class="rule-name">Donate <em>(Bonus Action)</em></span>
+          <div class="rule-head"><span class="rule-name">Donate</span><span class="rule-pill active">Active · Bonus Action</span></div>
           <p>Either bonded character may donate up to their <kw>Constitution modifier</kw> in HP into the Pool. The Pool cannot exceed its maximum. The Anchor may do this on their own turn.</p>
         </div>
         <div class="rule-block good">
-          <span class="rule-name">Withdraw <em>(Bonus Action)</em></span>
+          <div class="rule-head"><span class="rule-name">Withdraw</span><span class="rule-pill active">Active · Bonus Action</span></div>
           <p>Either bonded character may withdraw up to their <kw>Constitution modifier</kw> in HP from the Pool, healing themselves for that amount. Cannot exceed what the Pool holds. Donating and withdrawing cannot both occur on the same turn.</p>
           <p class="flavor">The Pool is a shared reserve — both characters choose whether to spend it offensively (buffering Life Transfer) or defensively (spot healing in a pinch).</p>
         </div>
         <div class="rule-block danger">
-          <span class="rule-name">Pool Collapse</span>
+          <div class="rule-head"><span class="rule-name">Pool Collapse</span><span class="rule-pill passive">Passive · Trigger</span></div>
           <p>If the Bond breaks while the Pool holds any HP, both the cleric and the former Anchor immediately take <kw>Psychic damage equal to the Pool's current HP</kw> (no saving throw). The Pool empties. A Pool at 2 HP barely stings. A Pool at 15 is a genuine detonation.</p>
           <p>Collapse triggers on: <kw>voluntary dissolution without re-linking</kw>; and <kw>Flaw-triggered breaks</kw> — the Breaking Point shattering the Bond, or the Ache of Absence dissolving it at dawn.</p>
           <p>Collapse does <em>not</em> trigger on <kw>Re-link</kw>: if the cleric drops the Bond and establishes a new one in the same Action, the Pool carries across intact. Collapse also does not trigger on involuntary breaks from outside forces (enemy dispels, forced movement, environmental effects). It is reserved for breaks that come from within.</p>
           <p class="flavor">A cleric who needs to switch Anchors mid-combat can do so freely — but one who simply lets go, with no one to reach toward, pays the price of that emptiness.</p>
         </div>
         <div class="rule-block good">
-          <span class="rule-name">Passive: Held Aloft</span>
+          <div class="rule-head"><span class="rule-name">Held Aloft</span><span class="rule-pill passive">Passive</span></div>
           <p>While the Pool holds at least <kw>1 HP</kw>, both bonded characters have <kw>advantage on death saving throws</kw>.</p>
           <p class="flavor">The connection is a lifeline in more ways than one.</p>
         </div>
@@ -481,7 +485,7 @@
       <p>The Bond transcends choice. It settles into the fabric of you both — permanent, unbreakable by distance or circumstance.</p>
       <div class="sub-rules">
         <div class="rule-block gold">
-          <span class="rule-name">Permanent Bond</span>
+          <div class="rule-head"><span class="rule-name">Permanent Bond</span><span class="rule-pill passive">Passive · State</span></div>
           <p>Leveling up unlocks the ability to perform <kw>The Asking</kw> — a ritual that, if completed, makes the current Bond permanent. Until The Asking succeeds, full Level 6 mechanics remain in effect and Level 8 abilities (Resonance, Shared Fortitude, Stasis) remain locked.</p>
           <p>Once permanent: the Bond persists regardless of distance, unconsciousness, or temporary death states. It cannot be broken by outside forces. <kw>This Bond cannot be dissolved.</kw> Re-link is no longer possible. The flexibility of Levels 4 and 6 ends here. There is only this person, and whatever comes next.</p>
         </div>
@@ -520,11 +524,11 @@
 
       <div class="sub-rules">
         <div class="rule-block gold">
-          <span class="rule-name">Resonance <em>(Passive)</em></span>
+          <div class="rule-head"><span class="rule-name">Resonance</span><span class="rule-pill passive">Passive</span></div>
           <p>Both bonded characters add the <em>other</em> character's <kw>Constitution modifier</kw> to their <kw>hit point maximum</kw>. The Shared Vitality Pool's maximum <kw>doubles</kw> permanently, and the Pool regenerates <kw>1d6 HP</kw> at the start of each of your turns.</p>
         </div>
         <div class="rule-block gold">
-          <span class="rule-name">Shared Fortitude <em>(Reaction)</em></span>
+          <div class="rule-head"><span class="rule-name">Shared Fortitude</span><span class="rule-pill active">Active · Reaction</span></div>
           <p>Once per <kw>turn</kw>, when either bonded character fails a <kw>Constitution saving throw</kw>, the other may use their <kw>Reaction</kw> to share the burden. Both characters use the <kw>higher</kw> of the two rolls. May be triggered after both rolls are revealed.</p>
         </div>
       </div>
@@ -532,8 +536,8 @@
       <p style="margin-top:20px;margin-bottom:2px;font-weight:600;font-size:15px;letter-spacing:0.04em;color:var(--ink);">Stasis</p>
       <div class="sub-rules">
         <div class="rule-block good">
-          <span class="rule-name">Into Stasis</span>
-          <p>When either bonded character reaches <kw>0 HP</kw>, they do not fall unconscious. They enter <kw>Stasis</kw> instead. While in Stasis: <kw>Incapacitated</kw>, immune to all damage, untargetable by spells and abilities, no death saving throws. They persist indefinitely.</p>
+          <div class="rule-head"><span class="rule-name">Into Stasis</span><span class="rule-pill passive">Passive · Trigger</span></div>
+          <p>When either bonded character reaches <kw>0 HP</kw>, they do not fall unconscious. They enter <kw>Stasis</kw> instead. While in Stasis: <kw>Paralyzed</kw>, immune to all damage, untargetable by spells and abilities, no death saving throws. They persist indefinitely.</p>
           <p>If both bonded characters would be reduced to 0 HP by the <kw>same triggering effect</kw>, only the one with fewer current HP enters Stasis; the other is reduced to <kw>1 HP</kw> instead. If both have equal HP, the cleric enters Stasis. The Bond cannot suspend both at once.</p>
           <span class="sub-head">What the Stased character experiences</span>
           <p>The Stased character is present and aware — held, unable to act or reach anyone. Whatever was pressing before grows distant. Something reaches them from outside: presence. Not urgency. Weight that expects nothing in return.</p>
@@ -546,18 +550,19 @@
           <p class="flavor">The connection communicates this without words. It always has.</p>
         </div>
         <div class="rule-block danger">
-          <span class="rule-name">Breaking Stasis</span>
+          <div class="rule-head"><span class="rule-name">Breaking Stasis</span><span class="rule-pill active">Active · Action</span></div>
           <p>A bonded character uses their <kw>Action</kw> and makes physical contact. The rescuer immediately takes <kw>Psychic damage equal to 3d10 + the cleric's CON modifier</kw>. The Stased character exits Stasis at <kw>1 HP</kw>, all prior conditions removed.</p>
           <span class="sub-head">On timing</span>
           <p>Breaking Stasis mid-combat is almost never the correct decision. The Stased character is immune to all damage and untargetable — safer inside Stasis than anywhere on the battlefield. The risk: if the rescuer takes more damage than their remaining HP, they enter Stasis themselves. If the now-freed character then drops to 0, both are in Stasis simultaneously — Eternal Stasis. Before attempting rescue, confirm your HP comfortably exceeds the maximum possible cost (30 + CON modifier).</p>
           <p class="flavor">The bond's felt weight during Stasis is itself a warning. Trust it.</p>
         </div>
         <div class="rule-block danger">
-          <span class="rule-name">Eternal Stasis</span>
-          <p>If both bonded characters are in Stasis simultaneously, neither can rescue the other. For all practical purposes, they are dead. A DC 30 ritual with rare, specific components (DM-determined) could theoretically free them — and even then, it is a kindness, not a given.</p>
-          <p class="flavor">This is not a tragedy that announces itself. It arrives like the last word in a very long silence.</p>
+          <div class="rule-head"><span class="rule-name">Eternal Stasis</span><span class="rule-pill passive">Passive · State</span></div>
+          <p>If both bonded characters are in Stasis simultaneously, neither can rescue the other. They persist indefinitely — <kw>Paralyzed</kw>, immune to all damage, untargetable. They do not age, hunger, decay, or die. The Bond does not break, and any network rooted in it remains intact.</p>
+          <p>A DC 30 ritual with rare, specific components (DM-determined) may free them. Each linked member who joins the ritual lessens its difficulty, at the DM's discretion. Even so, the ritual is a kindness, not a given.</p>
+          <p class="flavor">This is not a tragedy that announces itself. It arrives like a held breath — and waits.</p>
           <span class="sub-head">For the DM</span>
-          <p>What Eternal Stasis feels like from the inside is deliberately left undefined. Neither character can ever report it. Note only this: <em>something persists between them.</em> Whether that is a mercy is not for the rules to say. The party buries two people who are not quite dead, and no one ever finds out what that means.</p>
+          <p>What Eternal Stasis feels like from the inside is deliberately left undefined. Neither character can ever report it. The network registers them as present — direction, faint weight, the slow steady pulse of two people who have not let go. What the party makes of that, what they build around it, is not for the rules to say.</p>
         </div>
       </div>
 
@@ -590,25 +595,25 @@
       <p>The Aspect did not give the cleric their abilities cleanly. It revealed the pattern already there, and made it mechanical. The Flaw has four manifestations — each covering a different context, ensuring the cleric cannot optimise around it.</p>
       <div class="sub-rules">
         <div class="rule-block dark">
-          <span class="rule-name">Compulsive Sacrifice</span>
+          <div class="rule-head"><span class="rule-name">Compulsive Sacrifice</span><span class="rule-pill passive">Passive · Compulsion</span></div>
           <p>When your Anchor takes damage and you are within range and able to trigger Life Transfer, you must make a <kw>DC 12 Wisdom saving throw</kw>. On a failure, Life Transfer triggers automatically as a <kw>Reaction</kw>. <em>(This overrides the one-Reaction-per-round limit.)</em> You cannot choose to fail this save.</p>
           <p class="flavor">This is not a decision. It never was.</p>
         </div>
         <div class="rule-block dark">
-          <span class="rule-name">The Ache of Absence</span>
+          <div class="rule-head"><span class="rule-name">The Ache of Absence</span><span class="rule-pill passive">Passive · State</span></div>
           <p>The Bond requires the Anchor to ask the cleric something <em>personal</em> at least once per long rest — their opinion, their feelings, whether they are alright. A logistical question does not qualify. If a long rest passes without it, the Bond breaks silently at dawn.</p>
           <p>While no Bond is active: <kw>hit point maximum</kw> is reduced by <kw>proficiency bonus × 2</kw>, and the cleric has <kw>disadvantage on Wisdom saving throws</kw>. These penalties lift only when a new Bond is established.</p>
           <p class="flavor">The cleric cannot ask for this question. Asking dissolves the thing they need. They have to wait. They are very good at waiting.</p>
         </div>
         <div class="rule-block dark">
-          <span class="rule-name">Separation Anxiety</span>
+          <div class="rule-head"><span class="rule-name">Separation Anxiety</span><span class="rule-pill passive">Passive · Trigger</span></div>
           <p>While bonded, if the Anchor has been more than <kw>30 feet</kw> away for longer than <kw>1 minute</kw> (10 rounds), make a <kw>DC 12 Wisdom saving throw</kw> or become <kw>Frightened</kw> — the Anchor is the source. Repeat at the end of each of your turns; on a success, the effect ends.</p>
           <p>Note: Frightened prevents willingly moving <em>closer</em> to the fear's source — the cleric freezes rather than pursues.</p>
           <p class="flavor">The person they fear losing most is the one who locks them in place by walking away.</p>
           <p class="xref">At Level 8, the Permanent Bond removes the distance-break condition, so the Bond never shatters — but Separation Anxiety still fires. The cleric will periodically become frightened of their bonded partner whenever they step too far away, save out of it after a turn or two, and carry on. This is not a bug.</p>
         </div>
         <div class="rule-block dark">
-          <span class="rule-name">The Secret</span>
+          <div class="rule-head"><span class="rule-name">The Secret</span><span class="rule-pill passive">Passive · Compulsion</span></div>
           <p>The cleric cannot directly explain the Flaw — the compulsions, the bond, the need — to anyone. If they attempt to, they are immediately <kw>Silenced</kw> until the end of their next turn.</p>
           <p>If an Anchor <em>discovers</em> the Flaw on their own — witnesses Compulsive Sacrifice trigger, pieces together the pattern, or the cleric confesses despite the silence — the Bond's dynamic shifts permanently. From that point, the cleric cannot establish the Bond with that Anchor unilaterally: the Anchor must <kw>consciously and verbally consent</kw> each time. Any hesitation, refusal, or "I need a moment" causes the Bond to fail. No save. No retry until the Anchor is willing.</p>
           <p class="flavor">The cleric used to be able to simply reach out and take the connection. Now they have to ask for it, without being able to explain why, and wait to see if the answer is yes.</p>
@@ -622,7 +627,7 @@
   </div>
 
   <div class="footer">
-    Domain of Shared Breath &nbsp;·&nbsp; Constitution-primary Cleric &nbsp;·&nbsp; Homebrew &nbsp;·&nbsp; v1.3
+    Domain of Shared Breath &nbsp;·&nbsp; Constitution-primary Cleric &nbsp;·&nbsp; Homebrew &nbsp;·&nbsp; v1.4
   </div>
 
 </div>
