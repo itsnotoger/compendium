@@ -307,10 +307,366 @@
     /* Sidebar toggle stays readable */
     .sidebar-toggle { right: 10px; top: 10px; }
   }
+
+
+  /* ══════════════════════════════════════════════════
+     DOMAIN CHAPTER STYLES
+  ══════════════════════════════════════════════════ */
+
+  .foundation {
+    padding: 22px 28px;
+    border: 1px solid var(--border-faint);
+    background: rgba(255,255,255,0.3);
+    border-radius: 3px;
+    margin-bottom: 36px;
+    font-size: 16px; line-height: 1.75;
+  }
+  .foundation p { margin-bottom: 10px; }
+  .foundation p:last-child { margin-bottom: 0; }
+
+  .level-card {
+    border: 1px solid var(--border);
+    border-top: 3px solid var(--accent-red);
+    background: var(--parchment-dark);
+    border-radius: 3px;
+    padding: 28px 32px;
+    margin-bottom: 28px;
+  }
+  .level-card.lv6  { border-top-color: var(--accent-teal); }
+  .level-card.lv17 { border-top-color: var(--accent-gold); }
+  .level-card.open { border-top-color: var(--border); background: #f0e9d8; }
+
+  .card-header {
+    display: flex; align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--border-faint);
+    flex-wrap: wrap; gap: 8px;
+  }
+  .card-title {
+    font-family: 'IM Fell English','Georgia',serif;
+    font-size: 24px; line-height: 1.15;
+    color: var(--accent-red);
+  }
+  .lv6  .card-title { color: var(--accent-teal); }
+  .lv17 .card-title { color: var(--accent-gold); }
+  .open .card-title { color: var(--ink-faded); }
+
+  .effects { display: flex; flex-direction: column; gap: 12px; }
+  .effect {
+    border-left: 3px solid var(--border-faint);
+    padding: 10px 16px;
+    background: rgba(255,255,255,0.35);
+    border-radius: 0 3px 3px 0;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    column-gap: 12px;
+    row-gap: 6px;
+  }
+  .effect.passive { border-left-color: var(--accent-teal); }
+  .effect.active  { border-left-color: var(--accent-red-light); }
+  .effect.open    { border-left-color: var(--border); background: rgba(0,0,0,0.02); }
+
+  .effect-label {
+    display: inline-block;
+    font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase;
+    font-weight: 600; padding: 1px 7px; border-radius: 2px;
+    border: 1px solid;
+    grid-column: 2; grid-row: 1;
+    margin-bottom: 0; white-space: nowrap;
+  }
+  .effect-label.passive { color: var(--accent-teal); border-color: var(--accent-teal); background: rgba(30,90,90,0.06); }
+  .effect-label.active  { color: var(--accent-red); border-color: var(--accent-red-light); background: rgba(124,42,30,0.06); }
+  .effect-label.open    { color: var(--ink-faded); border-color: var(--border); background: rgba(0,0,0,0.03); }
+
+  .effect-name {
+    font-weight: 600; font-size: 15px; color: var(--ink);
+    grid-column: 1; grid-row: 1;
+    margin-bottom: 0;
+  }
+  .effect p, .effect table {
+    grid-column: 1 / -1;
+    font-size: 15.5px; color: var(--ink-faded); margin: 0;
+  }
+  .effect table { font-size: inherit; color: inherit; }
+  .effect p + p { margin-top: 6px; }
+
+  .open-questions {
+    border: 1px dashed var(--border);
+    border-radius: 3px;
+    padding: 22px 28px;
+    margin-top: 36px;
+    background: rgba(138,106,30,0.04);
+  }
+  .open-questions .q-title {
+    font-family: 'IM Fell English','Georgia',serif;
+    font-size: 20px; color: var(--accent-gold);
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border-faint);
+  }
+  .q-list { display: flex; flex-direction: column; gap: 12px; }
+  .q-item {
+    padding: 10px 16px;
+    border-left: 3px solid var(--accent-gold-light);
+    background: rgba(255,255,255,0.3);
+    border-radius: 0 3px 3px 0;
+  }
+  .q-item .q-label {
+    font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase;
+    font-weight: 600; color: var(--accent-gold); display: block; margin-bottom: 4px;
+  }
+  .q-item p { font-size: 15px; color: var(--ink-faded); margin: 0; }
+  .q-item code { font-family: 'Courier New', monospace; font-size: 13px; background: rgba(0,0,0,0.04); padding: 1px 4px; border-radius: 2px; }
+
+  .spell-table { width: 100%; border-collapse: collapse; font-size: 15px; margin-top: 8px; }
+  .spell-table th {
+    font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--ink-faded); font-weight: 600; text-align: left;
+    padding: 7px 10px; border-bottom: 1px solid var(--border);
+  }
+  .spell-table td { padding: 7px 10px; border-bottom: 1px solid var(--border-faint); vertical-align: top; }
+  .spell-table tr:last-child td { border-bottom: none; }
+  .spell-table td:first-child { white-space: nowrap; font-size: 13px; font-weight: 600; letter-spacing: 0.05em; color: var(--ink-faded); width: 110px; }
+  .spell-table td:nth-child(2) { color: var(--ink); }
+
+  .domain-intro {
+    margin-bottom: 36px;
+    font-size: 16.5px;
+    line-height: 1.75;
+    padding: 0 4px;
+  }
+  .domain-intro p { margin-bottom: 14px; }
+  .domain-intro p:last-child { margin-bottom: 0; }
+  .domain-intro strong { color: var(--ink); font-weight: 600; }
+
+  /* ══════════════════════════════════════════════════
+     CHAPTER TABS (book-style)
+  ══════════════════════════════════════════════════ */
+
+  .chapter-nav {
+    max-width: var(--page-width);
+    margin: 0 auto;
+    padding: 18px var(--page-padding-inline) 0;
+    display: flex;
+    gap: 6px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--parchment);
+  }
+  .chapter-nav button {
+    flex: 1;
+    font-family: 'IM Fell English', 'Georgia', serif;
+    font-size: 17px;
+    letter-spacing: 0.06em;
+    background: var(--parchment);
+    border: 1px solid var(--border-faint);
+    border-bottom: none;
+    border-top: 3px solid transparent;
+    padding: 8px 16px 10px;
+    cursor: pointer;
+    color: var(--ink-faded);
+    border-radius: 3px 3px 0 0;
+    transition: background 0.15s, color 0.15s;
+  }
+  .chapter-nav button:hover {
+    background: var(--parchment-dark);
+    color: var(--ink);
+  }
+  .chapter-nav button.active {
+    background: var(--parchment-dark);
+    color: var(--ink);
+  }
+  .chapter-nav button[data-chapter="domain"].active {
+    border-top-color: var(--accent-teal);
+  }
+  .chapter-nav button[data-chapter="aspect"].active {
+    border-top-color: var(--accent-gold);
+  }
+
+  /* Section visibility */
+  section[data-chapter] { display: none; }
+  section[data-chapter].is-active { display: block; }
+
+  /* When tabs are present, .page no longer needs as much top padding */
+  .page { padding-top: 24px; }
+
+  @media (max-width: 600px) {
+    .chapter-nav { padding: 12px 14px 0; gap: 4px; }
+    .chapter-nav button { font-size: 15px; padding: 6px 10px 8px; }
+    .page { padding-top: 16px; }
+  }
 </style>
 </head>
 <body>
-<div class="page">
+
+  <nav class="chapter-nav">
+    <button data-chapter="domain">Domain</button>
+    <button data-chapter="aspect">Aspect</button>
+  </nav>
+
+  <div class="page">
+
+    <section id="domain" data-chapter>
+
+
+  <div class="header">
+    <div class="domain-eyebrow">Cleric — Custom Domain</div>
+    <div class="domain-title">Domain of Shared Breath</div>
+    <div class="domain-subtitle">"No one stands outside the perimeter — except the one who holds it."</div>
+  </div>
+
+  <!-- Overview -->
+  <div class="section-eyebrow">Overview</div>
+  <div class="domain-intro">
+    <p>Clerics of the Domain of Shared Breath understand connection as the substance that sustains a life. They reach outward — to make sure no one in their company stands alone. The domain's central mechanic is the <strong>Breath Link</strong>: a communal, multi-target network of ambient awareness and small gifts, freely given, persistent until severed. Up to two Breath Links may be held at once — at a standard party size, someone always sits outside the perimeter, and that scarcity is the mechanic.</p>
+
+    <p><strong>The Anchor.</strong> The domain refers to whoever currently does the work of reaching outward — forging and curating the network — as <em>the Anchor</em>. At Level 3, the cleric is the Anchor. From Level 4 onward, when the Aspect's Bond forms, the role transfers to the Bond's Anchor: the cleric's reaching-out instinct narrows into devotion to one person, and the community-building hand passes to the one they have chosen. The Anchor inherits the breadth the cleric can no longer hold. If no Bond is active, the cleric is again the Anchor and may forge links normally.</p>
+  </div>
+
+  <div class="ornament-divider">✦ &nbsp; ✦ &nbsp; ✦</div>
+
+  <!-- Level 3 -->
+  <div class="level-card">
+    <div class="card-header">
+      <div class="card-title">The Breathing Network</div>
+      <div class="level-badge">Level 3 &nbsp;·&nbsp; Domain Ability</div>
+    </div>
+    <div class="effects">
+
+      <div class="effect active">
+        <span class="effect-label active">Active · Bonus Action</span>
+        <span class="effect-name">Forge Breath Link</span>
+        <p>As a <kw>Bonus Action</kw>, the Anchor touches a willing creature within reach to forge a <kw>Breath Link</kw>. The Anchor may maintain up to <kw>2 Breath Links</kw> at once; forging a new one at cap drops an existing link of the Anchor's choice (free, no sensation). A link persists indefinitely until severed by the Anchor (free action, on their turn), the linked creature dies, or the Anchor falls unconscious or dies. Once forged, a Breath Link's effects function regardless of distance, so long as the link persists.</p>
+      </div>
+
+      <div class="effect passive">
+        <span class="effect-label passive">Passive · Network</span>
+        <span class="effect-name">Felt Presence</span>
+        <p>All network members sense one another through the link — a vague awareness of direction and proximity. Not exact location, not identity beyond who is already known to be linked. A felt sense of <em>that way</em>. When the network shatters, this awareness simply fades — an absence where there had been company. The link is invisible to outsiders; Detect Magic registers something vague between linked creatures but reveals nothing of structure or mechanics.</p>
+      </div>
+
+      <div class="effect passive">
+        <span class="effect-label passive">Passive · Breath Anchor Benefit</span>
+        <span class="effect-name">Steadied by the Link</span>
+        <p>While Breath-linked, a creature has <kw>advantage on saving throws to resist or end the Frightened condition</kw>. They feel steadied — watched over — without knowing why. The Anchor does not receive this benefit. This is the enticement: the Anchor extends something genuinely good to whoever they choose to link.</p>
+      </div>
+
+      <div class="effect passive">
+        <span class="effect-label passive">Passive</span>
+        <span class="effect-name">Felt Across the Distance</span>
+        <p>The cleric senses through the network at all times. Whenever any Breath-linked creature takes damage, the cleric feels it — not numbers, just impact. Direction, severity, distress. Distance is no barrier: if a Breath-linked creature is hurt, the cleric knows the moment it happens. This sense is the cleric's alone and does not transfer with the Anchor role.</p>
+      </div>
+
+      <div class="effect active">
+        <span class="effect-label active">Active · Reaction · CD Point</span>
+        <span class="effect-name">Interpose</span>
+        <p>When a Breath-linked creature takes damage, the cleric may spend a <kw>Channel Divinity point</kw> as a <kw>Reaction</kw> to halve the damage. Declare after seeing the total, but before the target's resistances or immunities are applied. The halved damage retains its original type. Interpose can only target a Breath-linked creature.</p>
+      </div>
+
+      <div class="effect open">
+        <span class="effect-label open">Domain Spells</span>
+        <span class="effect-name">Shared Breath Spell List</span>
+        <table class="spell-table">
+          <thead><tr><th>Cleric Level</th><th>Spells</th></tr></thead>
+          <tbody>
+            <tr><td>1st</td><td>Bless, Heroism</td></tr>
+            <tr><td>3rd</td><td>Aid, Calm Emotions</td></tr>
+            <tr><td>5th</td><td>Beacon of Hope, Aura of Vitality</td></tr>
+            <tr><td>7th</td><td>Death Ward, Aura of Purity</td></tr>
+            <tr><td>9th</td><td>Greater Restoration, Rary's Telepathic Bond</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Level 6 -->
+  <div class="level-card lv6">
+    <div class="card-header">
+      <div class="card-title">The Network Deepens</div>
+      <div class="level-badge">Level 6 &nbsp;·&nbsp; Domain Ability</div>
+    </div>
+    <div class="effects">
+
+      <div class="effect passive">
+        <span class="effect-label passive">Passive · Range</span>
+        <span class="effect-name">Extended Reach</span>
+        <p>The Anchor may establish a Breath Link as a <kw>Bonus Action</kw> with a willing creature up to <kw>30 feet</kw> away, provided the current Anchor has previously touched that creature to form a Breath Link (or, in the cleric's case, a Bond). For an entirely new creature, physical contact is still required to form the first link.</p>
+      </div>
+
+      <div class="effect passive">
+        <span class="effect-label passive">Passive · Network</span>
+        <span class="effect-name">Wordless Impressions</span>
+        <p>The network's awareness deepens. Emotional texture now travels alongside the directional sense from Level 3 — only what the body cannot conceal. A mood. A weight. A separated party member's fear reaches the others before any signal could. Words, images, thought, and intent do not pass through; the network carries presence, not message.</p>
+      </div>
+
+      <div class="effect passive">
+        <span class="effect-label passive">Passive · Network</span>
+        <span class="effect-name">Conduit</span>
+        <p>Once per turn, as a <kw>free object interaction</kw>, a network member may pass one held object to another network member within <kw>60 feet</kw>. The object passes through the network — no line of sight or line of effect required. No action required from the recipient. A potion crosses the battlefield. A weapon reaches the disarmed ally. The network moves things the way breath moves — without ceremony.</p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Level 17 -->
+  <div class="level-card lv17">
+    <div class="card-header">
+      <div class="card-title">The Last Breath</div>
+      <div class="level-badge">Level 17 &nbsp;·&nbsp; Domain Ability</div>
+    </div>
+    <div class="effects">
+
+      <div class="effect active">
+        <span class="effect-label active">Active · Reaction · CD Point</span>
+        <span class="effect-name">Catch</span>
+        <p>When a Breath-linked creature would be reduced to <kw>0 HP</kw> — including by effects that would kill outright — the cleric may spend a <kw>Channel Divinity point</kw> as a <kw>Reaction</kw>. The creature enters a temporary <kw>Stasis</kw> instead: <kw>Paralyzed</kw>, immune to all damage, untargetable. No death saving throws.</p>
+        <p>Stasis lasts <kw>2 rounds</kw>. At the end of the second round, the creature exits automatically at <kw>1 HP</kw>, all prior conditions removed. This ability may be used <kw>once per creature per long rest</kw>.</p>
+        <p><strong style="font-weight:600">While in Stasis.</strong> The creature is suspended — aware, but unable to act or speak. Something reaches them from outside: steady, wordless, not urgent.</p>
+        <p><em>DM note: this is the same Stasis described in the Aspect section. The experience notes there apply generally, except that the Stased creature cannot push impressions outward (that requires an active Bond). Everything else — including what the outside character feels through the connection — applies as written.</em></p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Open Todos -->
+  <div class="open-questions" style="border-color: var(--accent-red-light); background: rgba(124,42,30,0.03);">
+    <div class="q-title" style="color: var(--accent-red);">Open Todos — Before This Is Done</div>
+    <div class="q-list">
+
+      <div class="q-item" style="border-left-color: var(--accent-red-light);">
+        <span class="q-label" style="color: var(--accent-red);">Aspect Doc · Transfer Clause as Warning Callout</span>
+        <p>When updating the Aspect section, the "umm actually" clause that redefines Breath Link creation at Level 4 needs a distinct, visually heavy callout — heavier than the existing <kw>callout</kw> and <kw>design-note</kw> styles. Proposed treatment: bordered block with accent-red left edge, header like <em>"⚠ Domain interaction"</em> or similar, placed immediately after the Level 4 ability card (where the Bond first forms and the transfer fires). Content must cover: (a) lore — the cleric's reaching-out instinct narrows into devotion, and the community-building hand transfers to the Anchor; (b) mechanical effect — the Anchor role transfers, the cleric can no longer create Breath Links while bonded, and the network now rides on the Bond rather than the Anchor's consciousness; (c) shatter cascade — when the Bond breaks for any reason, all Breath Links shatter; creation returns to the cleric until they re-bond. Phrasing should make clear this is a heads-up about Domain interaction, not a Domain rule — the rule itself stays in the Domain doc.</p>
+        <p><em>Mechanical detail for (b) and (c): while the Bond is active, the network rides on the Bond rather than the Anchor's consciousness — the "Anchor becomes unconscious" termination is replaced by "Bond breaks," and the Anchor may be unconscious without disrupting the network. When the Bond breaks for any reason, all Breath Links shatter; the Anchor rebuilds from scratch on re-establishment.</em></p>
+      </div>
+
+      <div class="q-item" style="border-left-color: var(--accent-red-light);">
+        <span class="q-label" style="color: var(--accent-red);">Aspect Doc · Anchor Sidebar Update</span>
+        <p>The "What the Anchor knows" sidebar in the Aspect section needs a domain row or annotation. The Anchor (post-Aspect) discovers Breath Link creation as a felt capacity at Level 4, when it transfers. They feel something genuinely good they can extend to others, without needing to know the cleric powers it. At later levels they witness Interpose halve damage to linked allies, observe Wordless Impressions and Conduit emerge, and at Level 17 see Catch put someone in temporary stasis. None of this discovers the Flaw — the domain layer is exactly the layer the cleric gives without hiding. Decide whether this belongs in the sidebar or a separate domain-side note.</p>
+      </div>
+      <div class="q-item" style="border-left-color: var(--accent-red-light);">
+        <span class="q-label" style="color: var(--accent-red);">Navigation · Cross-Chapter Anchor Links</span>
+        <p>Tabs are in place; intra-doc and cross-tab anchor links are not. Should be a small JS handler that intercepts <code>#anchor</code> clicks, checks if the target lives in the inactive chapter, switches chapter if needed, then scrolls to the anchor. Useful for forward refs between Aspect mechanics and Domain abilities (e.g. Catch DM note referencing Stasis in the Aspect chapter).</p>
+      </div>
+
+
+    </div>
+  </div>
+
+  <div class="footer">
+    Domain of Shared Breath &nbsp;·&nbsp; Constitution-primary Cleric &nbsp;·&nbsp; Homebrew &nbsp;·&nbsp; v2.0
+  </div>
+
+
+    </section>
+
+    <section id="aspect" data-chapter>
+
 
   <!-- Header -->
   <div class="header">
@@ -627,9 +983,69 @@
   </div>
 
   <div class="footer">
-    Domain of Shared Breath &nbsp;·&nbsp; Constitution-primary Cleric &nbsp;·&nbsp; Homebrew &nbsp;·&nbsp; v1.4
+    Domain of Shared Breath &nbsp;·&nbsp; Constitution-primary Cleric &nbsp;·&nbsp; Homebrew &nbsp;·&nbsp; v2.0
   </div>
 
-</div>
+
+    </section>
+
+  </div>
+
+  <script>
+
+  (function() {
+    const VALID = ['domain', 'aspect'];
+    const DEFAULT = 'domain';
+
+    function showChapter(name) {
+      if (!VALID.includes(name)) name = DEFAULT;
+
+      document.querySelectorAll('section[data-chapter]').forEach(s => {
+        s.classList.toggle('is-active', s.id === name);
+      });
+      document.querySelectorAll('.chapter-nav button').forEach(b => {
+        b.classList.toggle('active', b.dataset.chapter === name);
+      });
+
+      // Sidebar toggle: only relevant on aspect tab
+      const sidebarToggle = document.querySelector('.sidebar-toggle');
+      if (sidebarToggle) {
+        sidebarToggle.style.display = (name === 'aspect') ? '' : 'none';
+      }
+      // Close sidebar overlay when switching chapters
+      const sidebar = document.querySelector('.anchor-sidebar');
+      if (sidebar) {
+        sidebar.classList.remove('open');
+        if (sidebarToggle) sidebarToggle.textContent = 'Anchor ▸';
+      }
+
+      // Update hash without triggering hashchange (no-op when embedded in iframe)
+      try {
+        const currentHash = location.hash.replace('#', '');
+        if (currentHash !== name) history.replaceState(null, '', '#' + name);
+      } catch(e) {}
+    }
+
+    // Initial state from hash
+    const initial = (location.hash || '').replace('#', '');
+    showChapter(VALID.includes(initial) ? initial : DEFAULT);
+
+    // Tab clicks
+    document.querySelectorAll('.chapter-nav button').forEach(b => {
+      b.addEventListener('click', () => {
+        showChapter(b.dataset.chapter);
+        window.scrollTo(0, 0);
+      });
+    });
+
+    // Browser navigation (back/forward, external links into the doc)
+    window.addEventListener('hashchange', () => {
+      const h = location.hash.replace('#', '');
+      if (VALID.includes(h)) showChapter(h);
+    });
+  })();
+
+  </script>
+
 </body>
 </html>
