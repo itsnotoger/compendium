@@ -24,9 +24,17 @@
     --rule: #8a7456;
     /* ── Layout Dimensions ── */
     --page-width: 780px;
-    --page-padding-inline: 52px;
-    --sidebar-width: 300px;
-    --breakpoint: 1395px; /* Derived: 676px inner page (780-52*2 padding) + 300px sidebar + 52px gap + 2*24px viewport scrollbar */
+    --page-padding-inline: 52px;       /* side padding at wide viewports */
+    --page-padding-narrow: 28px;       /* side padding at narrow viewports (rails present) */
+    --sidebar-width: 300px;            /* right anchor knowledge sidebar */
+    --sidebar-v-width: 100px;          /* vertical rail button width (left nav + anchor toggle) */
+    --sidebar-v-gap:   12px;           /* gap between rail button edge and page column edge */
+    /* Derived — can't be computed in CSS, so defined explicitly: */
+    --rail-reserve: 112px;             /* = --sidebar-v-width + --sidebar-v-gap */
+    --rail-top: 130px;                 /* vertical offset where rails begin (clears shared header) */
+    /* Breakpoints (custom properties can't be used inside @media, kept here for documentation): */
+    --breakpoint: 1395px;              /* wide: right sidebar auto-expands */
+    --breakpoint-mobile: 700px;        /* mobile: horizontal tabs replace rail nav */
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -41,7 +49,9 @@
 
   .page {
     max-width: var(--page-width);
-    margin: 0 auto;
+    /* Sidebar-aware centering: reserves --rail-reserve (= --sidebar-v-width + --sidebar-v-gap)
+       at narrow viewports; resolves to normal centering once the page fits with room to spare. */
+    margin-inline: max(var(--rail-reserve), calc((100% - var(--page-width)) / 2));
     padding: var(--page-padding-inline) var(--page-padding-inline) 80px;
     position: relative;
   }
@@ -55,12 +65,12 @@
     z-index: 0;
   }
 
-  /* ── Header ── */
-  .header {
+  /* ── Shared header (eyebrow + title, always visible above nav) ── */
+  .shared-header {
+    max-width: var(--page-width);
+    margin: 0 auto;  /* header intentionally spans full column width, unconstrained by rails */
+    padding: 36px var(--page-padding-inline) 0;
     text-align: center;
-    border-bottom: 2.5px double var(--rule);
-    padding-bottom: 28px;
-    margin-bottom: 36px;
   }
   .domain-eyebrow {
     font-size: 13px; letter-spacing: 0.22em; text-transform: uppercase;
@@ -69,7 +79,16 @@
   .domain-title {
     font-family: 'IM Fell English','Georgia',serif;
     font-size: 46px; line-height: 1.1; color: var(--accent-red);
-    margin-bottom: 8px; letter-spacing: 0.01em;
+    margin-bottom: 0; letter-spacing: 0.01em;
+  }
+
+  /* ── Per-section intro (subtitle + optional stat line, with rule separator) ── */
+  .section-intro {
+    text-align: center;
+    border-bottom: 2.5px double var(--rule);
+    padding-bottom: 28px;
+    margin-bottom: 36px;
+    padding-top: 28px;
   }
   .domain-subtitle { font-style: italic; color: var(--ink-faded); font-size: 16px; margin-bottom: 18px; }
   .stat-line { display: inline-flex; gap: 32px; font-size: 13.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-faded); }
@@ -247,36 +266,16 @@
       display: none;
       position: fixed;
       right: 16px;
-      top: 56px;
+      top: 96px; /* clears the sticky nav bar */
       width: var(--sidebar-width);
       z-index: 200;
       box-shadow: 0 6px 24px rgba(0,0,0,0.18);
     }
     .anchor-sidebar.open { display: block; }
-
-    .sidebar-toggle {
-      position: fixed;
-      right: 16px;
-      top: 16px;
-      z-index: 201;
-      background: var(--parchment-dark);
-      border: 1px solid var(--border);
-      border-left: 3px solid var(--accent-gold);
-      color: var(--accent-gold);
-      font-family: 'Crimson Text', serif;
-      font-size: 11px;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      padding: 6px 12px 5px;
-      cursor: pointer;
-      border-radius: 2px;
-      line-height: 1;
-    }
-    .sidebar-toggle:hover { background: var(--parchment-shadow); }
   }
 
-  /* ── Mobile layout ── */
-  @media (max-width: 600px) {
+  /* ── Mobile layout (≤ --breakpoint-mobile) ── */
+  @media (max-width: 700px) { /* --breakpoint-mobile */
     .page {
       padding: 20px 14px 56px;
     }
@@ -304,8 +303,6 @@
     .overview-table td:nth-child(3) { display: none; }
     .tier-pill { font-size: 11px; letter-spacing: 0.04em; padding: 2px 5px; }
 
-    /* Sidebar toggle stays readable */
-    .sidebar-toggle { right: 10px; top: 10px; }
   }
 
 
@@ -443,21 +440,123 @@
   .domain-intro strong { color: var(--ink); font-weight: 600; }
 
   /* ══════════════════════════════════════════════════
-     CHAPTER TABS (book-style)
+     NAVIGATION
+     Three modes, two breakpoints:
+       narrow  601–1394px  left rail + right toggle (default styles)
+       wide    ≥ 1395px    same rails + sidebar always open
+       mobile  ≤  700px    horizontal sticky tabs
+     Rail formula: 112px reserve = 100px (--sidebar-v-width) + 12px (--sidebar-v-gap).
+     Page margin: max(112px, centre). Rails use matching min() — always flush.
   ══════════════════════════════════════════════════ */
 
-  .chapter-nav {
+  /* Section visibility */
+  section[data-chapter] { display: none; }
+  section[data-chapter].is-active { display: block; }
+
+  /* ── Vertical left rail: narrow + wide (hidden on mobile) ──
+     right: min() keeps rail flush with page left edge at all widths.
+     402 = half page (390) + gap (12). 112 = width (100) + gap (12). */
+  .chapter-nav-v {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: var(--rail-top);
+    /* right edge = page left edge − gap; 50%+page/2+gap = page right from centre */
+    right: min(
+      calc(50% + var(--page-width) / 2 + var(--sidebar-v-gap)),
+      calc(100% - var(--rail-reserve))
+    );
+    width: var(--sidebar-v-width);
+    gap: 6px;
+    z-index: 100;
+  }
+  .chapter-nav-v button {
+    font-family: 'IM Fell English', 'Georgia', serif;
+    font-size: 17px;
+    letter-spacing: 0.06em;
+    background: var(--parchment-dark);
+    border: 1px solid var(--border-faint);
+    border-right: 3px solid transparent;
+    border-radius: 3px 0 0 3px;
+    padding: 10px 12px 10px 10px;
+    text-align: right;
+    cursor: pointer;
+    color: var(--ink-faded);
+    width: 100%;
+    transition: background 0.15s, color 0.15s;
+  }
+  .chapter-nav-v button:hover { background: var(--parchment-shadow); color: var(--ink); }
+  .chapter-nav-v button[data-chapter="domain"].active {
+    background: var(--parchment-dark); color: var(--ink); border-right-color: var(--accent-teal);
+  }
+  .chapter-nav-v button[data-chapter="aspect"].active {
+    background: var(--parchment-dark); color: var(--ink); border-right-color: var(--accent-gold);
+  }
+
+  /* ── Anchor toggle: mirror of left rail ── */
+  .sidebar-toggle {
+    display: block;
+    position: fixed;
+    top: var(--rail-top);
+    /* mirrors left rail; left edge = page right edge + gap */
+    left: min(
+      calc(50% + var(--page-width) / 2 + var(--sidebar-v-gap)),
+      calc(100% - var(--rail-reserve))
+    );
+    width: var(--sidebar-v-width);
+    z-index: 201;
+    font-family: 'Crimson Text', serif;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    background: var(--parchment-dark);
+    border: 1px solid var(--border-faint);
+    border-left: 3px solid var(--accent-gold);
+    border-radius: 0 3px 3px 0;
+    color: var(--accent-gold);
+    padding: 10px 10px 10px 12px;
+    text-align: left;
+    cursor: pointer;
+    line-height: 1;
+    transition: background 0.15s;
+  }
+  .sidebar-toggle:hover { background: var(--parchment-shadow); }
+
+  /* ── In-sidebar close button ── */
+  .sidebar-close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: transparent;
+    border: 1px solid var(--border-faint);
+    border-radius: 2px;
+    color: var(--ink-faded);
+    font-family: 'Crimson Text', serif;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    cursor: pointer;
+    line-height: 1.4;
+  }
+  .sidebar-close:hover { background: var(--parchment-shadow); border-color: var(--border); }
+
+  /* ── Horizontal nav bar: mobile only ── */
+  .chapter-nav-h {
     max-width: var(--page-width);
     margin: 0 auto;
-    padding: 18px var(--page-padding-inline) 0;
-    display: flex;
+    padding: 14px var(--page-padding-inline) 0;
+    display: none;
+    align-items: flex-end;
     gap: 6px;
     position: sticky;
     top: 0;
     z-index: 100;
     background: var(--parchment);
+    border-bottom: 2.5px double var(--rule);
   }
-  .chapter-nav button {
+  .chapter-nav-h .h-tabs { display: flex; flex: 1; gap: 6px; }
+  .chapter-nav-h button[data-chapter] {
     flex: 1;
     font-family: 'IM Fell English', 'Georgia', serif;
     font-size: 17px;
@@ -472,50 +571,99 @@
     border-radius: 3px 3px 0 0;
     transition: background 0.15s, color 0.15s;
   }
-  .chapter-nav button:hover {
-    background: var(--parchment-dark);
-    color: var(--ink);
-  }
-  .chapter-nav button.active {
-    background: var(--parchment-dark);
-    color: var(--ink);
-  }
-  .chapter-nav button[data-chapter="domain"].active {
-    border-top-color: var(--accent-teal);
-  }
-  .chapter-nav button[data-chapter="aspect"].active {
-    border-top-color: var(--accent-gold);
+  .chapter-nav-h button[data-chapter]:hover { background: var(--parchment-dark); color: var(--ink); }
+  .chapter-nav-h button[data-chapter].active { background: var(--parchment-dark); color: var(--ink); }
+  .chapter-nav-h button[data-chapter="domain"].active { border-top-color: var(--accent-teal); }
+  .chapter-nav-h button[data-chapter="aspect"].active { border-top-color: var(--accent-gold); }
+
+  /* ── Wide (≥ --breakpoint): sidebar always visible, toggle hidden ── */
+  @media (min-width: 1395px) { /* --breakpoint */
+    .anchor-sidebar {
+      position: absolute;
+      left: calc(100% + var(--page-padding-inline));
+      top: 0;
+      width: var(--sidebar-width);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+    }
+    .sidebar-toggle { display: none; }
+    .sidebar-close  { display: none; }
   }
 
-  /* Section visibility */
-  section[data-chapter] { display: none; }
-  section[data-chapter].is-active { display: block; }
-
-  /* When tabs are present, .page no longer needs as much top padding */
-  .page { padding-top: 24px; }
-
-  @media (max-width: 600px) {
-    .chapter-nav { padding: 12px 14px 0; gap: 4px; }
-    .chapter-nav button { font-size: 15px; padding: 6px 10px 8px; }
-    .page { padding-top: 16px; }
+  /* ── Narrow (--breakpoint-mobile+1 to --breakpoint−1): sidebar as fixed overlay ── */
+  @media (max-width: 1394px) { /* --breakpoint */
+    .anchor-sidebar {
+      display: none;
+      position: fixed;
+      right: 16px;
+      top: var(--rail-top);
+      width: var(--sidebar-width);
+      z-index: 200;
+      box-shadow: 0 6px 24px rgba(0,0,0,0.18);
+    }
+    .anchor-sidebar.open { display: block; }
+    /* Reduce side padding so text sits closer to the rails */
+    .page { padding-inline: var(--page-padding-narrow); } /* --breakpoint */
   }
+
+  /* ── Mobile (≤ --breakpoint-mobile): horizontal tabs, full-width page, repositioned toggle ── */
+  @media (max-width: 700px) { /* --breakpoint-mobile */
+    /* Full-width page: undo rail reservation and narrow side padding */
+    .page { margin-inline: 0; padding: 20px 14px 56px; }
+
+    .chapter-nav-h { display: flex; padding: 10px 14px 0; }
+    .chapter-nav-h button[data-chapter] { font-size: 15px; padding: 6px 10px 8px; }
+    .chapter-nav-v { display: none; }
+
+    /* Toggle: comfortable touch target, flush right, below the nav bar */
+    .sidebar-toggle {
+      top: 52px;
+      left: auto;
+      right: 0;
+      width: auto;
+      padding: 9px 14px;
+      font-size: 12px;
+      letter-spacing: 0.15em;
+      border-radius: 3px 0 0 3px;
+      border-left: 3px solid var(--accent-gold);
+      border-right: none;
+    }
+    /* Sidebar: starts at same level as toggle (≈ mobile nav bar height) */
+    .anchor-sidebar { top: 52px !important; }
+  }
+
+  /* ── Page top padding (narrow + wide) ── */
+  .page { padding-top: 28px; }
 </style>
 </head>
 <body>
 
-  <nav class="chapter-nav">
+  <!-- Vertical nav: fixed left rail, shown at ≥1395px -->
+  <nav class="chapter-nav-v">
     <button data-chapter="domain">Domain</button>
     <button data-chapter="aspect">Aspect</button>
   </nav>
+
+  <!-- Shared title: always visible, scrolls normally -->
+  <div class="shared-header">
+    <div class="domain-eyebrow">Cleric — Custom Domain</div>
+    <div class="domain-title">Domain of Shared Breath</div>
+  </div>
+
+  <!-- Horizontal nav bar: sticky, visible below breakpoint -->
+  <nav class="chapter-nav-h">
+    <div class="h-tabs">
+      <button data-chapter="domain">Domain</button>
+      <button data-chapter="aspect">Aspect</button>
+    </div>
+  </nav>
+  <button class="sidebar-toggle">Anchor</button>
 
   <div class="page">
 
     <section id="domain" data-chapter>
 
 
-  <div class="header">
-    <div class="domain-eyebrow">Cleric — Custom Domain</div>
-    <div class="domain-title">Domain of Shared Breath</div>
+  <div class="section-intro">
     <div class="domain-subtitle">"No one stands outside the perimeter — except the one who holds it."</div>
   </div>
 
@@ -658,21 +806,12 @@
     </div>
   </div>
 
-  <div class="footer">
-    Domain of Shared Breath &nbsp;·&nbsp; Constitution-primary Cleric &nbsp;·&nbsp; Homebrew &nbsp;·&nbsp; v2.0
-  </div>
-
-
     </section>
 
     <section id="aspect" data-chapter>
 
-
-  <!-- Header -->
-  <div class="header">
-    <div class="domain-eyebrow">Cleric &mdash; Custom Domain</div>
-    <div class="domain-title">Domain of Shared Breath</div>
-    <div class="domain-subtitle">"You reach into the wound, not to close it — but to share it."</div>
+  <div class="section-intro">
+    <div class="domain-subtitle">“You reach into the wound, not to close it — but to share it.”</div>
     <div class="stat-line">
       <span><strong>Primary Stat:</strong> Constitution</span>
       <span><strong>Class:</strong> Cleric</span>
@@ -726,6 +865,7 @@
 
   <!-- Sidebar: absolute right on wide screens, toggle overlay on narrow -->
   <div class="anchor-sidebar">
+    <button class="sidebar-close">Close</button>
     <div class="sidebar-eyebrow">What the Anchor knows</div>
     <p>The Anchor's understanding grows only through observation and felt sense — never through explanation. Discovery consequences under The Secret apply when the Anchor learns beyond their current tier.</p>
     <table>
@@ -931,12 +1071,6 @@
 
   </div><!-- end cards-anchor -->
 
-  <!-- Narrow-screen toggle button -->
-  <button class="sidebar-toggle" onclick="
-    var s = document.querySelector('.anchor-sidebar');
-    s.classList.toggle('open');
-    this.textContent = s.classList.contains('open') ? '× Close' : 'Anchor ▸';
-  ">Anchor ▸</button>
 
   <div class="ornament-divider">✦ &nbsp; ✦ &nbsp; ✦</div>
 
@@ -982,12 +1116,12 @@
     </div>
   </div>
 
-  <div class="footer">
-    Domain of Shared Breath &nbsp;·&nbsp; Constitution-primary Cleric &nbsp;·&nbsp; Homebrew &nbsp;·&nbsp; v2.0
-  </div>
-
 
     </section>
+
+    <div class="footer">
+      Domain of Shared Breath &nbsp;·&nbsp; Constitution-primary Cleric &nbsp;·&nbsp; Homebrew &nbsp;·&nbsp; v2.1
+    </div>
 
   </div>
 
@@ -997,48 +1131,60 @@
     const VALID = ['domain', 'aspect'];
     const DEFAULT = 'domain';
 
+    function openSidebar() {
+      const s = document.querySelector('.anchor-sidebar');
+      const btn = document.querySelector('.sidebar-toggle');
+      if (s) s.classList.add('open');
+      if (btn) btn.style.visibility = 'hidden';
+    }
+
+    function closeSidebar() {
+      const s = document.querySelector('.anchor-sidebar');
+      const btn = document.querySelector('.sidebar-toggle');
+      if (s) s.classList.remove('open');
+      if (btn) btn.style.visibility = '';
+    }
+
     function showChapter(name) {
       if (!VALID.includes(name)) name = DEFAULT;
 
       document.querySelectorAll('section[data-chapter]').forEach(s => {
         s.classList.toggle('is-active', s.id === name);
       });
-      document.querySelectorAll('.chapter-nav button').forEach(b => {
+      document.querySelectorAll('button[data-chapter]').forEach(b => {
         b.classList.toggle('active', b.dataset.chapter === name);
       });
 
-      // Sidebar toggle: only relevant on aspect tab
+      closeSidebar();
+
+      // Toggle only visible on aspect tab
       const sidebarToggle = document.querySelector('.sidebar-toggle');
       if (sidebarToggle) {
-        sidebarToggle.style.display = (name === 'aspect') ? '' : 'none';
-      }
-      // Close sidebar overlay when switching chapters
-      const sidebar = document.querySelector('.anchor-sidebar');
-      if (sidebar) {
-        sidebar.classList.remove('open');
-        if (sidebarToggle) sidebarToggle.textContent = 'Anchor ▸';
+        sidebarToggle.style.visibility = (name === 'aspect') ? '' : 'hidden';
       }
 
-      // Update hash without triggering hashchange (no-op when embedded in iframe)
       try {
         const currentHash = location.hash.replace('#', '');
         if (currentHash !== name) history.replaceState(null, '', '#' + name);
       } catch(e) {}
     }
 
-    // Initial state from hash
     const initial = (location.hash || '').replace('#', '');
     showChapter(VALID.includes(initial) ? initial : DEFAULT);
 
-    // Tab clicks
-    document.querySelectorAll('.chapter-nav button').forEach(b => {
+    document.querySelectorAll('button[data-chapter]').forEach(b => {
       b.addEventListener('click', () => {
         showChapter(b.dataset.chapter);
         window.scrollTo(0, 0);
       });
     });
 
-    // Browser navigation (back/forward, external links into the doc)
+    const sidebarToggleBtn = document.querySelector('.sidebar-toggle');
+    if (sidebarToggleBtn) sidebarToggleBtn.addEventListener('click', openSidebar);
+
+    const sidebarCloseBtn = document.querySelector('.sidebar-close');
+    if (sidebarCloseBtn) sidebarCloseBtn.addEventListener('click', closeSidebar);
+
     window.addEventListener('hashchange', () => {
       const h = location.hash.replace('#', '');
       if (VALID.includes(h)) showChapter(h);
