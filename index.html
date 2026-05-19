@@ -442,30 +442,24 @@
   /* ══════════════════════════════════════════════════
      NAVIGATION
      Three modes, two breakpoints:
-       narrow  601–1394px  left rail + right toggle (default styles)
-       wide    ≥ 1395px    same rails + sidebar always open
-       mobile  ≤  700px    horizontal sticky tabs
-     Rail formula: 112px reserve = 100px (--sidebar-v-width) + 12px (--sidebar-v-gap).
-     Page margin: max(112px, centre). Rails use matching min() — always flush.
+       narrow  701–1394px  left rail flush to screen edge + right toggle near page
+       wide    ≥ 1395px    left rail becomes floating TOC box + anchor sidebar always open
+       mobile  ≤  700px    horizontal sticky tabs; toggle/sidebar JS-positioned below nav
+     Page margin reserves --rail-reserve (112px) on left, ensuring rail never overlaps content.
   ══════════════════════════════════════════════════ */
 
   /* Section visibility */
   section[data-chapter] { display: none; }
   section[data-chapter].is-active { display: block; }
 
-  /* ── Vertical left rail: narrow + wide (hidden on mobile) ──
-     right: min() keeps rail flush with page left edge at all widths.
-     402 = half page (390) + gap (12). 112 = width (100) + gap (12). */
+  /* ── Vertical left rail: narrow = attached to left screen edge; wide = TOC box ──
+     Page margin reserves --rail-reserve (112px) so buttons never overlap content. */
   .chapter-nav-v {
     display: flex;
     flex-direction: column;
     position: fixed;
     top: var(--rail-top);
-    /* right edge = page left edge − gap; 50%+page/2+gap = page right from centre */
-    right: min(
-      calc(50% + var(--page-width) / 2 + var(--sidebar-v-gap)),
-      calc(100% - var(--rail-reserve))
-    );
+    left: 0;
     width: var(--sidebar-v-width);
     gap: 6px;
     z-index: 100;
@@ -476,8 +470,9 @@
     letter-spacing: 0.06em;
     background: var(--parchment-dark);
     border: 1px solid var(--border-faint);
+    border-left: none;
     border-right: 3px solid transparent;
-    border-radius: 3px 0 0 3px;
+    border-radius: 0 3px 3px 0;
     padding: 10px 12px 10px 10px;
     text-align: right;
     cursor: pointer;
@@ -493,34 +488,37 @@
     background: var(--parchment-dark); color: var(--ink); border-right-color: var(--accent-gold);
   }
 
-  /* ── Anchor toggle: mirror of left rail ── */
+  /* ── Anchor toggle: floating badge (narrow only) — visually distinct from nav tabs ──
+     Nav tabs are screen-edge-attached with a half-open silhouette.
+     This is a self-contained pill: rounded all sides, full border, not attached to any edge. */
   .sidebar-toggle {
     display: block;
     position: fixed;
     top: var(--rail-top);
-    /* mirrors left rail; left edge = page right edge + gap */
+    /* just outside the page right edge, mirrors the left rail gap */
     left: min(
       calc(50% + var(--page-width) / 2 + var(--sidebar-v-gap)),
       calc(100% - var(--rail-reserve))
     );
-    width: var(--sidebar-v-width);
+    width: auto;
     z-index: 201;
     font-family: 'Crimson Text', serif;
     font-size: 11px;
+    font-weight: 600;
     letter-spacing: 0.18em;
     text-transform: uppercase;
-    background: var(--parchment-dark);
-    border: 1px solid var(--border-faint);
-    border-left: 3px solid var(--accent-gold);
-    border-radius: 0 3px 3px 0;
+    background: rgba(138,106,30,0.06);
+    border: 1px solid var(--accent-gold-light);
+    border-radius: 3px;
     color: var(--accent-gold);
-    padding: 10px 10px 10px 12px;
-    text-align: left;
+    padding: 8px 12px;
+    text-align: center;
     cursor: pointer;
     line-height: 1;
     transition: background 0.15s;
+    white-space: nowrap;
   }
-  .sidebar-toggle:hover { background: var(--parchment-shadow); }
+  .sidebar-toggle:hover { background: rgba(138,106,30,0.12); }
 
   /* ── In-sidebar close button ── */
   .sidebar-close {
@@ -547,15 +545,14 @@
     margin: 0 auto;
     padding: 14px var(--page-padding-inline) 0;
     display: none;
-    align-items: flex-end;
-    gap: 6px;
+    flex-direction: column;
     position: sticky;
     top: 0;
     z-index: 100;
     background: var(--parchment);
     border-bottom: 2.5px double var(--rule);
   }
-  .chapter-nav-h .h-tabs { display: flex; flex: 1; gap: 6px; }
+  .chapter-nav-h .h-tabs { display: flex; gap: 6px; }
   .chapter-nav-h button[data-chapter] {
     flex: 1;
     font-family: 'IM Fell English', 'Georgia', serif;
@@ -576,7 +573,36 @@
   .chapter-nav-h button[data-chapter="domain"].active { border-top-color: var(--accent-teal); }
   .chapter-nav-h button[data-chapter="aspect"].active { border-top-color: var(--accent-gold); }
 
-  /* ── Wide (≥ --breakpoint): sidebar always visible, toggle hidden ── */
+  /* Subtab row: always reserves its height (visibility, not display) so nav bar never jumps.
+     Spacer takes the left slot; button is content-width only, right-aligned. */
+  .chapter-nav-h .h-subtabs { display: flex; visibility: hidden; }
+  .chapter-nav-h .h-subtabs.is-active { visibility: visible; }
+  .chapter-nav-h .h-subtab-spacer { flex: 1; }
+  .chapter-nav-h .h-subtab-btn {
+    font-family: 'Crimson Text', serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    background: var(--parchment-dark);
+    border: 1px solid var(--border-faint);
+    border-top: 2px solid var(--accent-gold);
+    border-bottom: none;
+    color: var(--accent-gold);
+    padding: 4px 14px 6px;
+    cursor: pointer;
+    text-align: center;
+    border-radius: 0 0 3px 3px;
+    transition: background 0.15s;
+    white-space: nowrap;
+  }
+  .chapter-nav-h .h-subtab-btn:hover { background: var(--parchment-shadow); }
+  .chapter-nav-h .h-subtab-btn.open {
+    background: var(--parchment-shadow);
+    color: var(--ink);
+  }
+
+  /* ── Wide (≥ --breakpoint): sidebar auto-expands; left rail becomes floating TOC box ── */
   @media (min-width: 1395px) { /* --breakpoint */
     .anchor-sidebar {
       position: absolute;
@@ -587,6 +613,53 @@
     }
     .sidebar-toggle { display: none; }
     .sidebar-close  { display: none; }
+
+    /* Left rail → TOC box: contained, labelled, left of the page column */
+    .chapter-nav-v {
+      /* right edge of box = 12px left of page left edge
+         page left edge = 50% - 390px; box width = 160px
+         so: left = 50% - 390px - 12px - 160px = 50% - 562px */
+      left: calc(50% - 562px);
+      top: 140px;
+      width: 160px;
+      gap: 0;
+      background: rgba(245,239,227,0.97);
+      border: 1px solid var(--border-faint);
+      border-radius: 3px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+    }
+    .chapter-nav-v::before {
+      content: 'Contents';
+      display: block;
+      font-family: 'Crimson Text', serif;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--accent-gold);
+      padding: 12px 14px 10px;
+      border-bottom: 1px solid var(--border-faint);
+    }
+    .chapter-nav-v button {
+      border-left: 3px solid transparent;
+      border-right: none;
+      border-top: none;
+      border-bottom: 1px solid var(--border-faint);
+      border-radius: 0;
+      text-align: left;
+      padding: 10px 14px 10px 11px;
+      background: transparent;
+    }
+    .chapter-nav-v button:last-child {
+      border-bottom: none;
+      border-radius: 0 0 2px 2px;
+    }
+    .chapter-nav-v button[data-chapter="domain"].active {
+      background: var(--parchment-dark); border-right: none; border-left-color: var(--accent-teal);
+    }
+    .chapter-nav-v button[data-chapter="aspect"].active {
+      background: var(--parchment-dark); border-right: none; border-left-color: var(--accent-gold);
+    }
   }
 
   /* ── Narrow (--breakpoint-mobile+1 to --breakpoint−1): sidebar as fixed overlay ── */
@@ -601,8 +674,6 @@
       box-shadow: 0 6px 24px rgba(0,0,0,0.18);
     }
     .anchor-sidebar.open { display: block; }
-    /* Reduce side padding so text sits closer to the rails */
-    .page { padding-inline: var(--page-padding-narrow); } /* --breakpoint */
   }
 
   /* ── Mobile (≤ --breakpoint-mobile): horizontal tabs, full-width page, repositioned toggle ── */
@@ -614,21 +685,16 @@
     .chapter-nav-h button[data-chapter] { font-size: 15px; padding: 6px 10px 8px; }
     .chapter-nav-v { display: none; }
 
-    /* Toggle: comfortable touch target, flush right, below the nav bar */
-    .sidebar-toggle {
-      top: 52px;
-      left: auto;
+    /* Fixed rail toggle hidden on mobile — subtab handles opening the sidebar */
+    .sidebar-toggle { display: none; }
+    /* Anchor sidebar: fixed below the sticky nav bar (height ≈ 80px).
+       Flush right + gold top border reads as a panel dropped from the Anchor subtab. */
+    .anchor-sidebar {
+      top: 80px;
       right: 0;
-      width: auto;
-      padding: 9px 14px;
-      font-size: 12px;
-      letter-spacing: 0.15em;
-      border-radius: 3px 0 0 3px;
-      border-left: 3px solid var(--accent-gold);
-      border-right: none;
+      border-top: 2px solid var(--accent-gold);
+      border-radius: 0 0 3px 3px;
     }
-    /* Sidebar: starts at same level as toggle (≈ mobile nav bar height) */
-    .anchor-sidebar { top: 52px !important; }
   }
 
   /* ── Page top padding (narrow + wide) ── */
@@ -654,6 +720,11 @@
     <div class="h-tabs">
       <button data-chapter="domain">Domain</button>
       <button data-chapter="aspect">Aspect</button>
+    </div>
+    <!-- Subtabs: appear below parent tab when that chapter is active (mobile only) -->
+    <div class="h-subtabs" data-for-chapter="aspect">
+      <div class="h-subtab-spacer"></div>
+      <button class="h-subtab-btn">Anchor</button>
     </div>
   </nav>
   <button class="sidebar-toggle">Anchor</button>
@@ -1132,17 +1203,21 @@
     const DEFAULT = 'domain';
 
     function openSidebar() {
-      const s = document.querySelector('.anchor-sidebar');
-      const btn = document.querySelector('.sidebar-toggle');
+      const s         = document.querySelector('.anchor-sidebar');
+      const railBtn   = document.querySelector('.sidebar-toggle');
+      const subtabBtn = document.querySelector('.h-subtab-btn');
       if (s) s.classList.add('open');
-      if (btn) btn.style.visibility = 'hidden';
+      if (railBtn)   railBtn.style.visibility = 'hidden';
+      if (subtabBtn) subtabBtn.classList.add('open');
     }
 
     function closeSidebar() {
-      const s = document.querySelector('.anchor-sidebar');
-      const btn = document.querySelector('.sidebar-toggle');
+      const s         = document.querySelector('.anchor-sidebar');
+      const railBtn   = document.querySelector('.sidebar-toggle');
+      const subtabBtn = document.querySelector('.h-subtab-btn');
       if (s) s.classList.remove('open');
-      if (btn) btn.style.visibility = '';
+      if (railBtn)   railBtn.style.visibility = '';
+      if (subtabBtn) subtabBtn.classList.remove('open');
     }
 
     function showChapter(name) {
@@ -1157,11 +1232,14 @@
 
       closeSidebar();
 
-      // Toggle only visible on aspect tab
-      const sidebarToggle = document.querySelector('.sidebar-toggle');
-      if (sidebarToggle) {
-        sidebarToggle.style.visibility = (name === 'aspect') ? '' : 'hidden';
-      }
+      // Show subtab row for the active chapter; hide all others
+      document.querySelectorAll('.h-subtabs').forEach(el => {
+        el.classList.toggle('is-active', el.dataset.forChapter === name);
+      });
+
+      // Narrow rail toggle: only visible on aspect tab
+      const railBtn = document.querySelector('.sidebar-toggle');
+      if (railBtn) railBtn.style.visibility = (name === 'aspect') ? '' : 'hidden';
 
       try {
         const currentHash = location.hash.replace('#', '');
@@ -1179,8 +1257,14 @@
       });
     });
 
-    const sidebarToggleBtn = document.querySelector('.sidebar-toggle');
-    if (sidebarToggleBtn) sidebarToggleBtn.addEventListener('click', openSidebar);
+    // Narrow rail toggle
+    const railToggleBtn = document.querySelector('.sidebar-toggle');
+    if (railToggleBtn) railToggleBtn.addEventListener('click', openSidebar);
+
+    // Mobile subtab button(s)
+    document.querySelectorAll('.h-subtab-btn').forEach(btn => {
+      btn.addEventListener('click', openSidebar);
+    });
 
     const sidebarCloseBtn = document.querySelector('.sidebar-close');
     if (sidebarCloseBtn) sidebarCloseBtn.addEventListener('click', closeSidebar);
