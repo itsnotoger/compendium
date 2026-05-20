@@ -170,7 +170,6 @@
     box-shadow: inset 0 1px 3px rgba(0,0,0,0.08);
   }
 
-
   /* ── Horizontal nav bar: mobile only ── */
   .chapter-nav-h {
     max-width: var(--page-width);
@@ -387,28 +386,40 @@
     padding: 28px 32px; margin-bottom: 28px;
   }
   .ability-card.level6 { border-top-color: var(--accent-teal); }
-  .ability-card.level8 { border-top-color: var(--accent-gold); }
+  .ability-card.level8,
+  .ability-card.level17 { border-top-color: var(--accent-gold); }
   .ability-card.flaw   { border-top-color: var(--ink-faded); background: #f0e9d8; }
 
   .ability-header { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 4px; flex-wrap: wrap; gap: 8px; }
+  /* When no tagline follows, the header draws its own separator (Domain cards) */
+  .ability-header:not(:has(+ .ability-tagline)) {
+    margin-bottom: 20px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--border-faint);
+  }
   .ability-name { font-family: 'IM Fell English','Georgia',serif; font-size: 26px; color: var(--accent-red); line-height: 1.15; }
   .level6 .ability-name { color: var(--accent-teal); }
-  .level8 .ability-name { color: var(--accent-gold); }
+  .level8 .ability-name,
+  .level17 .ability-name { color: var(--accent-gold); }
   .flaw   .ability-name { color: var(--ink-faded); }
   .level-badge { font-size: 12px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ink-faded); border: 1px solid var(--border-faint); padding: 2px 9px; border-radius: 2px; white-space: nowrap; }
   .ability-tagline { font-style: italic; color: var(--ink-faded); font-size: 15.5px; margin-bottom: 18px; padding-bottom: 14px; border-bottom: 1px solid var(--border-faint); }
   .ability-body p { margin-bottom: 12px; }
 
   /* ── Sub-rules ── */
-  .sub-rules { display: flex; flex-direction: column; gap: 14px; margin: 18px 0; }
+  .sub-rules { display: flex; flex-direction: column; gap: 14px; }
   .rule-block { border-left: 3px solid var(--border-faint); padding: 10px 16px; background: rgba(255,255,255,0.35); border-radius: 0 3px 3px 0; }
   .rule-block.danger { border-left-color: var(--accent-red-light); }
   .rule-block.good   { border-left-color: var(--accent-teal); }
   .rule-block.gold   { border-left-color: var(--accent-gold-light); }
   .rule-block.dark   { border-left-color: var(--ink-faded); }
+  .rule-block.open   { border-left-color: var(--border); background: rgba(0,0,0,0.02); }
   .rule-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px; gap: 10px; }
   .rule-name { font-weight: 600; font-size: 15px; color: var(--ink); letter-spacing: 0.03em; }
   .rule-pill { display: inline-block; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 600; padding: 1px 7px; border-radius: 2px; border: 1px solid; white-space: nowrap; flex-shrink: 0; }
+  .rule-pill.passive { color: var(--accent-teal); border-color: var(--accent-teal); background: rgba(30,90,90,0.06); }
+  .rule-pill.active  { color: var(--accent-red); border-color: var(--accent-red-light); background: rgba(124,42,30,0.06); }
+  .rule-pill.open    { color: var(--ink-faded); border-color: var(--border); background: rgba(0,0,0,0.03); }
   .rule-block p { font-size: 15.5px; margin: 0 0 10px; color: var(--ink-faded); }
   .rule-block p:last-child { margin-bottom: 0; }
 
@@ -470,76 +481,9 @@
   .footer { border-top: 1px solid var(--border-faint); margin-top: 60px; padding-top: 18px; text-align: center; font-size: 13px; color: var(--border); letter-spacing: 0.1em; font-style: italic; }
 
   /* ══════════════════════════════════════════════════
-     DOMAIN CHAPTER STYLES
+     DOMAIN-ONLY ELEMENTS
+     (Card system unified with Aspect; these are the bits without an Aspect counterpart)
   ══════════════════════════════════════════════════ */
-
-  .level-card {
-    border: 1px solid var(--border);
-    border-top: 3px solid var(--accent-red);
-    background: var(--parchment-dark);
-    border-radius: 3px;
-    padding: 28px 32px;
-    margin-bottom: 28px;
-  }
-  .level-card.lv6  { border-top-color: var(--accent-teal); }
-  .level-card.lv17 { border-top-color: var(--accent-gold); }
-
-  .card-header {
-    display: flex; align-items: baseline;
-    justify-content: space-between;
-    margin-bottom: 20px;
-    padding-bottom: 14px;
-    border-bottom: 1px solid var(--border-faint);
-    flex-wrap: wrap; gap: 8px;
-  }
-  .card-title {
-    font-family: 'IM Fell English','Georgia',serif;
-    font-size: 24px; line-height: 1.15;
-    color: var(--accent-red);
-  }
-  .lv6  .card-title { color: var(--accent-teal); }
-  .lv17 .card-title { color: var(--accent-gold); }
-
-  .effects { display: flex; flex-direction: column; gap: 12px; }
-  .effect {
-    border-left: 3px solid var(--border-faint);
-    padding: 10px 16px;
-    background: rgba(255,255,255,0.35);
-    border-radius: 0 3px 3px 0;
-    display: grid;
-    grid-template-columns: 1fr auto;
-    align-items: center;
-    column-gap: 12px;
-    row-gap: 6px;
-  }
-  .effect.passive { border-left-color: var(--accent-teal); }
-  .effect.active  { border-left-color: var(--accent-red-light); }
-  .effect.open    { border-left-color: var(--border); background: rgba(0,0,0,0.02); }
-
-  .effect-label {
-    display: inline-block;
-    font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase;
-    font-weight: 600; padding: 1px 7px; border-radius: 2px;
-    border: 1px solid;
-    grid-column: 2; grid-row: 1;
-    margin-bottom: 0; white-space: nowrap;
-  }
-  /* Shared by .rule-pill (Aspect sub-rules) and .effect-label (Domain effects) */
-  .rule-pill.passive, .effect-label.passive { color: var(--accent-teal); border-color: var(--accent-teal); background: rgba(30,90,90,0.06); }
-  .rule-pill.active,  .effect-label.active  { color: var(--accent-red); border-color: var(--accent-red-light); background: rgba(124,42,30,0.06); }
-  .effect-label.open    { color: var(--ink-faded); border-color: var(--border); background: rgba(0,0,0,0.03); }
-
-  .effect-name {
-    font-weight: 600; font-size: 15px; color: var(--ink);
-    grid-column: 1; grid-row: 1;
-    margin-bottom: 0;
-  }
-  .effect p, .effect table {
-    grid-column: 1 / -1;
-    font-size: 15.5px; color: var(--ink-faded); margin: 0;
-  }
-  .effect table { font-size: inherit; color: inherit; }
-  .effect p + p { margin-top: 6px; }
 
   .open-questions {
     border: 1px dashed var(--border);
@@ -680,46 +624,58 @@
   <div class="ornament-divider">✦ &nbsp; ✦ &nbsp; ✦</div>
 
   <!-- Level 3 -->
-  <div class="level-card">
-    <div class="card-header">
-      <div class="card-title">The Breathing Network</div>
+  <div class="ability-card">
+    <div class="ability-header">
+      <div class="ability-name">The Breathing Network</div>
       <div class="level-badge">Level 3 &nbsp;·&nbsp; Domain Ability</div>
     </div>
-    <div class="effects">
+    <div class="sub-rules">
 
-      <div class="effect active">
-        <span class="effect-label active">Active · Bonus Action</span>
-        <span class="effect-name">Forge Breath Link</span>
+      <div class="rule-block danger">
+        <div class="rule-head">
+          <span class="rule-name">Forge Breath Link</span>
+          <span class="rule-pill active">Active · Bonus Action</span>
+        </div>
         <p>As a <kw>Bonus Action</kw>, the Anchor touches a willing creature within reach to forge a <kw>Breath Link</kw>. The Anchor may maintain up to <kw>2 Breath Links</kw> at once; forging a new one at cap drops an existing link of the Anchor's choice (free, no sensation). A link persists indefinitely until severed by the Anchor (free action, on their turn), the linked creature dies, or the Anchor falls unconscious or dies. Once forged, a Breath Link's effects function regardless of distance, so long as the link persists.</p>
       </div>
 
-      <div class="effect passive">
-        <span class="effect-label passive">Passive · Network</span>
-        <span class="effect-name">Felt Presence</span>
+      <div class="rule-block good">
+        <div class="rule-head">
+          <span class="rule-name">Felt Presence</span>
+          <span class="rule-pill passive">Passive · Network</span>
+        </div>
         <p>All network members sense one another through the link — a vague awareness of direction and proximity. Not exact location, not identity beyond who is already known to be linked. A felt sense of <em>that way</em>. When the network shatters, this awareness simply fades — an absence where there had been company. The link is invisible to outsiders; Detect Magic registers something vague between linked creatures but reveals nothing of structure or mechanics.</p>
       </div>
 
-      <div class="effect passive">
-        <span class="effect-label passive">Passive · Breath Anchor Benefit</span>
-        <span class="effect-name">Steadied by the Link</span>
+      <div class="rule-block good">
+        <div class="rule-head">
+          <span class="rule-name">Steadied by the Link</span>
+          <span class="rule-pill passive">Passive · Breath Anchor Benefit</span>
+        </div>
         <p>While Breath-linked, a creature has <kw>advantage on saving throws to resist or end the Frightened condition</kw>. They feel steadied — watched over — without knowing why. The Anchor does not receive this benefit. This is the enticement: the Anchor extends something genuinely good to whoever they choose to link.</p>
       </div>
 
-      <div class="effect passive">
-        <span class="effect-label passive">Passive</span>
-        <span class="effect-name">Felt Across the Distance</span>
+      <div class="rule-block good">
+        <div class="rule-head">
+          <span class="rule-name">Felt Across the Distance</span>
+          <span class="rule-pill passive">Passive</span>
+        </div>
         <p>The cleric senses through the network at all times. Whenever any Breath-linked creature takes damage, the cleric feels it — not numbers, just impact. Direction, severity, distress. Distance is no barrier: if a Breath-linked creature is hurt, the cleric knows the moment it happens. This sense is the cleric's alone and does not transfer with the Anchor role.</p>
       </div>
 
-      <div class="effect active">
-        <span class="effect-label active">Active · Reaction · CD Point</span>
-        <span class="effect-name">Interpose</span>
+      <div class="rule-block danger">
+        <div class="rule-head">
+          <span class="rule-name">Interpose</span>
+          <span class="rule-pill active">Active · Reaction · CD Point</span>
+        </div>
         <p>When a Breath-linked creature takes damage, the cleric may spend a <kw>Channel Divinity point</kw> as a <kw>Reaction</kw> to halve the damage. Declare after seeing the total, but before the target's resistances or immunities are applied. The halved damage retains its original type. Interpose can only target a Breath-linked creature.</p>
       </div>
 
-      <div class="effect open">
-        <span class="effect-label open">Domain Spells</span>
-        <span class="effect-name">Shared Breath Spell List</span>
+      <div class="rule-block open">
+        <div class="rule-head">
+          <span class="rule-name">Shared Breath Spell List</span>
+          <span class="rule-pill open">Domain Spells</span>
+        </div>
         <table class="spell-table">
           <thead><tr><th>Cleric Level</th><th>Spells</th></tr></thead>
           <tbody>
@@ -736,28 +692,34 @@
   </div>
 
   <!-- Level 6 -->
-  <div class="level-card lv6">
-    <div class="card-header">
-      <div class="card-title">The Network Deepens</div>
+  <div class="ability-card level6">
+    <div class="ability-header">
+      <div class="ability-name">The Network Deepens</div>
       <div class="level-badge">Level 6 &nbsp;·&nbsp; Domain Ability</div>
     </div>
-    <div class="effects">
+    <div class="sub-rules">
 
-      <div class="effect passive">
-        <span class="effect-label passive">Passive · Range</span>
-        <span class="effect-name">Extended Reach</span>
+      <div class="rule-block good">
+        <div class="rule-head">
+          <span class="rule-name">Extended Reach</span>
+          <span class="rule-pill passive">Passive · Range</span>
+        </div>
         <p>The Anchor may establish a Breath Link as a <kw>Bonus Action</kw> with a willing creature up to <kw>30 feet</kw> away, provided the current Anchor has previously touched that creature to form a Breath Link (or, in the cleric's case, a Bond). For an entirely new creature, physical contact is still required to form the first link.</p>
       </div>
 
-      <div class="effect passive">
-        <span class="effect-label passive">Passive · Network</span>
-        <span class="effect-name">Wordless Impressions</span>
+      <div class="rule-block good">
+        <div class="rule-head">
+          <span class="rule-name">Wordless Impressions</span>
+          <span class="rule-pill passive">Passive · Network</span>
+        </div>
         <p>The network's awareness deepens. Emotional texture now travels alongside the directional sense from Level 3 — only what the body cannot conceal. A mood. A weight. A separated party member's fear reaches the others before any signal could. Words, images, thought, and intent do not pass through; the network carries presence, not message.</p>
       </div>
 
-      <div class="effect passive">
-        <span class="effect-label passive">Passive · Network</span>
-        <span class="effect-name">Conduit</span>
+      <div class="rule-block good">
+        <div class="rule-head">
+          <span class="rule-name">Conduit</span>
+          <span class="rule-pill passive">Passive · Network</span>
+        </div>
         <p>Once per turn, as a <kw>free object interaction</kw>, a network member may pass one held object to another network member within <kw>60 feet</kw>. The object passes through the network — no line of sight or line of effect required. No action required from the recipient. A potion crosses the battlefield. A weapon reaches the disarmed ally. The network moves things the way breath moves — without ceremony.</p>
       </div>
 
@@ -765,16 +727,18 @@
   </div>
 
   <!-- Level 17 -->
-  <div class="level-card lv17">
-    <div class="card-header">
-      <div class="card-title">The Last Breath</div>
+  <div class="ability-card level17">
+    <div class="ability-header">
+      <div class="ability-name">The Last Breath</div>
       <div class="level-badge">Level 17 &nbsp;·&nbsp; Domain Ability</div>
     </div>
-    <div class="effects">
+    <div class="sub-rules">
 
-      <div class="effect active">
-        <span class="effect-label active">Active · Reaction · CD Point</span>
-        <span class="effect-name">Catch</span>
+      <div class="rule-block danger">
+        <div class="rule-head">
+          <span class="rule-name">Catch</span>
+          <span class="rule-pill active">Active · Reaction · CD Point</span>
+        </div>
         <p>When a Breath-linked creature would be reduced to <kw>0 HP</kw> — including by effects that would kill outright — the cleric may spend a <kw>Channel Divinity point</kw> as a <kw>Reaction</kw>. The creature enters a temporary <kw>Stasis</kw> instead: <kw>Paralyzed</kw>, immune to all damage, untargetable. No death saving throws.</p>
         <p>Stasis lasts <kw>2 rounds</kw>. At the end of the second round, the creature exits automatically at <kw>1 HP</kw>, all prior conditions removed. This ability may be used <kw>once per creature per long rest</kw>.</p>
         <p><strong style="font-weight:600">While in Stasis.</strong> The creature is suspended — aware, but unable to act or speak. Something reaches them from outside: steady, wordless, not urgent.</p>
