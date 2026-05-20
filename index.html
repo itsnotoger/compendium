@@ -40,6 +40,7 @@
        CSS does not allow var() inside @media, so they are duplicated there. */
     --breakpoint:        1395px;   /* wide: TOC + anchor sidebar always visible */
     --breakpoint-mobile:  800px;   /* mobile: horizontal tabs replace rail nav */
+    --mobile-nav-h:        72px;   /* approx. sticky nav height on mobile; positions sidebar top */
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -139,13 +140,15 @@
   }
 
   /* ── Anchor toggle: floating badge (narrow only) — visually distinct from nav tabs ──
-     Nav tabs are screen-edge-attached with a half-open silhouette.
-     This is a self-contained pill: rounded all sides, full border, not attached to any edge. */
+     Both right and left are set so the button fills the right gutter between the page
+     column and the viewport edge — growing naturally with viewport width. */
   .sidebar-toggle {
     display: block;
     position: fixed;
     top: var(--rail-top);
     right: var(--overlay-edge);
+    width: calc(var(--page-margin-inline) - var(--page-padding-inline) - var(--overlay-edge));
+    min-width: fit-content;
     z-index: 201;
     font-family: 'Crimson Text', serif;
     font-size: 11px;
@@ -164,11 +167,7 @@
     white-space: nowrap;
   }
   .sidebar-toggle:hover { background: rgba(138,106,30,0.12); }
-  .sidebar-toggle.open {
-    background: rgba(138,106,30,0.16);
-    border-color: var(--accent-gold);
-    box-shadow: inset 0 1px 3px rgba(0,0,0,0.08);
-  }
+  .sidebar-toggle.open  { display: none; } /* panel has its own ✕; toggle hides to avoid overlap */
 
   /* ── Horizontal nav bar: mobile only ── */
   .chapter-nav-h {
@@ -242,13 +241,40 @@
     border-left: 3px solid var(--accent-gold);
     background: rgba(245,239,227,0.98);
     border-radius: 3px;
-    padding: 16px 18px;
+    padding: 0;
     font-size: 13px;
+    overflow: hidden; /* clips ✕ hover bg to sidebar's border-radius */
   }
   .anchor-sidebar .sidebar-eyebrow {
     font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase;
-    color: var(--accent-gold); margin-bottom: 8px; font-weight: 600;
+    color: var(--accent-gold); margin-bottom: 0; font-weight: 600;
   }
+  /* Header strip: eyebrow left, close button right (close hidden in wide — sidebar always open) */
+  .sidebar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 0 0 18px; /* left matches body; right is flush — ✕ padding owns right edge */
+  }
+  /* Body: carries all content padding below the header */
+  .sidebar-body {
+    padding: 0 18px 16px;
+  }
+  .sidebar-close {
+    display: none; /* shown via narrow overlay rule below */
+    background: none;
+    border: none;
+    border-radius: 0; /* sidebar overflow:hidden + its own border-radius clips the corner */
+    color: var(--accent-gold);
+    font-size: 18px;
+    line-height: 1;
+    padding: 11px 14px;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: background 0.1s;
+  }
+  .sidebar-close:hover  { background: rgba(138,106,30,0.12); color: var(--ink); }
+  .sidebar-close:active { background: rgba(138,106,30,0.24); color: var(--ink); }
   .anchor-sidebar p { font-size: 12.5px; color: var(--ink-faded); margin-bottom: 10px; line-height: 1.5; }
   .anchor-sidebar table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
   .anchor-sidebar th { text-align: left; padding: 5px 6px; border-bottom: 1px solid var(--border); color: var(--ink-faded); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 600; }
@@ -266,6 +292,9 @@
       width: var(--anchor-sidebar-width);
       box-shadow: 0 2px 10px rgba(0,0,0,0.07);
     }
+    /* No ✕ button in wide — header needs its own top padding for visual breathing room */
+    .sidebar-header { padding-top: 14px; }
+    .sidebar-body    { padding-top: 10px; }
     .sidebar-toggle { display: none; }
 
     /* Left rail → TOC box: contained, labelled, left of the page column */
@@ -325,6 +354,7 @@
       box-shadow: 0 6px 24px rgba(0,0,0,0.18);
     }
     .anchor-sidebar.open { display: block; }
+    .sidebar-close { display: block; } /* ✕ visible whenever sidebar is an overlay */
   }
 
   /* ══════════════════════════════════════════════════
@@ -548,10 +578,10 @@
     .chapter-nav-v { display: none; }
     /* Fixed rail toggle hidden on mobile — subtab handles opening the sidebar */
     .sidebar-toggle { display: none; }
-    /* Anchor sidebar: fixed below the sticky nav bar (height ≈ 80px).
-       Flush right + gold top border reads as a panel dropped from the Anchor subtab. */
+    /* Anchor sidebar: CSS-only positioning — top approximates sticky nav height so nav
+       remains accessible as secondary close. Internal ✕ handles closing from any scroll. */
     .anchor-sidebar {
-      top: 80px;
+      top: var(--mobile-nav-h);
       right: 0;
       border-top: 2px solid var(--accent-gold);
       border-radius: 0 0 3px 3px;
@@ -831,7 +861,11 @@
 
   <!-- Sidebar: absolute right on wide screens, toggle overlay on narrow -->
   <div class="anchor-sidebar">
-    <div class="sidebar-eyebrow">What the Anchor knows</div>
+    <div class="sidebar-header">
+      <div class="sidebar-eyebrow">What the Anchor knows</div>
+      <button class="sidebar-close" aria-label="Close">✕</button>
+    </div>
+    <div class="sidebar-body">
     <p>The Anchor's understanding grows only through observation and felt sense — never through explanation. Discovery consequences under The Secret apply when the Anchor learns beyond their current tier.</p>
     <table>
       <thead><tr><th>Tier</th><th>Feels</th><th>Does not know</th></tr></thead>
@@ -853,7 +887,8 @@
         </tr>
       </tbody>
     </table>
-  </div>
+  </div><!-- end sidebar-body -->
+  </div><!-- end anchor-sidebar -->
 
   <!-- ═══════════════════ LEVEL 4 ═══════════════════ -->
   <div class="ability-card">
@@ -1097,21 +1132,15 @@
     const DEFAULT = 'domain';
 
     function openSidebar() {
-      const s         = document.querySelector('.anchor-sidebar');
-      const railBtn   = document.querySelector('.sidebar-toggle');
-      const subtabBtn = document.querySelector('.h-subtab-btn');
-      if (s) s.classList.add('open');
-      if (railBtn)   railBtn.classList.add('open');
-      if (subtabBtn) subtabBtn.classList.add('open');
+      document.querySelector('.anchor-sidebar')?.classList.add('open');
+      document.querySelector('.sidebar-toggle')?.classList.add('open');
+      document.querySelector('.h-subtab-btn')?.classList.add('open');
     }
 
     function closeSidebar() {
-      const s         = document.querySelector('.anchor-sidebar');
-      const railBtn   = document.querySelector('.sidebar-toggle');
-      const subtabBtn = document.querySelector('.h-subtab-btn');
-      if (s) s.classList.remove('open');
-      if (railBtn)   railBtn.classList.remove('open');
-      if (subtabBtn) subtabBtn.classList.remove('open');
+      document.querySelector('.anchor-sidebar')?.classList.remove('open');
+      document.querySelector('.sidebar-toggle')?.classList.remove('open');
+      document.querySelector('.h-subtab-btn')?.classList.remove('open');
     }
 
     function toggleSidebar() {
@@ -1163,6 +1192,9 @@
     document.querySelectorAll('.h-subtab-btn').forEach(btn => {
       btn.addEventListener('click', toggleSidebar);
     });
+
+    // Internal ✕ button closes from any scroll position
+    document.querySelector('.sidebar-close')?.addEventListener('click', closeSidebar);
 
     window.addEventListener('hashchange', () => {
       const h = location.hash.replace('#', '');
