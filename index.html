@@ -52,6 +52,10 @@
     line-height: 1.65;
   }
 
+  /* ══════════════════════════════════════════════════
+     PAGE STRUCTURE
+  ══════════════════════════════════════════════════ */
+
   .page {
     max-width: var(--page-width);
     margin-inline: var(--page-margin-inline);
@@ -84,6 +88,252 @@
     font-size: 46px; line-height: 1.1; color: var(--accent-red);
     margin-bottom: 0; letter-spacing: 0.01em;
   }
+
+  /* Section visibility */
+  section[data-chapter] { display: none; }
+  section[data-chapter].is-active { display: block; }
+
+  /* ══════════════════════════════════════════════════
+     NAVIGATION & OVERLAY PANELS
+     Three modes, two breakpoints:
+       narrow  801–1394px  left rail flush to screen edge + right toggle near page
+       wide    ≥ 1395px    left rail becomes floating TOC box + anchor sidebar always open
+       mobile  ≤  800px    horizontal sticky tabs; toggle/sidebar JS-positioned below nav
+     .page margin-inline floors at --page-margin-min so the rail never overlaps content.
+  ══════════════════════════════════════════════════ */
+
+  /* ── Vertical left rail: narrow = attached to left screen edge; wide = TOC box ──
+     .page margin-inline floors at --page-margin-min so the rail never overlaps content. */
+  .chapter-nav-v {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: var(--rail-top);
+    left: 0;
+    width: var(--rail-width);
+    gap: 6px;
+    z-index: 100;
+  }
+  .chapter-nav-v button {
+    font-family: 'IM Fell English', 'Georgia', serif;
+    font-size: 17px;
+    letter-spacing: 0.06em;
+    background: var(--parchment-dark);
+    border: 1px solid var(--border-faint);
+    border-left: none;
+    border-right: 3px solid transparent;
+    border-radius: 0 3px 3px 0;
+    padding: 10px 12px 10px 10px;
+    text-align: right;
+    cursor: pointer;
+    color: var(--ink-faded);
+    width: 100%;
+    transition: background 0.15s, color 0.15s;
+  }
+  .chapter-nav-v button:hover { background: var(--parchment-shadow); color: var(--ink); }
+  .chapter-nav-v button[data-chapter="domain"].active {
+    background: var(--parchment-dark); color: var(--ink); border-right-color: var(--accent-teal);
+  }
+  .chapter-nav-v button[data-chapter="aspect"].active {
+    background: var(--parchment-dark); color: var(--ink); border-right-color: var(--accent-gold);
+  }
+
+  /* ── Anchor toggle: floating badge (narrow only) — visually distinct from nav tabs ──
+     Nav tabs are screen-edge-attached with a half-open silhouette.
+     This is a self-contained pill: rounded all sides, full border, not attached to any edge. */
+  .sidebar-toggle {
+    display: block;
+    position: fixed;
+    top: var(--rail-top);
+    right: var(--overlay-edge);
+    z-index: 201;
+    font-family: 'Crimson Text', serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    background: rgba(138,106,30,0.06);
+    border: 1px solid var(--accent-gold-light);
+    border-radius: 3px;
+    color: var(--accent-gold);
+    padding: 8px 12px;
+    text-align: center;
+    cursor: pointer;
+    line-height: 1;
+    transition: background 0.15s;
+    white-space: nowrap;
+  }
+  .sidebar-toggle:hover { background: rgba(138,106,30,0.12); }
+  .sidebar-toggle.open {
+    background: rgba(138,106,30,0.16);
+    border-color: var(--accent-gold);
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.08);
+  }
+
+  /* ── In-sidebar close button — hidden; toggle buttons handle open/close ── */
+  .sidebar-close { display: none; }
+
+  /* ── Horizontal nav bar: mobile only ── */
+  .chapter-nav-h {
+    max-width: var(--page-width);
+    margin: 0 auto;
+    padding: 14px var(--page-padding-inline) 0;
+    display: none;
+    flex-direction: column;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--parchment);
+    border-bottom: 1px solid var(--border-faint);
+    box-shadow: 0 3px 14px rgba(0,0,0,0.09);
+  }
+  .chapter-nav-h .h-tabs { display: flex; gap: 6px; }
+  .chapter-nav-h button[data-chapter] {
+    flex: 1;
+    font-family: 'IM Fell English', 'Georgia', serif;
+    font-size: 17px;
+    letter-spacing: 0.06em;
+    background: var(--parchment);
+    border: 1px solid var(--border-faint);
+    border-bottom: none;
+    border-top: 3px solid transparent;
+    padding: 8px 16px 10px;
+    cursor: pointer;
+    color: var(--ink-faded);
+    border-radius: 3px 3px 0 0;
+    transition: background 0.15s, color 0.15s;
+  }
+  .chapter-nav-h button[data-chapter]:hover { background: var(--parchment-dark); color: var(--ink); }
+  .chapter-nav-h button[data-chapter].active { background: var(--parchment-dark); color: var(--ink); }
+  .chapter-nav-h button[data-chapter="domain"].active { border-top-color: var(--accent-teal); }
+  .chapter-nav-h button[data-chapter="aspect"].active { border-top-color: var(--accent-gold); }
+
+  /* Subtab row: always reserves its height (visibility, not display) so nav bar never jumps.
+     Spacer takes the left slot; button is content-width only, right-aligned. */
+  .chapter-nav-h .h-subtabs { display: flex; visibility: hidden; }
+  .chapter-nav-h .h-subtabs.is-active { visibility: visible; }
+  .chapter-nav-h .h-subtab-spacer { flex: 1; }
+  .chapter-nav-h .h-subtab-btn {
+    font-family: 'Crimson Text', serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    background: var(--parchment-dark);
+    border: 1px solid var(--border-faint);
+    border-top: 2px solid var(--accent-gold);
+    border-bottom: none;
+    color: var(--accent-gold);
+    padding: 4px 14px 6px;
+    cursor: pointer;
+    text-align: center;
+    border-radius: 0 0 3px 3px;
+    transition: background 0.15s;
+    white-space: nowrap;
+  }
+  .chapter-nav-h .h-subtab-btn:hover { background: var(--parchment-shadow); }
+  .chapter-nav-h .h-subtab-btn.open {
+    background: var(--parchment-shadow);
+    color: var(--ink);
+  }
+
+  /* ── Anchor knowledge sidebar ── */
+  .cards-anchor { position: relative; }
+
+  .anchor-sidebar {
+    border: 1px solid var(--border-faint);
+    border-left: 3px solid var(--accent-gold);
+    background: rgba(245,239,227,0.98);
+    border-radius: 3px;
+    padding: 16px 18px;
+    font-size: 13px;
+  }
+  .anchor-sidebar .sidebar-eyebrow {
+    font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--accent-gold); margin-bottom: 8px; font-weight: 600;
+  }
+  .anchor-sidebar p { font-size: 12.5px; color: var(--ink-faded); margin-bottom: 10px; line-height: 1.5; }
+  .anchor-sidebar table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+  .anchor-sidebar th { text-align: left; padding: 5px 6px; border-bottom: 1px solid var(--border); color: var(--ink-faded); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 600; }
+  .anchor-sidebar td { padding: 6px 6px; border-bottom: 1px solid var(--border-faint); vertical-align: top; line-height: 1.4; color: var(--ink-faded); }
+  .anchor-sidebar td.felt { color: var(--ink); }
+  .anchor-sidebar td:first-child { white-space: nowrap; font-size: 11px; font-weight: 600; letter-spacing: 0.05em; }
+  .anchor-sidebar tr:last-child td { border-bottom: none; }
+
+  /* ── Wide (≥ --breakpoint): sidebar auto-expands; left rail becomes floating TOC box ── */
+  @media (min-width: 1395px) { /* --breakpoint */
+    .anchor-sidebar {
+      position: absolute;
+      left: calc(100% + var(--page-padding-inline));
+      top: 0;
+      width: var(--anchor-sidebar-width);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+    }
+    .sidebar-toggle { display: none; }
+    .sidebar-close  { display: none; }
+
+    /* Left rail → TOC box: contained, labelled, left of the page column */
+    .chapter-nav-v {
+      left: calc(50% - var(--page-width) / 2 - var(--rail-gap) - var(--toc-width));
+      top: 140px;
+      width: var(--toc-width);
+      gap: 0;
+      background: rgba(245,239,227,0.97);
+      border: 1px solid var(--border-faint);
+      border-radius: 3px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+    }
+    .chapter-nav-v::before {
+      content: 'Contents';
+      display: block;
+      font-family: 'Crimson Text', serif;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--accent-gold);
+      padding: 12px 14px 10px;
+      border-bottom: 1px solid var(--border-faint);
+    }
+    .chapter-nav-v button {
+      border-left: 3px solid transparent;
+      border-right: none;
+      border-top: none;
+      border-bottom: 1px solid var(--border-faint);
+      border-radius: 0;
+      text-align: left;
+      padding: 10px 14px 10px 11px;
+      background: transparent;
+    }
+    .chapter-nav-v button:last-child {
+      border-bottom: none;
+      border-radius: 0 0 2px 2px;
+    }
+    .chapter-nav-v button[data-chapter="domain"].active {
+      background: var(--parchment-dark); border-right: none; border-left-color: var(--accent-teal);
+    }
+    .chapter-nav-v button[data-chapter="aspect"].active {
+      background: var(--parchment-dark); border-right: none; border-left-color: var(--accent-gold);
+    }
+  }
+
+  /* ── Narrow (--breakpoint-mobile+1 to --breakpoint−1): sidebar as fixed overlay ── */
+  @media (max-width: 1394px) { /* --breakpoint */
+    .anchor-sidebar {
+      display: none;
+      position: fixed;
+      right: var(--overlay-edge);
+      top: var(--rail-top);
+      width: var(--anchor-sidebar-width);
+      z-index: 200;
+      box-shadow: 0 6px 24px rgba(0,0,0,0.18);
+    }
+    .anchor-sidebar.open { display: block; }
+  }
+
+  /* ══════════════════════════════════════════════════
+     CONTENT COMPONENTS
+  ══════════════════════════════════════════════════ */
 
   /* ── Per-section intro (subtitle + optional stat line, with rule separator) ── */
   .section-intro {
@@ -225,67 +475,6 @@
   .footer { border-top: 1px solid var(--border-faint); margin-top: 60px; padding-top: 18px; text-align: center; font-size: 13px; color: var(--border); letter-spacing: 0.1em; font-style: italic; }
 
   /* ══════════════════════════════════════════════════
-     ANCHOR KNOWLEDGE SIDEBAR
-  ══════════════════════════════════════════════════ */
-
-  .cards-anchor { position: relative; }
-
-  .anchor-sidebar {
-    border: 1px solid var(--border-faint);
-    border-left: 3px solid var(--accent-gold);
-    background: rgba(245,239,227,0.98);
-    border-radius: 3px;
-    padding: 16px 18px;
-    font-size: 13px;
-  }
-
-  .anchor-sidebar .sidebar-eyebrow {
-    font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase;
-    color: var(--accent-gold); margin-bottom: 8px; font-weight: 600;
-  }
-  .anchor-sidebar p { font-size: 12.5px; color: var(--ink-faded); margin-bottom: 10px; line-height: 1.5; }
-  .anchor-sidebar table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
-  .anchor-sidebar th { text-align: left; padding: 5px 6px; border-bottom: 1px solid var(--border); color: var(--ink-faded); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 600; }
-  .anchor-sidebar td { padding: 6px 6px; border-bottom: 1px solid var(--border-faint); vertical-align: top; line-height: 1.4; color: var(--ink-faded); }
-  .anchor-sidebar td.felt { color: var(--ink); }
-  .anchor-sidebar td:first-child { white-space: nowrap; font-size: 11px; font-weight: 600; letter-spacing: 0.05em; }
-  .anchor-sidebar tr:last-child td { border-bottom: none; }
-
-  /* ── Anchor sidebar positioning is handled in the NAVIGATION section below ── */
-
-  /* ── Mobile layout (≤ --breakpoint-mobile) ── */
-  @media (max-width: 800px) { /* --breakpoint-mobile */
-    .page {
-      padding: 20px 14px 56px;
-    }
-
-    /* Header */
-    .domain-title { font-size: 34px; }
-    .stat-line { flex-direction: column; gap: 6px; text-align: center; }
-
-    /* Backstory */
-    .backstory { padding: 14px 16px; font-size: 15px; }
-
-    /* Ability cards */
-    .ability-card { padding: 18px 16px; }
-    .rule-block   { padding: 10px 12px; }
-    .ritual-block { padding: 18px 16px; }
-    .callout, .design-note { padding: 12px 14px; }
-
-    /* Overview table:
-       Hide the Bond Mechanic column (col 3) so Core Ability has room.
-       Compact the tier pills. */
-    .overview-table { font-size: 13.5px; }
-    .overview-table th,
-    .overview-table td { padding: 8px 8px; }
-    .overview-table th:nth-child(3),
-    .overview-table td:nth-child(3) { display: none; }
-    .tier-pill { font-size: 11px; letter-spacing: 0.04em; padding: 2px 5px; }
-
-  }
-
-
-  /* ══════════════════════════════════════════════════
      DOMAIN CHAPTER STYLES
   ══════════════════════════════════════════════════ */
 
@@ -419,233 +608,17 @@
   .domain-intro strong { color: var(--ink); font-weight: 600; }
 
   /* ══════════════════════════════════════════════════
-     NAVIGATION
-     Three modes, two breakpoints:
-       narrow  801–1394px  left rail flush to screen edge + right toggle near page
-       wide    ≥ 1395px    left rail becomes floating TOC box + anchor sidebar always open
-       mobile  ≤  800px    horizontal sticky tabs; toggle/sidebar JS-positioned below nav
-     Page margin floors at --page-margin-min so the rail never overlaps content.
+     MOBILE OVERRIDES  (≤ --breakpoint-mobile)
+     Must come last — overrides rules from all sections above.
   ══════════════════════════════════════════════════ */
 
-  /* Section visibility */
-  section[data-chapter] { display: none; }
-  section[data-chapter].is-active { display: block; }
-
-  /* ── Vertical left rail: narrow = attached to left screen edge; wide = TOC box ──
-     .page margin-inline floors at --page-margin-min so the rail never overlaps content. */
-  .chapter-nav-v {
-    display: flex;
-    flex-direction: column;
-    position: fixed;
-    top: var(--rail-top);
-    left: 0;
-    width: var(--rail-width);
-    gap: 6px;
-    z-index: 100;
-  }
-  .chapter-nav-v button {
-    font-family: 'IM Fell English', 'Georgia', serif;
-    font-size: 17px;
-    letter-spacing: 0.06em;
-    background: var(--parchment-dark);
-    border: 1px solid var(--border-faint);
-    border-left: none;
-    border-right: 3px solid transparent;
-    border-radius: 0 3px 3px 0;
-    padding: 10px 12px 10px 10px;
-    text-align: right;
-    cursor: pointer;
-    color: var(--ink-faded);
-    width: 100%;
-    transition: background 0.15s, color 0.15s;
-  }
-  .chapter-nav-v button:hover { background: var(--parchment-shadow); color: var(--ink); }
-  .chapter-nav-v button[data-chapter="domain"].active {
-    background: var(--parchment-dark); color: var(--ink); border-right-color: var(--accent-teal);
-  }
-  .chapter-nav-v button[data-chapter="aspect"].active {
-    background: var(--parchment-dark); color: var(--ink); border-right-color: var(--accent-gold);
-  }
-
-  /* ── Anchor toggle: floating badge (narrow only) — visually distinct from nav tabs ──
-     Nav tabs are screen-edge-attached with a half-open silhouette.
-     This is a self-contained pill: rounded all sides, full border, not attached to any edge. */
-  .sidebar-toggle {
-    display: block;
-    position: fixed;
-    top: var(--rail-top);
-    right: var(--overlay-edge);
-    z-index: 201;
-    font-family: 'Crimson Text', serif;
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    background: rgba(138,106,30,0.06);
-    border: 1px solid var(--accent-gold-light);
-    border-radius: 3px;
-    color: var(--accent-gold);
-    padding: 8px 12px;
-    text-align: center;
-    cursor: pointer;
-    line-height: 1;
-    transition: background 0.15s;
-    white-space: nowrap;
-  }
-  .sidebar-toggle:hover { background: rgba(138,106,30,0.12); }
-  .sidebar-toggle.open {
-    background: rgba(138,106,30,0.16);
-    border-color: var(--accent-gold);
-    box-shadow: inset 0 1px 3px rgba(0,0,0,0.08);
-  }
-
-  /* ── In-sidebar close button — hidden; toggle buttons handle open/close ── */
-  .sidebar-close { display: none; }
-
-  /* ── Horizontal nav bar: mobile only ── */
-  .chapter-nav-h {
-    max-width: var(--page-width);
-    margin: 0 auto;
-    padding: 14px var(--page-padding-inline) 0;
-    display: none;
-    flex-direction: column;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    background: var(--parchment);
-    border-bottom: 1px solid var(--border-faint);
-    box-shadow: 0 3px 14px rgba(0,0,0,0.09);
-  }
-  .chapter-nav-h .h-tabs { display: flex; gap: 6px; }
-  .chapter-nav-h button[data-chapter] {
-    flex: 1;
-    font-family: 'IM Fell English', 'Georgia', serif;
-    font-size: 17px;
-    letter-spacing: 0.06em;
-    background: var(--parchment);
-    border: 1px solid var(--border-faint);
-    border-bottom: none;
-    border-top: 3px solid transparent;
-    padding: 8px 16px 10px;
-    cursor: pointer;
-    color: var(--ink-faded);
-    border-radius: 3px 3px 0 0;
-    transition: background 0.15s, color 0.15s;
-  }
-  .chapter-nav-h button[data-chapter]:hover { background: var(--parchment-dark); color: var(--ink); }
-  .chapter-nav-h button[data-chapter].active { background: var(--parchment-dark); color: var(--ink); }
-  .chapter-nav-h button[data-chapter="domain"].active { border-top-color: var(--accent-teal); }
-  .chapter-nav-h button[data-chapter="aspect"].active { border-top-color: var(--accent-gold); }
-
-  /* Subtab row: always reserves its height (visibility, not display) so nav bar never jumps.
-     Spacer takes the left slot; button is content-width only, right-aligned. */
-  .chapter-nav-h .h-subtabs { display: flex; visibility: hidden; }
-  .chapter-nav-h .h-subtabs.is-active { visibility: visible; }
-  .chapter-nav-h .h-subtab-spacer { flex: 1; }
-  .chapter-nav-h .h-subtab-btn {
-    font-family: 'Crimson Text', serif;
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    background: var(--parchment-dark);
-    border: 1px solid var(--border-faint);
-    border-top: 2px solid var(--accent-gold);
-    border-bottom: none;
-    color: var(--accent-gold);
-    padding: 4px 14px 6px;
-    cursor: pointer;
-    text-align: center;
-    border-radius: 0 0 3px 3px;
-    transition: background 0.15s;
-    white-space: nowrap;
-  }
-  .chapter-nav-h .h-subtab-btn:hover { background: var(--parchment-shadow); }
-  .chapter-nav-h .h-subtab-btn.open {
-    background: var(--parchment-shadow);
-    color: var(--ink);
-  }
-
-  /* ── Wide (≥ --breakpoint): sidebar auto-expands; left rail becomes floating TOC box ── */
-  @media (min-width: 1395px) { /* --breakpoint */
-    .anchor-sidebar {
-      position: absolute;
-      left: calc(100% + var(--page-padding-inline));
-      top: 0;
-      width: var(--anchor-sidebar-width);
-      box-shadow: 0 2px 10px rgba(0,0,0,0.07);
-    }
-    .sidebar-toggle { display: none; }
-    .sidebar-close  { display: none; }
-
-    /* Left rail → TOC box: contained, labelled, left of the page column */
-    .chapter-nav-v {
-      left: calc(50% - var(--page-width) / 2 - var(--rail-gap) - var(--toc-width));
-      top: 140px;
-      width: var(--toc-width);
-      gap: 0;
-      background: rgba(245,239,227,0.97);
-      border: 1px solid var(--border-faint);
-      border-radius: 3px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.07);
-    }
-    .chapter-nav-v::before {
-      content: 'Contents';
-      display: block;
-      font-family: 'Crimson Text', serif;
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.22em;
-      text-transform: uppercase;
-      color: var(--accent-gold);
-      padding: 12px 14px 10px;
-      border-bottom: 1px solid var(--border-faint);
-    }
-    .chapter-nav-v button {
-      border-left: 3px solid transparent;
-      border-right: none;
-      border-top: none;
-      border-bottom: 1px solid var(--border-faint);
-      border-radius: 0;
-      text-align: left;
-      padding: 10px 14px 10px 11px;
-      background: transparent;
-    }
-    .chapter-nav-v button:last-child {
-      border-bottom: none;
-      border-radius: 0 0 2px 2px;
-    }
-    .chapter-nav-v button[data-chapter="domain"].active {
-      background: var(--parchment-dark); border-right: none; border-left-color: var(--accent-teal);
-    }
-    .chapter-nav-v button[data-chapter="aspect"].active {
-      background: var(--parchment-dark); border-right: none; border-left-color: var(--accent-gold);
-    }
-  }
-
-  /* ── Narrow (--breakpoint-mobile+1 to --breakpoint−1): sidebar as fixed overlay ── */
-  @media (max-width: 1394px) { /* --breakpoint */
-    .anchor-sidebar {
-      display: none;
-      position: fixed;
-      right: var(--overlay-edge);
-      top: var(--rail-top);
-      width: var(--anchor-sidebar-width);
-      z-index: 200;
-      box-shadow: 0 6px 24px rgba(0,0,0,0.18);
-    }
-    .anchor-sidebar.open { display: block; }
-  }
-
-  /* ── Mobile (≤ --breakpoint-mobile): horizontal tabs, full-width page, repositioned toggle ── */
   @media (max-width: 800px) { /* --breakpoint-mobile */
-    /* Full-width page: undo rail reservation and narrow side padding */
-    .page { margin-inline: 0; padding: 20px 14px 56px; }
 
+    /* ── Page & nav ── */
+    .page { margin-inline: 0; padding: 20px 14px 56px; }
     .chapter-nav-h { display: flex; padding: 10px 14px 0; }
     .chapter-nav-h button[data-chapter] { font-size: 15px; padding: 6px 10px 8px; }
     .chapter-nav-v { display: none; }
-
     /* Fixed rail toggle hidden on mobile — subtab handles opening the sidebar */
     .sidebar-toggle { display: none; }
     /* Anchor sidebar: fixed below the sticky nav bar (height ≈ 80px).
@@ -656,8 +629,24 @@
       border-top: 2px solid var(--accent-gold);
       border-radius: 0 0 3px 3px;
     }
-  }
 
+    /* ── Content ── */
+    .domain-title { font-size: 34px; }
+    .stat-line { flex-direction: column; gap: 6px; text-align: center; }
+    .backstory { padding: 14px 16px; font-size: 15px; }
+    .ability-card { padding: 18px 16px; }
+    .rule-block   { padding: 10px 12px; }
+    .ritual-block { padding: 18px 16px; }
+    .callout, .design-note { padding: 12px 14px; }
+    /* Overview table: hide Bond Mechanic column (col 3) so Core Ability has room */
+    .overview-table { font-size: 13.5px; }
+    .overview-table th,
+    .overview-table td { padding: 8px 8px; }
+    .overview-table th:nth-child(3),
+    .overview-table td:nth-child(3) { display: none; }
+    .tier-pill { font-size: 11px; letter-spacing: 0.04em; padding: 2px 5px; }
+
+  }
 </style>
 </head>
 <body>
