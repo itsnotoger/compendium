@@ -22,6 +22,11 @@
     --border: #b8a07a;
     --border-faint: #d4c5ab;
     --rule: #8a7456;
+    /* ── Interaction ── */
+    --button-hover: #ffffff80;
+    --button-press: #ffffffc4;
+    /* ── Mobile nav ── */
+    --nav-bg-mobile: #dbccb5;
     /* ── Layout Dimensions ── */
     --page-width:          780px;
     --page-padding-inline:  28px;
@@ -76,9 +81,15 @@
   /* ── Shared header (eyebrow + title, always visible above nav) ── */
   .shared-header {
     max-width: var(--page-width);
-    margin: 0 auto;  /* header intentionally spans full column width, unconstrained by rails */
-    padding: 36px var(--page-padding-inline) 0;
+    margin: 0 auto;
+    padding: 36px var(--page-padding-inline) 28px;
     text-align: center;
+  }
+  /* Mobile only: gradient fade from parchment into nav background color */
+  @media (max-width: 800px) {
+    .shared-header {
+      background: linear-gradient(to bottom, var(--parchment) 60%, var(--nav-bg-mobile) 100%);
+    }
   }
   .domain-eyebrow {
     font-size: 13px; letter-spacing: 0.22em; text-transform: uppercase;
@@ -87,7 +98,15 @@
   .domain-title {
     font-family: 'IM Fell English','Georgia',serif;
     font-size: 46px; line-height: 1.1; color: var(--accent-red);
-    margin-bottom: 0; letter-spacing: 0.01em;
+    margin-bottom: 10px; letter-spacing: 0.01em;
+  }
+  .header-meta {
+    font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--ink-faded); margin-bottom: 12px;
+  }
+  .header-flavor {
+    font-style: italic; color: var(--ink-faded); font-size: 15.5px;
+    margin-bottom: 0;
   }
 
   /* Section visibility */
@@ -131,7 +150,8 @@
     width: 100%;
     transition: background 0.15s, color 0.15s;
   }
-  .chapter-nav-v button:hover { background: var(--parchment-shadow); color: var(--ink); }
+  .chapter-nav-v button:hover { background: var(--button-hover); color: var(--ink); }
+  .chapter-nav-v button:active { background: var(--button-press); color: var(--ink); }
   .chapter-nav-v button[data-chapter="domain"].active {
     background: var(--parchment-dark); color: var(--ink); border-right-color: var(--accent-teal);
   }
@@ -166,7 +186,8 @@
     transition: background 0.15s;
     white-space: nowrap;
   }
-  .sidebar-toggle:hover { background: rgba(138,106,30,0.12); }
+  .sidebar-toggle:hover { background: var(--button-hover); }
+  .sidebar-toggle:active { background: var(--button-press); }
   .sidebar-toggle.open  { display: none; } /* panel has its own ✕; toggle hides to avoid overlap */
 
   /* ── Horizontal nav bar: mobile only ── */
@@ -180,8 +201,7 @@
     top: 0;
     z-index: 100;
     background: var(--parchment);
-    border-bottom: 1px solid var(--border-faint);
-    box-shadow: 0 3px 14px rgba(0,0,0,0.09);
+    border-bottom: none;
   }
   .chapter-nav-h .h-tabs { display: flex; gap: 6px; }
   .chapter-nav-h button[data-chapter] {
@@ -189,7 +209,7 @@
     font-family: 'IM Fell English', 'Georgia', serif;
     font-size: 17px;
     letter-spacing: 0.06em;
-    background: var(--parchment);
+    background: var(--parchment-dark);
     border: 1px solid var(--border-faint);
     border-bottom: none;
     border-top: 3px solid transparent;
@@ -199,8 +219,9 @@
     border-radius: 3px 3px 0 0;
     transition: background 0.15s, color 0.15s;
   }
-  .chapter-nav-h button[data-chapter]:hover { background: var(--parchment-dark); color: var(--ink); }
-  .chapter-nav-h button[data-chapter].active { background: var(--parchment-dark); color: var(--ink); }
+  .chapter-nav-h button[data-chapter]:hover { background: var(--button-hover); color: var(--ink); }
+  .chapter-nav-h button[data-chapter]:active { background: var(--button-press); color: var(--ink); }
+  .chapter-nav-h button[data-chapter].active { background: var(--button-hover); color: var(--ink); }
   .chapter-nav-h button[data-chapter="domain"].active { border-top-color: var(--accent-teal); }
   .chapter-nav-h button[data-chapter="aspect"].active { border-top-color: var(--accent-gold); }
 
@@ -227,9 +248,10 @@
     transition: background 0.15s;
     white-space: nowrap;
   }
-  .chapter-nav-h .h-subtab-btn:hover { background: var(--parchment-shadow); }
+  .chapter-nav-h .h-subtab-btn:hover { background: var(--button-hover); }
+  .chapter-nav-h .h-subtab-btn:active { background: var(--button-press); }
   .chapter-nav-h .h-subtab-btn.open {
-    background: var(--parchment-shadow);
+    background: var(--button-hover);
     color: var(--ink);
   }
 
@@ -273,8 +295,8 @@
     flex-shrink: 0;
     transition: background 0.1s;
   }
-  .sidebar-close:hover  { background: rgba(138,106,30,0.12); color: var(--ink); }
-  .sidebar-close:active { background: rgba(138,106,30,0.24); color: var(--ink); }
+  .sidebar-close:hover  { background: var(--button-hover); color: var(--accent-gold); }
+  .sidebar-close:active { background: var(--button-press); color: var(--accent-gold); }
   .anchor-sidebar p { font-size: 12.5px; color: var(--ink-faded); margin-bottom: 10px; line-height: 1.5; }
   .anchor-sidebar table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
   .anchor-sidebar th { text-align: left; padding: 5px 6px; border-bottom: 1px solid var(--border); color: var(--ink-faded); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 600; }
@@ -573,7 +595,15 @@
 
     /* ── Page & nav ── */
     .page { margin-inline: 0; padding: 20px 14px 56px; }
-    .chapter-nav-h { display: flex; padding: 10px 14px 0; }
+    .chapter-nav-h { display: flex; padding: 10px 14px 0; background: var(--nav-bg-mobile); }
+    .nav-ornament {
+      display: flex; align-items: center; padding: 0 2%;
+      color: var(--accent-gold); font-size: 15px; letter-spacing: 0.22em; line-height: 1; height: 0.7rem;
+    }
+    .nav-ornament-rule { flex: 1; height: 1px; opacity: 0.7; }
+    .nav-ornament-rule.l { background: linear-gradient(to right, var(--nav-bg-mobile), var(--rule) 40%); }
+    .nav-ornament-rule.r { background: linear-gradient(to left, var(--nav-bg-mobile), var(--rule) 40%); }
+    .nav-ornament-glyph { padding: 0 12px; opacity: 0.75; }
     .chapter-nav-h button[data-chapter] { font-size: 15px; padding: 6px 10px 8px; }
     .chapter-nav-v { display: none; }
     /* Fixed rail toggle hidden on mobile — subtab handles opening the sidebar */
@@ -616,8 +646,10 @@
 
   <!-- Shared title: always visible, scrolls normally -->
   <div class="shared-header">
-    <div class="domain-eyebrow">Cleric — Custom Domain</div>
+    <div class="domain-eyebrow">Cleric — Subclass</div>
     <div class="domain-title">Domain of Shared Breath</div>
+    <div class="header-meta">Primary Stat: Constitution &nbsp;·&nbsp; Custom Domain &amp; Aspect</div>
+    <div class="header-flavor">“No one stands outside the perimeter — except the one who holds it.”</div>
   </div>
 
   <!-- Horizontal nav bar: sticky, visible below breakpoint -->
@@ -631,6 +663,12 @@
       <div class="h-subtab-spacer"></div>
       <button class="h-subtab-btn">Anchor</button>
     </div>
+    <!-- Ornament separator: mobile only, sits at bottom of sticky nav band -->
+    <div class="nav-ornament">
+      <div class="nav-ornament-rule l"></div>
+      <span class="nav-ornament-glyph">❧ ✦ ☙</span>
+      <div class="nav-ornament-rule r"></div>
+    </div>
   </nav>
   <button class="sidebar-toggle">Anchor</button>
 
@@ -639,9 +677,6 @@
     <section id="domain" data-chapter>
 
 
-  <div class="section-intro">
-    <div class="domain-subtitle">"No one stands outside the perimeter — except the one who holds it."</div>
-  </div>
 
   <!-- Overview -->
   <div class="section-eyebrow">Overview</div>
@@ -806,14 +841,6 @@
 
     <section id="aspect" data-chapter>
 
-  <div class="section-intro">
-    <div class="domain-subtitle">“You reach into the wound, not to close it — but to share it.”</div>
-    <div class="stat-line">
-      <span><strong>Primary Stat:</strong> Constitution</span>
-      <span><strong>Class:</strong> Cleric</span>
-      <span><strong>Abilities:</strong> Levels 4, 6, 8</span>
-    </div>
-  </div>
 
   <!-- Character Soul -->
   <div class="backstory">
