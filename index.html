@@ -141,7 +141,7 @@
     background: var(--parchment-dark);
     border: 1px solid var(--border-faint);
     border-left: none;
-    border-right: 3px solid transparent;
+    border-right: 2px solid var(--border-faint);
     border-radius: 0 3px 3px 0;
     padding: 10px 12px 10px 10px;
     text-align: right;
@@ -153,10 +153,10 @@
   .chapter-nav-v button:hover { background: var(--button-hover); color: var(--ink); }
   .chapter-nav-v button:active { background: var(--button-press); color: var(--ink); }
   .chapter-nav-v button[data-chapter="domain"].active {
-    background: var(--parchment-dark); color: var(--ink); border-right-color: var(--accent-teal);
+    background: var(--parchment-dark); color: var(--ink); border-right: 3px solid var(--accent-teal);
   }
   .chapter-nav-v button[data-chapter="aspect"].active {
-    background: var(--parchment-dark); color: var(--ink); border-right-color: var(--accent-gold);
+    background: var(--parchment-dark); color: var(--ink); border-right: 3px solid var(--accent-gold);
   }
 
   /* ── Anchor toggle: floating badge (narrow only) — visually distinct from nav tabs ──
@@ -678,13 +678,39 @@
 
 
 
-  <!-- Overview -->
   <div class="section-eyebrow">Overview</div>
   <div class="domain-intro">
     <p>Clerics of the Domain of Shared Breath understand connection as the substance that sustains a life. They reach outward — to make sure no one in their company stands alone. The domain's central mechanic is the <strong>Breath Link</strong>: a communal, multi-target network of ambient awareness and small gifts, freely given, persistent until severed. Up to two Breath Links may be held at once — at a standard party size, someone always sits outside the perimeter, and that scarcity is the mechanic.</p>
 
     <p><strong>The Anchor.</strong> The domain refers to whoever currently does the work of reaching outward — forging and curating the network — as <em>the Anchor</em>. At Level 3, the cleric is the Anchor. From Level 4 onward, when the Aspect's Bond forms, the role transfers to the Bond's Anchor: the cleric's reaching-out instinct narrows into devotion to one person, and the community-building hand passes to the one they have chosen. The Anchor inherits the breadth the cleric can no longer hold. If no Bond is active, the cleric is again the Anchor and may forge links normally.</p>
   </div>
+
+  <div class="section-eyebrow">Progression at a glance</div>
+  <table class="overview-table">
+    <thead>
+      <tr><th>Level</th><th>Name</th><th>Network</th><th>Core Abilities</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="tier-pill t4">Lv. 3</span></td>
+        <td>The Breathing Network</td>
+        <td>Touch to forge; 2 links max; unlimited range once forged</td>
+        <td>Felt Presence · Steadied by the Link (adv vs Frightened) · Felt Across the Distance · Interpose (Reaction, CD, halve damage)</td>
+      </tr>
+      <tr>
+        <td><span class="tier-pill t6">Lv. 6</span></td>
+        <td>The Network Deepens</td>
+        <td>30 ft range on re-link (prior touch required)</td>
+        <td>Wordless Impressions (emotional texture) · Conduit (free object transfer, 60 ft, no LoS)</td>
+      </tr>
+      <tr>
+        <td><span class="tier-pill t8">Lv. 17</span></td>
+        <td>The Last Breath</td>
+        <td>—</td>
+        <td>Catch: Stasis instead of 0 HP; exits at 1 HP after 2 rounds; once per creature per long rest</td>
+      </tr>
+    </tbody>
+  </table>
 
   <div class="ornament-divider">✦ &nbsp; ✦ &nbsp; ✦</div>
 
