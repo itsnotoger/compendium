@@ -478,6 +478,8 @@
     margin: 14px 0 4px;
   }
   .sub-head:first-child { margin-top: 4px; }
+  /* When sub-head is a direct child of ability-body (section-level divider, not inside a rule-block) */
+  .ability-body > .sub-head { margin-top: 20px; }
 
   /* ── Flavor text — italic, visually lighter than rule prose ── */
   p.flavor {
@@ -511,6 +513,18 @@
   /* ── Keywords ── */
   kw { font-weight: 600; color: var(--ink); font-style: normal; }
   em { color: var(--ink-faded); }
+
+  /* ── Inline rule lead — bold label at the start of a paragraph, stays inline ── */
+  .rule-lead { font-weight: 600; color: var(--ink); }
+
+  /* ── Focus ring — keyboard navigation ── */
+  button:focus-visible {
+    outline: 2px solid var(--accent-gold);
+    outline-offset: 2px;
+  }
+
+  /* ── Eyebrow → sub-rules direct adjacency: add breathing room ── */
+  .section-eyebrow + .sub-rules { margin-top: 8px; }
 
   /* ── Ritual Block ── */
   .ritual-block { border: 1px solid var(--border); border-top: 2px solid var(--accent-gold); background: rgba(138,106,30,0.05); border-radius: 3px; padding: 24px 28px; margin: 22px 0; }
@@ -670,7 +684,7 @@
 <body>
 
   <!-- Vertical nav: fixed left rail, shown at ≥1395px -->
-  <nav class="chapter-nav-v">
+  <nav class="chapter-nav-v" aria-label="Chapter navigation">
     <button data-chapter="domain">Domain</button>
     <button data-chapter="aspect">Aspect</button>
   </nav>
@@ -684,7 +698,7 @@
   </div>
 
   <!-- Horizontal nav bar: sticky, visible below breakpoint -->
-  <nav class="chapter-nav-h">
+  <nav class="chapter-nav-h" aria-label="Chapter navigation">
     <div class="h-tabs">
       <button data-chapter="domain">Domain</button>
       <button data-chapter="aspect">Aspect</button>
@@ -705,7 +719,7 @@
 
   <div class="page">
 
-    <section id="domain" data-chapter>
+    <section id="domain" data-chapter aria-label="Domain">
 
 
 
@@ -869,7 +883,7 @@
         </div>
         <p>When a Breath-linked creature would be reduced to <kw>0 HP</kw> — including by effects that would kill outright — the cleric may spend a <kw>Channel Divinity point</kw> as a <kw>Reaction</kw>. The creature enters a temporary <kw>Stasis</kw> instead: <kw>Paralyzed</kw>, immune to all damage, untargetable. No death saving throws.</p>
         <p>Stasis lasts <kw>2 rounds</kw>. At the end of the second round, the creature exits automatically at <kw>1 HP</kw>, all prior conditions removed. This ability may be used <kw>once per creature per long rest</kw>.</p>
-        <p><strong style="font-weight:600">While in Stasis.</strong> The creature is suspended — aware, but unable to act or speak. Something reaches them from outside: steady, wordless, not urgent.</p>
+        <p><span class="rule-lead">While in Stasis.</span> The creature is suspended — aware, but unable to act or speak. Something reaches them from outside: steady, wordless, not urgent.</p>
         <p><em>DM note: this is the same Stasis described in the Aspect section. The experience notes there apply generally, except that the Stased creature cannot push impressions outward (that requires an active Bond). Everything else — including what the outside character feels through the connection — applies as written.</em></p>
       </div>
 
@@ -902,7 +916,7 @@
 
     </section>
 
-    <section id="aspect" data-chapter>
+    <section id="aspect" data-chapter aria-label="Aspect">
 
 
   <!-- About the Aspect -->
@@ -927,7 +941,7 @@
 
   <!-- What the Aspect costs -->
   <div class="section-eyebrow">What the Aspect costs</div>
-  <div class="sub-rules" style="margin-top: 8px;">
+  <div class="sub-rules">
     <div class="rule-block open">
       <p><strong>The Flaw</strong> — Mechanics make the character fail saves, shatter bonds, freeze when their Anchor walks away. No opting out at the table.</p>
       <p><strong>The Spell Restriction</strong> — The cleric draws from a narrow field: protection, sustain, connection. Damage and coercion were never learned.</p>
@@ -1057,7 +1071,7 @@
           <div class="rule-head"><span class="rule-name">Life Transfer (Upgraded)</span><span class="rule-pill active">Active · Reaction</span></div>
           <p>When Life Transfer triggers, damage is drawn from the <kw>Pool first</kw>. Only the excess beyond the Pool's remaining value is taken from your HP as Psychic damage. If the Pool absorbs everything, you feel nothing. If the Pool was empty, the full damage hits you as before.</p>
         </div>
-        <div class="rule-block">
+        <div class="rule-block good">
           <div class="rule-head"><span class="rule-name">Donate</span><span class="rule-pill active">Active · Bonus Action</span></div>
           <p>Either bonded character may donate up to their <kw>Constitution modifier</kw> in HP into the Pool. The Pool cannot exceed its maximum. The Anchor may do this on their own turn.</p>
         </div>
@@ -1146,7 +1160,7 @@
         </div>
       </div>
 
-      <p style="margin-top:20px;margin-bottom:2px;font-weight:600;font-size:15px;letter-spacing:0.04em;color:var(--ink);">Stasis</p>
+      <p class="sub-head">Stasis</p>
       <div class="sub-rules">
         <div class="rule-block good">
           <div class="rule-head"><span class="rule-name">Into Stasis</span><span class="rule-pill passive">Passive · Trigger</span></div>
@@ -1306,9 +1320,7 @@
     const railToggleBtn = document.querySelector('.sidebar-toggle');
     if (railToggleBtn) railToggleBtn.addEventListener('click', toggleSidebar);
 
-    document.querySelectorAll('.h-subtab-btn').forEach(btn => {
-      btn.addEventListener('click', toggleSidebar);
-    });
+    document.querySelector('.h-subtab-btn')?.addEventListener('click', toggleSidebar);
 
     // Internal ✕ button closes from any scroll position
     document.querySelector('.sidebar-close')?.addEventListener('click', closeSidebar);
