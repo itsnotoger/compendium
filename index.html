@@ -522,9 +522,38 @@
      the original margin-top: 4px was never winning against the general
      rule's margin-top: 6px !important. Kept as the effective behavior. */
   .ritual-block p.flavor { padding-top: 10px; }
-  .ritual-speech { border-left: 2px solid var(--border-faint); margin: 18px 0; padding: 12px 18px; font-style: italic; font-size: 15px; color: var(--ink-faded); display: flex; flex-direction: column; gap: 10px; }
-  .ritual-speech .speaker { font-style: normal; font-size: 12px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--border); margin-bottom: 2px; display: block; }
-  .ritual-speech .beat { font-style: normal; font-size: 13px; color: var(--border); letter-spacing: 0.05em; text-align: center; padding: 4px 0; }
+  .ritual-speech {
+    border: 1px solid var(--border-faint);
+    border-radius: 3px;
+    background: rgba(196,151,58,0.16);
+    margin: 20px 0;
+    padding: 0;
+    font-style: italic;
+    font-size: 15px;
+    color: var(--ink-faded);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .ritual-speech-label {
+    font-style: normal;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent-gold);
+    padding: 7px 18px;
+    border-bottom: 1px solid var(--border-faint);
+    background: rgba(138,106,30,0.13);
+  }
+  .ritual-speech-body {
+    padding: 14px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .ritual-speech .speaker { font-style: normal; font-size: 12px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ink-faded); margin-bottom: 2px; display: block; }
+  .ritual-speech .beat { font-style: normal; font-size: 13px; color: var(--accent-gold); letter-spacing: 0.05em; text-align: center; padding: 4px 0; }
+  .ritual-speech-body .cleric { text-align: right; }
 
   /* ── Footer ── */
   .footer { border-top: 1px solid var(--border-faint); margin-top: 60px; padding-top: 18px; text-align: center; font-size: 13px; color: var(--border); letter-spacing: 0.1em; font-style: italic; }
@@ -1083,23 +1112,25 @@
         <p>The ritual completes when the Anchor, of their own will, asks the cleric something <em>personal</em> — directed at them, about them, for them. Not logistics. Not tactics. Something that treats the cleric as a person whose inner life matters. If the Anchor doesn't ask — pulls away, fills the silence, or simply doesn't — the ritual quietly fails. No penalty. The cleric's hand closes around nothing, and the night continues.</p>
         <p>If the Anchor has previously discovered the Flaw and requires verbal consent to form a Bond, the personal question during The Asking serves as that consent.</p>
         <div class="ritual-speech">
-          <div>
-            <span class="speaker">— example, before the ritual —</span>
-            "There is something I want to give you. I need you to let me."
+          <div class="ritual-speech-label">Example</div>
+          <div class="ritual-speech-body">
+            <div class="beat">[ evening. a fire. a long quiet. ]</div>
+            <div class="cleric">
+              <span class="speaker">— the cleric —</span>
+              "There is something I want to give you. I need you to let me."
+            </div>
+            <div class="beat">[ the cleric draws the blade. extends their hand. the anchor takes it, mirrors the wound. joined hands, a gesture, and then the cleric goes still. ]</div>
+            <div>
+              <span class="speaker">— the anchor —</span>
+              "I don't know what this means."
+            </div>
+            <div class="beat">[ silence. the cleric does not fill it. they have been trained their whole life not to. ]</div>
+            <div>
+              <span class="speaker">— the anchor —</span>
+              "...are you alright?"
+            </div>
+            <div class="beat">[ the ritual completes. ]</div>
           </div>
-          <div class="beat">[ the cleric draws the blade. extends their hand. ]</div>
-          <div>
-            <span class="speaker">— example, mid-ritual, if the anchor speaks first —</span>
-            "You don't have to explain. I just — is this what you want?"
-          </div>
-          <div class="beat">[ the ritual completes. the cleric cannot answer. ]</div>
-          <div>
-            <span class="speaker">— example, if the anchor hesitates —</span>
-            "I don't know what this means."
-          </div>
-          <div class="beat">[ silence. the cleric does not fill it. they have been trained their whole life not to. ]</div>
-          <div>"...are you alright?"</div>
-          <div class="beat">[ the ritual completes. ]</div>
         </div>
         <p class="flavor">The Anchor does not need to know what they agreed to. They only need to ask. What the Anchor reads in the cleric's face in that moment — the relief, the grief, the gratitude — is all the truth they are going to get. It has always been enough for people to look at this cleric and not quite understand what they are seeing, and decide to stay anyway.</p>
       </div>
