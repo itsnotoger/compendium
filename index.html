@@ -13,7 +13,6 @@
     --ink-faded: #4a3f36;
     --parchment: #f5efe3;
     --parchment-dark: #ede3d1;
-    --parchment-shadow: #d4c5ab;
     --accent-red: #7c2a1e;
     --accent-red-light: #a33a2b;
     --accent-gold: #8a6a1e;
@@ -383,23 +382,14 @@
      CONTENT COMPONENTS
   ══════════════════════════════════════════════════ */
 
-  /* ── Per-section intro (subtitle + optional stat line, with rule separator) ── */
-  .section-intro {
-    text-align: center;
-    border-bottom: 2.5px double var(--rule);
-    padding-bottom: 28px;
-    margin-bottom: 36px;
-    padding-top: 28px;
-  }
-  .domain-subtitle { font-style: italic; color: var(--ink-faded); font-size: 16px; margin-bottom: 18px; }
-  .stat-line { display: inline-flex; gap: 32px; font-size: 13.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-faded); }
-  .stat-line span strong { color: var(--ink); font-weight: 600; }
-
   /* ── Section eyebrow ── */
   .section-eyebrow {
     font-size: 12px; letter-spacing: 0.25em; text-transform: uppercase;
     color: var(--accent-gold); margin-bottom: 4px;
   }
+  /* Any .section-eyebrow after a preceding sibling gets top breathing room.
+     The first one in a section has no preceding sibling and stays flush. */
+  * + .section-eyebrow { margin-top: 32px; }
 
   /* ── Backstory ── */
   .backstory {
@@ -432,6 +422,7 @@
   .tier-pill.t4 { color: var(--accent-red); border-color: var(--accent-red-light); background: rgba(124,42,30,0.06); }
   .tier-pill.t6 { color: var(--accent-teal); border-color: var(--accent-teal); background: rgba(30,90,90,0.06); }
   .tier-pill.t8 { color: var(--accent-gold); border-color: var(--accent-gold-light); background: rgba(138,106,30,0.06); }
+  .tier-pill.flaw { color: var(--ink-faded); border-color: var(--border); background: rgba(0,0,0,0.03); }
 
   /* ── Ability Cards ── */
   .ability-card {
@@ -510,6 +501,7 @@
 
   /* ── Callout / Design note ── */
   .callout { background: rgba(255,255,255,0.5); border: 1px solid var(--border-faint); border-radius: 3px; padding: 14px 18px; margin: 16px 0; font-size: 15px; color: var(--ink-faded); font-style: italic; }
+  .callout strong { font-style: normal; color: var(--ink); font-weight: 600; }
   .design-note { background: rgba(138,106,30,0.07); border: 1px dashed var(--border-faint); border-radius: 3px; padding: 14px 18px; font-size: 14.5px; color: var(--ink-faded); margin-top: 16px; font-style: italic; }
   .design-note strong { font-style: normal; color: var(--accent-gold); font-weight: 600; }
 
@@ -526,7 +518,10 @@
   .ritual-subtitle { font-size: 13px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-faded); margin-bottom: 18px; padding-bottom: 14px; border-bottom: 1px solid var(--border-faint); }
   .ritual-block p { font-size: 15.5px; color: var(--ink-faded); margin-bottom: 12px; }
   .ritual-block p:last-child { margin-bottom: 0; }
-  .ritual-block p.flavor { color: var(--border) !important; font-style: italic; font-size: 15px !important; border-top: 1px solid var(--border-faint); padding-top: 10px; margin-top: 4px; }
+  /* Only padding-top actually differs from the general .flavor rule;
+     the original margin-top: 4px was never winning against the general
+     rule's margin-top: 6px !important. Kept as the effective behavior. */
+  .ritual-block p.flavor { padding-top: 10px; }
   .ritual-speech { border-left: 2px solid var(--border-faint); margin: 18px 0; padding: 12px 18px; font-style: italic; font-size: 15px; color: var(--ink-faded); display: flex; flex-direction: column; gap: 10px; }
   .ritual-speech .speaker { font-style: normal; font-size: 12px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--border); margin-bottom: 2px; display: block; }
   .ritual-speech .beat { font-style: normal; font-size: 13px; color: var(--border); letter-spacing: 0.05em; text-align: center; padding: 4px 0; }
@@ -566,6 +561,12 @@
   }
   .q-item p { font-size: 15px; color: var(--ink-faded); margin: 0; }
   .q-item code { font-family: 'Courier New', monospace; font-size: 13px; background: rgba(0,0,0,0.04); padding: 1px 4px; border-radius: 2px; }
+
+  /* Danger variant of the open-questions block (used for "Open Todos" — outstanding work). */
+  .open-questions.danger              { border-color: var(--accent-red-light); background: rgba(124,42,30,0.03); }
+  .open-questions.danger .q-title     { color: var(--accent-red); }
+  .open-questions.danger .q-item      { border-left-color: var(--accent-red-light); }
+  .open-questions.danger .q-label     { color: var(--accent-red); }
 
   .spell-table { width: 100%; border-collapse: collapse; font-size: 15px; margin-top: 8px; }
   .spell-table th {
@@ -621,7 +622,6 @@
 
     /* ── Content ── */
     .domain-title { font-size: 34px; }
-    .stat-line { flex-direction: column; gap: 6px; text-align: center; }
     .backstory { padding: 14px 16px; font-size: 15px; }
     .ability-card { padding: 18px 16px; }
     .rule-block   { padding: 10px 12px; }
@@ -686,7 +686,7 @@
     <p>The Breath Link is the mechanisation of that instinct. The two-link cap is the mechanisation of its cost — this cleric can hold most of the party, but not all of it. Someone is always left out. That is the mechanic because it was already true.</p>
   </div>
 
-  <div class="section-eyebrow" style="margin-top: 32px;">Overview</div>
+  <div class="section-eyebrow">Overview</div>
   <div class="domain-intro">
     <p>The domain's central mechanic is the <strong>Breath Link</strong>: a communal network of ambient awareness and small gifts, freely given, persistent until severed. Up to two may be held at once — at a standard party size, someone is always left out, and that scarcity is the mechanic.</p>
 
@@ -848,22 +848,22 @@
   </div>
 
   <!-- Open Todos -->
-  <div class="open-questions" style="border-color: var(--accent-red-light); background: rgba(124,42,30,0.03);">
-    <div class="q-title" style="color: var(--accent-red);">Open Todos — Before This Is Done</div>
+  <div class="open-questions danger">
+    <div class="q-title">Open Todos — Before This Is Done</div>
     <div class="q-list">
 
-      <div class="q-item" style="border-left-color: var(--accent-red-light);">
-        <span class="q-label" style="color: var(--accent-red);">Aspect Doc · Transfer Clause as Warning Callout</span>
+      <div class="q-item">
+        <span class="q-label">Aspect Doc · Transfer Clause as Warning Callout</span>
         <p>When updating the Aspect section, the "umm actually" clause that redefines Breath Link creation at Level 4 needs a distinct, visually heavy callout — heavier than the existing <kw>callout</kw> and <kw>design-note</kw> styles. Proposed treatment: bordered block with accent-red left edge, header like <em>"⚠ Domain interaction"</em> or similar, placed immediately after the Level 4 ability card (where the Bond first forms and the transfer fires). Content must cover: (a) lore — the cleric's reaching-out instinct narrows into devotion, and the community-building hand transfers to the Anchor; (b) mechanical effect — the Anchor role transfers, the cleric can no longer create Breath Links while bonded, and the network now rides on the Bond rather than the Anchor's consciousness; (c) shatter cascade — when the Bond breaks for any reason, all Breath Links shatter; creation returns to the cleric until they re-bond. Phrasing should make clear this is a heads-up about Domain interaction, not a Domain rule — the rule itself stays in the Domain doc.</p>
         <p><em>Mechanical detail for (b) and (c): while the Bond is active, the network rides on the Bond rather than the Anchor's consciousness — the "Anchor becomes unconscious" termination is replaced by "Bond breaks," and the Anchor may be unconscious without disrupting the network. When the Bond breaks for any reason, all Breath Links shatter; the Anchor rebuilds from scratch on re-establishment.</em></p>
       </div>
 
-      <div class="q-item" style="border-left-color: var(--accent-red-light);">
-        <span class="q-label" style="color: var(--accent-red);">Aspect Doc · Anchor Sidebar Update</span>
+      <div class="q-item">
+        <span class="q-label">Aspect Doc · Anchor Sidebar Update</span>
         <p>The "What the Anchor knows" sidebar in the Aspect section needs a domain row or annotation. The Anchor (post-Aspect) discovers Breath Link creation as a felt capacity at Level 4, when it transfers. They feel something genuinely good they can extend to others, without needing to know the cleric powers it. At later levels they witness Interpose halve damage to linked allies, observe Wordless Impressions and Conduit emerge, and at Level 17 see Catch put someone in temporary stasis. None of this discovers the Flaw — the domain layer is exactly the layer the cleric gives without hiding. Decide whether this belongs in the sidebar or a separate domain-side note.</p>
       </div>
-      <div class="q-item" style="border-left-color: var(--accent-red-light);">
-        <span class="q-label" style="color: var(--accent-red);">Navigation · Cross-Chapter Anchor Links</span>
+      <div class="q-item">
+        <span class="q-label">Navigation · Cross-Chapter Anchor Links</span>
         <p>Tabs are in place; intra-doc and cross-tab anchor links are not. Should be a small JS handler that intercepts <code>#anchor</code> clicks, checks if the target lives in the inactive chapter, switches chapter if needed, then scrolls to the anchor. Useful for forward refs between Aspect mechanics and Domain abilities (e.g. Catch DM note referencing Stasis in the Aspect chapter).</p>
       </div>
 
@@ -883,21 +883,21 @@
   </div>
 
   <!-- Who this person already was -->
-  <div class="section-eyebrow" style="margin-top: 32px;">Who this person already was</div>
+  <div class="section-eyebrow">Who this person already was</div>
   <div class="backstory">
     <p>Someone who learned early that closeness had to be earned through utility — give before asked, absorb before offered. The Breath Link was already the shape of that reaching; the magic just gave it a name.</p>
     <p>The Aspect arrived and narrowed it. The compulsion to protect everyone became the compulsion to protect this one, formalized into rules: a damage type, a Saving Throw, a range in feet. It offered exactly what they had always wanted — permanence, inescapability — and folded the disaster inside the gift. They will not understand the full cost until they find that being unreachable in Stasis is the most rest they have ever had.</p>
   </div>
 
   <!-- Spell restriction -->
-  <div class="section-eyebrow" style="margin-top: 32px;">The spell restriction</div>
+  <div class="section-eyebrow">The spell restriction</div>
   <div class="domain-intro">
     <p>The cleric's magic should protect, sustain, or connect — not harm or diminish. The test: could this spell flow through a Breath Link? <em>Bless</em> can. <em>Hold Person</em> cannot.</p>
     <p>Abjuration and enchantment on the cleric and paladin lists are a natural starting point — that's where most of it lives. But anything fitting the intent qualifies; the schools are a direction, not a fence. A campaign may relax this restriction, but this is the version that holds together.</p>
   </div>
 
   <!-- What the Aspect costs -->
-  <div class="section-eyebrow" style="margin-top: 32px;">What the Aspect costs</div>
+  <div class="section-eyebrow">What the Aspect costs</div>
   <div class="sub-rules" style="margin-top: 8px;">
     <div class="rule-block open">
       <p><strong>The Flaw</strong> — Mechanics make the character fail saves, shatter bonds, freeze when their Anchor walks away. No opting out at the table.</p>
@@ -907,7 +907,7 @@
   </div>
 
   <!-- Progression Overview -->
-  <div class="section-eyebrow" style="margin-top: 32px;">Progression at a glance</div>
+  <div class="section-eyebrow">Progression at a glance</div>
   <table class="overview-table">
     <thead>
       <tr><th>Level</th><th>Name</th><th>Bond Mechanic</th><th>Core Ability</th></tr>
@@ -932,7 +932,7 @@
         <td>Stasis replaces 0 HP; Resonance + Shared Fortitude; risk of Eternal Stasis</td>
       </tr>
       <tr>
-        <td><span class="tier-pill" style="color:var(--ink-faded);border-color:var(--border);background:rgba(0,0,0,0.03)">Flaw</span></td>
+        <td><span class="tier-pill flaw">Flaw</span></td>
         <td>Hollow Without You</td>
         <td>Aspect-granted; always active</td>
         <td>Compulsive Sacrifice · Ache of Absence · Separation Anxiety · The Secret</td>
@@ -1095,10 +1095,10 @@
           <div class="beat">[ the ritual completes. the cleric cannot answer. ]</div>
           <div>
             <span class="speaker">— example, if the anchor hesitates —</span>
-            "I don't know what this means."<br><br>
-            [ silence. the cleric does not fill it. they have been trained their whole life not to. ]<br><br>
-            "...are you alright?"
+            "I don't know what this means."
           </div>
+          <div class="beat">[ silence. the cleric does not fill it. they have been trained their whole life not to. ]</div>
+          <div>"...are you alright?"</div>
           <div class="beat">[ the ritual completes. ]</div>
         </div>
         <p class="flavor">The Anchor does not need to know what they agreed to. They only need to ask. What the Anchor reads in the cleric's face in that moment — the relief, the grief, the gratitude — is all the truth they are going to get. It has always been enough for people to look at this cleric and not quite understand what they are seeing, and decide to stay anyway.</p>
@@ -1149,7 +1149,7 @@
       </div>
 
       <div class="callout">
-        <strong style="font-style:normal;color:var(--ink);">Interaction — Compulsive Sacrifice into Stasis:</strong> If Compulsive Sacrifice triggers automatically and reduces the cleric to 0 HP, they enter Stasis. The Anchor — just protected by that sacrifice — must now spend their Action, touch the cleric, and absorb 3d10 Psychic damage to bring them back. The one who was shielded becomes the one who must pay. At Level 8, the Breaking Point no longer shatters the Permanent Bond — but the Frightened condition still triggers. The compulsion does not protect the cleric from the consequences of the compulsion.
+        <strong>Interaction — Compulsive Sacrifice into Stasis:</strong> If Compulsive Sacrifice triggers automatically and reduces the cleric to 0 HP, they enter Stasis. The Anchor — just protected by that sacrifice — must now spend their Action, touch the cleric, and absorb 3d10 Psychic damage to bring them back. The one who was shielded becomes the one who must pay. At Level 8, the Breaking Point no longer shatters the Permanent Bond — but the Frightened condition still triggers. The compulsion does not protect the cleric from the consequences of the compulsion.
       </div>
       <div class="design-note"><strong>On the balance:</strong> The Permanent Bond cannot be dissolved — this is not an oversight. The Asking produces something irreversible by design. The only exits are Eternal Stasis, or the Anchor's true final death before The Asking is completed (in which case Ache of Absence activates and the cleric must find a new Anchor through Level 6 mechanics). The Resonance, doubled Pool, passive regeneration, and Shared Fortitude are substantial precisely because optionality has been surrendered permanently. The danger of Eternal Stasis is the cost of Stasis existing at all.</div>
     </div>
