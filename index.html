@@ -515,6 +515,12 @@
   .callout { background: rgba(255,255,255,0.5); border: 1px solid var(--border-faint); border-radius: 3px; padding: 14px 18px; margin: 16px 0; font-size: 15px; color: var(--ink-faded); font-style: italic; }
   .callout strong { font-style: normal; color: var(--ink); font-weight: 600; }
   .design-note { background: rgba(138,106,30,0.07); border: 1px dashed var(--border-faint); border-radius: 3px; padding: 14px 18px; font-size: 14.5px; color: var(--ink-faded); margin-top: 16px; font-style: italic; }
+  .design-note::before {
+    content: "Design intent: ";
+    font-weight: 600;
+    color: var(--accent-gold);
+    font-style: normal;
+  }
   .design-note strong { font-style: normal; color: var(--accent-gold); font-weight: 600; }
 
   /* ── Ornament divider ── */
@@ -1187,9 +1193,7 @@
           <p class="flavor">The connection is a lifeline in more ways than one.</p>
         </div>
       </div>
-      <div class="callout">
-        At proficiency +3 with both characters at +3 CON, the Pool holds 18 HP. It builds through deliberate investment — donations during downtime, hit dice on short rests, the slow accumulation of shared danger. A full Pool means the most to lose if the Bond breaks. Before switching Anchors mid-combat, drain the Pool first: what remains inside is the cost of letting go.
-      </div>
+      <div class="design-note">At proficiency +3 with both characters at +3 CON, the Pool holds 18 HP. It builds through deliberate investment — donations during downtime, hit dice on short rests, the slow accumulation of shared danger. A full Pool means the most to lose if the Bond breaks. Before switching Anchors mid-combat, drain the Pool first: what remains inside is the cost of letting go.</div>
     </div>
   </div>
 
@@ -1287,10 +1291,7 @@
         </div>
       </div>
 
-      <div class="callout">
-        <strong>Interaction — Compulsive Sacrifice into Stasis:</strong> If Compulsive Sacrifice triggers automatically and reduces the cleric to 0 HP, they enter Stasis. The Anchor — just protected by that sacrifice — must now spend their Action, touch the cleric, and absorb 3d10 Psychic damage to bring them back. The one who was shielded becomes the one who must pay. At Level 8, the Breaking Point no longer shatters the Permanent Bond — but the Frightened condition still triggers. The compulsion does not protect the cleric from the consequences of the compulsion.
-      </div>
-      <div class="design-note"><strong>On the balance:</strong> The Permanent Bond cannot be dissolved — this is not an oversight. The Asking produces something irreversible by design. The only exits are Eternal Stasis, or the Anchor's true final death before The Asking is completed (in which case Ache of Absence activates and the cleric must find a new Anchor through Level 6 mechanics). The Resonance, doubled Pool, passive regeneration, and Shared Fortitude are substantial precisely because optionality has been surrendered permanently. The danger of Eternal Stasis is the cost of Stasis existing at all.</div>
+      <div class="design-note"><strong>Interaction — Compulsive Sacrifice into Stasis:</strong> If Compulsive Sacrifice triggers automatically and reduces the cleric to 0 HP, they enter Stasis. The Anchor — just protected by that sacrifice — must now spend their Action, touch the cleric, and absorb 3d10 Psychic damage to bring them back. The one who was shielded becomes the one who must pay. At Level 8, the Breaking Point no longer shatters the Permanent Bond — but the Frightened condition still triggers. The compulsion does not protect the cleric from the consequences of the compulsion. The Permanent Bond cannot be dissolved — this is not an oversight. The Asking produces something irreversible by design. The only exits are Eternal Stasis, or the Anchor's true final death before The Asking is completed (in which case Ache of Absence activates and the cleric must find a new Anchor through Level 6 mechanics). The Resonance, doubled Pool, passive regeneration, and Shared Fortitude are substantial precisely because optionality has been surrendered permanently. The danger of Eternal Stasis is the cost of Stasis existing at all.</div>
     </div>
   </div>
 
@@ -1334,10 +1335,7 @@
           <p class="flavor">The cleric used to be able to simply reach out and take the connection. Now they have to ask for it, without being able to explain why, and wait to see if the answer is yes.</p>
         </div>
       </div>
-      <div class="callout">
-        Note on Compulsive Sacrifice: if the automatic Reaction triggers the Level 4 Breaking Point (intercepted damage exceeding half max HP), the Break still occurs. The compulsion does not protect the cleric from the consequences of the compulsion. That, too, is the point.
-      </div>
-      <div class="design-note"><strong>On design intent:</strong> Each clause covers a different context. Compulsive Sacrifice removes agency in combat. Ache of Absence fires from emotional neglect — not hostility, just the Anchor treating the cleric as useful rather than known. Separation Anxiety fires during normal play, whenever distance opens up. The Secret fires from intimacy — the closer the relationship becomes, the more the Bond shifts from something the cleric holds to something they must be granted. The Level 8 Permanent Bond resolves the consent problem for a discovered Anchor in a way that is both mechanically significant and quietly devastating as a character beat.</div>
+      <div class="design-note">Note on Compulsive Sacrifice: if the automatic Reaction triggers the Level 4 Breaking Point (intercepted damage exceeding half max HP), the Break still occurs. The compulsion does not protect the cleric from the consequences of the compulsion. That, too, is the point. Each clause covers a different context. Compulsive Sacrifice removes agency in combat. Ache of Absence fires from emotional neglect — not hostility, just the Anchor treating the cleric as useful rather than known. Separation Anxiety fires during normal play, whenever distance opens up. The Secret fires from intimacy — the closer the relationship becomes, the more the Bond shifts from something the cleric holds to something they must be granted. The Level 8 Permanent Bond resolves the consent problem for a discovered Anchor in a way that is both mechanically significant and quietly devastating as a character beat.</div>
     </div>
   </div>
 
