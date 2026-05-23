@@ -539,7 +539,14 @@
   /* ── Ritual Block ── */
   .ritual-block { border: 1px solid var(--border); border-top: 2px solid var(--accent-gold); background: rgba(138,106,30,0.05); border-radius: 3px; padding: 24px 28px; margin: 22px 0; }
   .ritual-title { font-family: 'IM Fell English','Georgia',serif; font-size: 18px; color: var(--accent-gold); margin-bottom: 4px; }
-  .ritual-subtitle { font-size: 13px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-faded); margin-bottom: 18px; padding-bottom: 14px; border-bottom: 1px solid var(--border-faint); }
+  .ritual-subtitle { 
+    font-size: 13px; letter-spacing: 0.18em; text-transform: uppercase; 
+    color: var(--ink-faded); margin-bottom: 18px; padding-bottom: 14px; 
+    border-bottom: 1px solid var(--border-faint);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
   .ritual-block p { font-size: 15.5px; color: var(--ink-faded); margin-bottom: 12px; }
   .ritual-block p:last-child { margin-bottom: 0; }
   /* Only padding-top actually differs from the general .flavor rule;
@@ -1158,11 +1165,11 @@
           <div class="rule-head"><span class="rule-name">Life Transfer (Upgraded)</span><span class="rule-pill active">Active · Reaction</span></div>
           <p>When Life Transfer triggers, damage is drawn from the <kw>Pool first</kw>. Only the excess beyond the Pool's remaining value is taken from your HP as Psychic damage. If the Pool absorbs everything, you feel nothing. If the Pool was empty, the full damage hits you as before.</p>
         </div>
-        <div class="rule-block good">
+        <div class="rule-block">
           <div class="rule-head"><span class="rule-name">Donate</span><span class="rule-pill active">Active · Bonus Action</span></div>
           <p>Either bonded character may donate up to their <kw>Constitution modifier</kw> in HP into the Pool. The Pool cannot exceed its maximum. The Anchor may do this on their own turn.</p>
         </div>
-        <div class="rule-block good">
+        <div class="rule-block">
           <div class="rule-head"><span class="rule-name">Withdraw</span><span class="rule-pill active">Active · Bonus Action</span></div>
           <p>Either bonded character may withdraw up to their <kw>Constitution modifier</kw> in HP from the Pool, healing themselves for that amount. Cannot exceed what the Pool holds. Donating and withdrawing cannot both occur on the same turn.</p>
           <p class="flavor">The Pool is a shared reserve — both characters choose whether to spend it offensively (buffering Life Transfer) or defensively (spot healing in a pinch).</p>
@@ -1205,7 +1212,7 @@
 
       <div class="ritual-block">
         <div class="ritual-title">The Asking</div>
-        <div class="ritual-subtitle">Ritual &nbsp;·&nbsp; 10 minutes &nbsp;·&nbsp; Requires an active Level 6 Bond &nbsp;·&nbsp; Completes the Permanent Bond</div>
+        <div class="ritual-subtitle"><span>Ritual</span><span>·</span><span>10 minutes</span><span>·</span><span>Completes the Permanent Bond</span></div>
         <p>The cleric must have an active Bond before beginning. The ritual transforms an existing Bond — it cannot create a new one.</p>
         <p>The cleric initiates by making a small wound on their palm and extending their open hand toward the Anchor without a word. If the Anchor takes the hand and mirrors the wound, the ritual begins. Neither character needs to understand what is happening. One of them does.</p>
         <p>The cleric then performs a gesture of their choosing — tracing a symbol on the Anchor's wrist, pressing joined hands to their chest, holding the silence. What matters is that it feels like a threshold. Something offered that cannot be taken back. There are no words, because the cleric cannot speak the truth of what this is.</p>
@@ -1262,7 +1269,7 @@
           <span class="sub-head">What the outside character experiences</span>
           <p>The connection changes texture — two-way current becomes one-directional. The Stased character is present but unreachable.</p>
           <p class="flavor">The connection communicates this without words. It always has.</p>
-          <p class="xref" data-type="dm">You could say: "Something is waiting for you. Not urgency. Not pain. Weight. Through the connection, the outside character understands instinctively that reaching in will cost something real."</p>
+          <p class="xref" data-type="dm">You could say: “Something is waiting for you. Not urgency. Not pain. Weight.” Through the connection, the outside character understands instinctively that reaching in will cost something real.</p>
         </div>
         <div class="rule-block danger">
           <div class="rule-head"><span class="rule-name">Breaking Stasis</span><span class="rule-pill active">Active · Action</span></div>
