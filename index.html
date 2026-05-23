@@ -529,9 +529,7 @@
   .xref-link:hover  { color: var(--ink); text-decoration-color: var(--ink-faded); }
   .xref-link:active { color: var(--ink); text-decoration-color: var(--ink); }
 
-  /* ── Callout / Design note ── */
-  .callout { background: rgba(255,255,255,0.5); border: 1px solid var(--border-faint); border-radius: 3px; padding: 14px 18px; margin: 16px 0; font-size: 15px; color: var(--ink-faded); font-style: italic; }
-  .callout strong { font-style: normal; color: var(--ink); font-weight: 600; }
+  /* ── Design note ── */
   .design-note { background: rgba(138,106,30,0.07); border: 1px dashed var(--border-faint); border-radius: 3px; padding: 14px 18px; font-size: 14.5px; color: var(--ink-faded); margin-top: 16px; font-style: italic; }
   .design-note::before {
     content: "Design intent: ";
@@ -618,40 +616,6 @@
      (Card system unified with Aspect; these are the bits without an Aspect counterpart)
   ══════════════════════════════════════════════════ */
 
-  .open-questions {
-    border: 1px dashed var(--border);
-    border-radius: 3px;
-    padding: 22px 28px;
-    margin-top: 36px;
-    background: rgba(138,106,30,0.04);
-  }
-  .open-questions .q-title {
-    font-family: 'IM Fell English','Georgia',serif;
-    font-size: 20px; color: var(--accent-gold);
-    margin-bottom: 16px;
-    padding-bottom: 12px;
-    border-bottom: 1px solid var(--border-faint);
-  }
-  .q-list { display: flex; flex-direction: column; gap: 12px; }
-  .q-item {
-    padding: 10px 16px;
-    border-left: 3px solid var(--accent-gold-light);
-    background: rgba(255,255,255,0.3);
-    border-radius: 0 3px 3px 0;
-  }
-  .q-item .q-label {
-    font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase;
-    font-weight: 600; color: var(--accent-gold); display: block; margin-bottom: 4px;
-  }
-  .q-item p { font-size: 15px; color: var(--ink-faded); margin: 0; }
-  .q-item code { font-family: 'Courier New', monospace; font-size: 13px; background: rgba(0,0,0,0.04); padding: 1px 4px; border-radius: 2px; }
-
-  /* Danger variant of the open-questions block (used for "Open Todos" — outstanding work). */
-  .open-questions.danger              { border-color: var(--accent-red-light); background: rgba(124,42,30,0.03); }
-  .open-questions.danger .q-title     { color: var(--accent-red); }
-  .open-questions.danger .q-item      { border-left-color: var(--accent-red-light); }
-  .open-questions.danger .q-label     { color: var(--accent-red); }
-
   .spell-table { width: 100%; border-collapse: collapse; font-size: 15px; margin-top: 8px; }
   .spell-table th {
     font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
@@ -710,7 +674,7 @@
     .ability-card { padding: 18px 16px; }
     .rule-block   { padding: 10px 12px; }
     .ritual-block { padding: 18px 16px; }
-    .callout, .design-note { padding: 12px 14px; }
+    .design-note { padding: 12px 14px; }
     /* Overview table: hide Bond Mechanic column (col 3) so Core Ability has room */
     .overview-table { font-size: 13.5px; }
     .overview-table th,
