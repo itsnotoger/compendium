@@ -512,6 +512,18 @@
     font-style: normal;
   }
 
+  /* Inline cross-reference link within xref paragraphs */
+  .xref-link {
+    cursor: pointer;
+    text-decoration: underline;
+    text-decoration-style: dashed;
+    text-underline-offset: 3px;
+    text-decoration-color: var(--border);
+    transition: text-decoration-color 0.15s, color 0.15s;
+  }
+  .xref-link:hover  { color: var(--ink); text-decoration-color: var(--ink-faded); }
+  .xref-link:active { color: var(--ink); text-decoration-color: var(--ink); }
+
   /* ── Callout / Design note ── */
   .callout { background: rgba(255,255,255,0.5); border: 1px solid var(--border-faint); border-radius: 3px; padding: 14px 18px; margin: 16px 0; font-size: 15px; color: var(--ink-faded); font-style: italic; }
   .callout strong { font-style: normal; color: var(--ink); font-weight: 600; }
@@ -985,7 +997,7 @@
         <p>When a Breath-linked creature would be reduced to <kw>0 HP</kw> — including by effects that would kill outright — the cleric may spend a <kw>Channel Divinity point</kw> as a <kw>Reaction</kw>. The creature enters a temporary <kw>Stasis</kw> instead: <kw>Paralyzed</kw>, immune to all damage, untargetable. No death saving throws.</p>
         <p>Stasis lasts <kw>2 rounds</kw>. At the end of the second round, the creature exits automatically at <kw>1 HP</kw>, all prior conditions removed. This ability may be used <kw>once per creature per long rest</kw>.</p>
         <p><span class="rule-lead">While in Stasis.</span> The creature is suspended — aware, but unable to act or speak. Something reaches them from outside: steady, wordless, not urgent.</p>
-        <p class="xref" data-type="dm">this is the same Stasis described in the Aspect section. The experience notes there apply generally, except that the Stased creature cannot push impressions outward (that requires an active Bond). Everything else — including what the outside character feels through the connection — applies as written.</p>
+        <p class="xref" data-type="dm">this is the same Stasis described in <span class="xref-link" data-chapter="aspect" data-target="card-aspect-pinnacle">the Aspect section</span>. The experience notes there apply generally, except that the Stased creature cannot push impressions outward (that requires an active Bond). Everything else — including what the outside character feels through the connection — applies as written.</p>
       </div>
 
     </div>
@@ -1143,7 +1155,7 @@
           <div class="rule-head"><span class="rule-name">The Breaking Point</span><span class="rule-pill passive">Passive · Trigger</span></div>
           <p>If intercepted damage exceeds <kw>half your maximum HP</kw>, the Bond shatters immediately afterward — after the damage is dealt, not before. The damage is never reduced by the break. You are immediately <kw>Frightened</kw> (Anchor is the source) until the end of your next turn.</p>
           <p class="flavor">This fear is not rational. That is the point.</p>
-          <p class="xref">At Level 8, the Permanent Bond cannot be shattered — but the Frightened condition still triggers. The tether holds. The cleric is afraid of the person they cannot leave.</p>
+          <p class="xref">At <span class="xref-link" data-chapter="aspect" data-target="card-aspect-pinnacle">Level 8</span>, the Permanent Bond cannot be shattered — but the Frightened condition still triggers. The tether holds. The cleric is afraid of the person they cannot leave.</p>
         </div>
       </div>
       <div class="design-note">Psychic was chosen for two reasons. Mechanically: it bypasses most resistance systems, so the cleric pays full price regardless of the Anchor's build. Lorewise: the cleric takes psychic damage because that is literally what is happening — they feel their allies being hurt. The damage type is not an abstraction.</div>
@@ -1327,7 +1339,7 @@
           <p>While bonded, if the Anchor has been more than <kw>30 feet</kw> away for longer than <kw>1 minute</kw> (10 rounds), make a <kw>DC 12 Wisdom saving throw</kw> or become <kw>Frightened</kw> — the Anchor is the source. Repeat at the end of each of your turns; on a success, the effect ends.</p>
           <p>Note: Frightened prevents willingly moving <em>closer</em> to the fear's source — the cleric freezes rather than pursues.</p>
           <p class="flavor">The person they fear losing most is the one who locks them in place by walking away.</p>
-          <p class="xref">At Level 8, the Permanent Bond removes the distance-break condition, so the Bond never shatters — but Separation Anxiety still fires. The cleric will periodically become frightened of their bonded partner whenever they step too far away, save out of it after a turn or two, and carry on. This is not a bug.</p>
+          <p class="xref">At <span class="xref-link" data-chapter="aspect" data-target="card-aspect-pinnacle">Level 8</span>, the Permanent Bond removes the distance-break condition, so the Bond never shatters — but Separation Anxiety still fires. The cleric will periodically become frightened of their bonded partner whenever they step too far away, save out of it after a turn or two, and carry on. This is not a bug.</p>
         </div>
         <div class="rule-block dark">
           <div class="rule-head"><span class="rule-name">The Secret</span><span class="rule-pill passive">Passive · Compulsion</span></div>
@@ -1444,6 +1456,13 @@
     document.querySelectorAll('button[data-chapter]').forEach(b => {
       b.addEventListener('click', () => {
         showChapter(b.dataset.chapter);
+      });
+    });
+
+    // xref-link spans: inline cross-references that jump to another card (cross-tab or intra-tab)
+    document.querySelectorAll('.xref-link').forEach(el => {
+      el.addEventListener('click', () => {
+        showChapter(el.dataset.chapter, el.dataset.target);
       });
     });
 
