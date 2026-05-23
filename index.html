@@ -503,6 +503,14 @@
     margin-top: 8px !important;
   }
 
+  /* DM note variant: adds label via CSS */
+  p.xref[data-type="dm"]::before {
+    content: "DM note: ";
+    font-weight: 600;
+    color: var(--ink);
+    font-style: normal;
+  }
+
   /* ── Callout / Design note ── */
   .callout { background: rgba(255,255,255,0.5); border: 1px solid var(--border-faint); border-radius: 3px; padding: 14px 18px; margin: 16px 0; font-size: 15px; color: var(--ink-faded); font-style: italic; }
   .callout strong { font-style: normal; color: var(--ink); font-weight: 600; }
@@ -963,7 +971,7 @@
         <p>When a Breath-linked creature would be reduced to <kw>0 HP</kw> — including by effects that would kill outright — the cleric may spend a <kw>Channel Divinity point</kw> as a <kw>Reaction</kw>. The creature enters a temporary <kw>Stasis</kw> instead: <kw>Paralyzed</kw>, immune to all damage, untargetable. No death saving throws.</p>
         <p>Stasis lasts <kw>2 rounds</kw>. At the end of the second round, the creature exits automatically at <kw>1 HP</kw>, all prior conditions removed. This ability may be used <kw>once per creature per long rest</kw>.</p>
         <p><span class="rule-lead">While in Stasis.</span> The creature is suspended — aware, but unable to act or speak. Something reaches them from outside: steady, wordless, not urgent.</p>
-        <p><em>DM note: this is the same Stasis described in the Aspect section. The experience notes there apply generally, except that the Stased creature cannot push impressions outward (that requires an active Bond). Everything else — including what the outside character feels through the connection — applies as written.</em></p>
+        <p class="xref" data-type="dm">this is the same Stasis described in the Aspect section. The experience notes there apply generally, except that the Stased creature cannot push impressions outward (that requires an active Bond). Everything else — including what the outside character feels through the connection — applies as written.</p>
       </div>
 
     </div>
@@ -1252,8 +1260,9 @@
           <span class="sub-head">On signaling</span>
           <p>If the cleric is the Stased character, they may choose to emit <em>not yet</em> — meaning: I am safe here; the cost of reaching in is real; wait. This is a choice, not a feature of Stasis itself. The cleric knows what Breaking Stasis costs. Whether they want to be retrieved, and when, is theirs to decide.</p>
           <span class="sub-head">What the outside character experiences</span>
-          <p>The connection changes texture — two-way current becomes one-directional. The Stased character is present but unreachable. <em>DM prompt: something is waiting for you.</em> Not urgency. Not pain. Weight. Through the connection, the outside character understands instinctively that reaching in will cost something real.</p>
+          <p>The connection changes texture — two-way current becomes one-directional. The Stased character is present but unreachable.</p>
           <p class="flavor">The connection communicates this without words. It always has.</p>
+          <p class="xref" data-type="dm">You could say: "Something is waiting for you. Not urgency. Not pain. Weight. Through the connection, the outside character understands instinctively that reaching in will cost something real."</p>
         </div>
         <div class="rule-block danger">
           <div class="rule-head"><span class="rule-name">Breaking Stasis</span><span class="rule-pill active">Active · Action</span></div>
@@ -1267,8 +1276,7 @@
           <p>If both bonded characters are in Stasis simultaneously, neither can rescue the other. They persist indefinitely — <kw>Paralyzed</kw>, immune to all damage, untargetable. They do not age, hunger, decay, or die. The Bond does not break, and any network rooted in it remains intact.</p>
           <p>A DC 30 ritual with rare, specific components (DM-determined) may free them. Each linked member who joins the ritual lessens its difficulty, at the DM's discretion. Even so, the ritual is a kindness, not a given.</p>
           <p class="flavor">This is not a tragedy that announces itself. It arrives like a held breath — and waits.</p>
-          <span class="sub-head">For the DM</span>
-          <p>What Eternal Stasis feels like from the inside is deliberately left undefined. Neither character can ever report it. The network registers them as present — direction, faint weight, the slow steady pulse of two people who have not let go. What the party makes of that, what they build around it, is not for the rules to say.</p>
+          <p class="xref" data-type="dm">What Eternal Stasis feels like from the inside is deliberately left undefined. Neither character can ever report it. The network registers them as present — direction, faint weight, the slow steady pulse of two people who have not let go. What the party makes of that, what they build around it, is not for the rules to say.</p>
         </div>
       </div>
 
@@ -1330,7 +1338,7 @@
     </section>
 
     <div class="footer">
-      <div>Domain of Shared Breath &nbsp;·&nbsp; Constitution-primary Cleric &nbsp;·&nbsp; Homebrew &nbsp;·&nbsp; v2.2</div>
+      <div>Domain of Shared Breath &nbsp;·&nbsp; Constitution-primary Cleric &nbsp;·&nbsp; Homebrew &nbsp;·&nbsp; v2.3</div>
       <button class="design-notes-toggle" id="designNotesToggle" aria-label="Toggle design notes">
         <span>Notes</span>
         <div class="toggle-track" id="toggleTrack">
