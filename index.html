@@ -869,7 +869,7 @@
       <tr data-chapter="domain" data-target="card-domain-deep">
         <td><span class="tier-pill t6">Lv. 6</span></td>
         <td>The Network Deepens</td>
-        <td>30 ft range on re-link (prior touch required)</td>
+        <td>30 ft range; prior touch required</td>
         <td>Wordless Impressions (emotional texture) · Conduit (free object transfer, 60 ft, no LoS)</td>
       </tr>
       <tr data-chapter="domain" data-target="card-domain-pinnacle">
@@ -896,7 +896,7 @@
           <span class="rule-name">Forge Breath Link</span>
           <span class="rule-pill active">Active · Bonus Action</span>
         </div>
-        <p>As a <kw>Bonus Action</kw>, the Anchor touches a willing creature within reach to forge a <kw>Breath Link</kw>. The Anchor may maintain up to <kw>2 Breath Links</kw> at once; forging a new one at cap drops an existing link of the Anchor's choice (free, no sensation). A link persists indefinitely until severed by the Anchor (free action, on their turn), the linked creature dies, or the Anchor falls unconscious or dies. Once forged, a Breath Link's effects function regardless of distance, so long as the link persists.</p>
+        <p>As a <kw>Bonus Action</kw>, <span class="xref-link" data-chapter="aspect" data-target="card-aspect-core">the Anchor</span> touches a willing creature within reach to forge a <kw>Breath Link</kw>. The Anchor may maintain up to <kw>2 Breath Links</kw> at once; forging a new one at cap drops an existing link of the Anchor's choice (free, no sensation). A link persists indefinitely until severed by the Anchor (free action, on their turn), the linked creature dies, or the cleric falls unconscious or dies. Once forged, a Breath Link's effects function regardless of distance, so long as the link persists.</p>
       </div>
 
       <div class="rule-block good">
@@ -949,6 +949,7 @@
       </div>
 
     </div>
+    <div class="design-note">The network terminating on the cleric's unconsciousness — not the Anchor's — is intentional. The Breath Link is an extension of the cleric's awareness: the mechanisation of that low-level monitoring instinct described in the backstory. The Anchor role (who can forge new links) can transfer, but the network itself is always the cleric's creation, sustained by the cleric's presence. The cleric is the root. This has a practical table consequence: the cleric going down is always catastrophic for the network, even when they're not the active Anchor. A frontliner Bond's Anchor can drop without the network shattering — a useful asymmetry that rewards keeping the cleric upright.</div>
   </div>
 
   <!-- Level 6 -->
@@ -1003,20 +1004,6 @@
         <p>Stasis lasts <kw>2 rounds</kw>. At the end of the second round, the creature exits automatically at <kw>1 HP</kw>, all prior conditions removed. This ability may be used <kw>once per creature per long rest</kw>.</p>
         <p><span class="rule-lead">While in Stasis.</span> The creature is suspended — aware, but unable to act or speak. Something reaches them from outside: steady, wordless, not urgent.</p>
         <p class="xref" data-type="dm">this is the same Stasis described in <span class="xref-link" data-chapter="aspect" data-target="card-aspect-pinnacle">the Aspect section</span>. The experience notes there apply generally, except that the Stased creature cannot push impressions outward (that requires an active Bond). Everything else — including what the outside character feels through the connection — applies as written.</p>
-      </div>
-
-    </div>
-  </div>
-
-  <!-- Open Todos -->
-  <div class="open-questions danger">
-    <div class="q-title">Open Todos — Before This Is Done</div>
-    <div class="q-list">
-
-      <div class="q-item">
-        <span class="q-label">Aspect Doc · Transfer Clause as Warning Callout</span>
-        <p>When updating the Aspect section, the "umm actually" clause that redefines Breath Link creation at Level 4 needs a distinct, visually heavy callout — heavier than the existing <kw>callout</kw> and <kw>design-note</kw> styles. Proposed treatment: bordered block with accent-red left edge, header like <em>"⚠ Domain interaction"</em> or similar, placed immediately after the Level 4 ability card (where the Bond first forms and the transfer fires). Content must cover: (a) lore — the cleric's reaching-out instinct narrows into devotion, and the community-building hand transfers to the Anchor; (b) mechanical effect — the Anchor role transfers, the cleric can no longer create Breath Links while bonded, and the network now rides on the Bond rather than the Anchor's consciousness; (c) shatter cascade — when the Bond breaks for any reason, all Breath Links shatter; creation returns to the cleric until they re-bond. Phrasing should make clear this is a heads-up about Domain interaction, not a Domain rule — the rule itself stays in the Domain doc.</p>
-        <p><em>Mechanical detail for (b) and (c): while the Bond is active, the network rides on the Bond rather than the Anchor's consciousness — the "Anchor becomes unconscious" termination is replaced by "Bond breaks," and the Anchor may be unconscious without disrupting the network. When the Bond breaks for any reason, all Breath Links shatter; the Anchor rebuilds from scratch on re-establishment.</em></p>
       </div>
 
     </div>
@@ -1158,6 +1145,14 @@
           <p class="flavor">This fear is not rational. That is the point.</p>
           <p class="xref">At <span class="xref-link" data-chapter="aspect" data-target="card-aspect-pinnacle">Level 8</span>, the Permanent Bond cannot be shattered — but the Frightened condition still triggers. The tether holds. The cleric is afraid of the person they cannot leave.</p>
         </div>
+        <div class="rule-block open">
+          <div class="rule-head">
+            <span class="rule-name">Breath Links</span>
+            <span class="rule-pill open">Domain Interaction</span>
+          </div>
+          <p>While the Bond is active, <strong>the Anchor takes over the <span class="xref-link" data-chapter="domain" data-target="card-domain-core">Breath Link network</span></strong>. The cleric can no longer forge Breath Links. Only the Anchor can.</p>
+          <p>If the Bond breaks, all Breath Links shatter.</p>
+        </div>
       </div>
       <div class="design-note">Psychic was chosen for two reasons. Mechanically: it bypasses most resistance systems, so the cleric pays full price regardless of the Anchor's build. Lorewise: the cleric takes psychic damage because that is literally what is happening — they feel their allies being hurt. The damage type is not an abstraction.</div>
     </div>
@@ -1179,7 +1174,7 @@
         </div>
         <div class="rule-block good">
           <div class="rule-head"><span class="rule-name">The Vitality Pool</span><span class="rule-pill passive">Passive · Resource</span></div>
-          <p>The cleric carries a <kw>Shared Vitality Pool</kw> — a third resource, separate from either character's hit points. Maximum = <kw>(your CON modifier + Anchor's CON modifier) × proficiency bonus</kw>; recalculates whenever a new Anchor is bonded. Starts <kw>empty</kw> when first gained and persists across re-links, rests, and combat. Both characters sense its current value instinctively — no explanation required.</p>
+          <p>The cleric carries a <kw>Shared Vitality Pool</kw> — a third resource, separate from either character's hit points. Maximum = <kw>(your CON modifier + Anchor's CON modifier) × proficiency bonus</kw>; recalculates whenever a new Anchor is bonded. Starts <kw>empty</kw> when first gained and persists across Anchor changes, rests, and combat. Both characters sense its current value instinctively — no explanation required.</p>
         </div>
         <div class="rule-block good">
           <div class="rule-head"><span class="rule-name">Life Transfer (Upgraded)</span><span class="rule-pill active">Active · Reaction</span></div>
@@ -1197,8 +1192,8 @@
         <div class="rule-block danger">
           <div class="rule-head"><span class="rule-name">Pool Collapse</span><span class="rule-pill passive">Passive · Trigger</span></div>
           <p>If the Bond breaks while the Pool holds any HP, both the cleric and the former Anchor immediately take <kw>Psychic damage equal to the Pool's current HP</kw> (no saving throw). The Pool empties. A Pool at 2 HP barely stings. A Pool at 15 is a genuine detonation.</p>
-          <p>Collapse triggers on: <kw>voluntary dissolution without re-linking</kw>; and <kw>Flaw-triggered breaks</kw> — the Breaking Point shattering the Bond, or the Ache of Absence dissolving it at dawn.</p>
-          <p>Collapse does <em>not</em> trigger on <kw>Re-link</kw>: if the cleric drops the Bond and establishes a new one in the same Action, the Pool carries across intact. Collapse also does not trigger on involuntary breaks from outside forces (enemy dispels, forced movement, environmental effects). It is reserved for breaks that come from within.</p>
+          <p>Collapse triggers on: <kw>voluntary dissolution with no new Bond established in the same Action</kw>; and <kw>Flaw-triggered breaks</kw> — the Breaking Point shattering the Bond, or the Ache of Absence dissolving it at dawn.</p>
+          <p>Collapse does <em>not</em> trigger if the cleric dissolves the Bond and establishes a new one in the same Action — the Pool carries across intact. Breath Links shatter regardless; the new Anchor rebuilds the network from scratch. Collapse also does not trigger on involuntary breaks from outside forces (enemy dispels, forced movement, environmental effects). It is reserved for breaks that come from within.</p>
           <p class="flavor">A cleric who needs to switch Anchors mid-combat can do so freely — but one who simply lets go, with no one to reach toward, pays the price of that emptiness.</p>
         </div>
         <div class="rule-block good">
@@ -1224,7 +1219,7 @@
         <div class="rule-block gold">
           <div class="rule-head"><span class="rule-name">Permanent Bond</span><span class="rule-pill passive">Passive · State</span></div>
           <p>Leveling up unlocks the ability to perform <kw>The Asking</kw> — a ritual that, if completed, makes the current Bond permanent. Until The Asking succeeds, full Level 6 mechanics remain in effect and Level 8 abilities (Resonance, Shared Fortitude, Stasis) remain locked.</p>
-          <p>Once permanent: the Bond persists regardless of distance, unconsciousness, or temporary death states. It cannot be broken by outside forces. <kw>This Bond cannot be dissolved.</kw> Re-link is no longer possible. The flexibility of Levels 4 and 6 ends here. There is only this person, and whatever comes next.</p>
+          <p>Once permanent: the Bond persists regardless of distance, unconsciousness, or temporary death states. It cannot be broken by outside forces. <kw>This Bond cannot be dissolved.</kw> The flexibility of Levels 4 and 6 ends here. There is only this person, and whatever comes next.</p>
         </div>
       </div>
 
@@ -1357,7 +1352,7 @@
     </section>
 
     <div class="footer">
-      <div>Domain of Shared Breath &nbsp;·&nbsp; Constitution-primary Cleric &nbsp;·&nbsp; Homebrew &nbsp;·&nbsp; v2.4</div>
+      <div>Domain of Shared Breath &nbsp;·&nbsp; Constitution-primary Cleric &nbsp;·&nbsp; Homebrew &nbsp;·&nbsp; v2.5</div>
       <button class="design-notes-toggle" id="designNotesToggle" aria-label="Toggle design notes">
         <span>Notes</span>
         <div class="toggle-track" id="toggleTrack">
