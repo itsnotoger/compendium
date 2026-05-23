@@ -17,6 +17,8 @@
     --accent-red-light: #a33a2b;
     --accent-gold: #8a6a1e;
     --accent-gold-light: #c4973a;
+    --accent-gold-bright: #f2d062;
+    --accent-gold-dark: #704b1a;
     --accent-teal: #1e5a5a;
     --border: #b8a07a;
     --border-faint: #d4c5ab;
@@ -570,7 +572,7 @@
   .ritual-speech-body .cleric { text-align: right; }
 
   /* ── Footer ── */
-  .footer { border-top: 1px solid var(--border-faint); margin-top: 60px; padding-top: 18px; text-align: center; font-size: 13px; color: var(--border); letter-spacing: 0.1em; font-style: italic; }
+  .footer { border-top: 1px solid var(--border-faint); margin-top: 60px; padding-top: 18px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; font-size: 13px; color: var(--border); letter-spacing: 0.1em; font-style: italic; }
 
   /* ══════════════════════════════════════════════════
      DOMAIN-ONLY ELEMENTS
@@ -679,6 +681,83 @@
     .tier-pill { font-size: 11px; letter-spacing: 0.04em; padding: 2px 5px; }
 
   }
+
+  /* ══════════════════════════════════════════════════
+     DESIGN NOTES TOGGLE
+     ══════════════════════════════════════════════════
+     Hexagonal toggle with SVG-rendered border and knob.
+     State: `.show-design-notes` class on body controls visibility.
+     Knob offsets (tuned): OFF -9px, ON +10px; Y +1px for both.
+     
+     NOTE: The hexagonal path is defined 3 times (clip-path + 2 SVG backgrounds).
+     If shape changes, update all 3 instances.
+  ══════════════════════════════════════════════════ */
+
+  .design-note { display: none; }
+  body.show-design-notes .design-note { display: block; }
+
+  .design-notes-toggle {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    font-family: 'Crimson Text', serif;
+    font-size: 13px;
+    font-weight: 400;
+    font-style: italic;
+    letter-spacing: 0.1em;
+    color: var(--border);
+    transition: color 0.2s;
+    text-rendering: optimizeLegibility;
+    line-height: 1.2; /* stabilize flex alignment; prevents text jump on toggle */
+  }
+  .design-notes-toggle:hover { color: var(--ink-faded); }
+
+  .toggle-track {
+    display: flex;
+    align-items: center;
+    padding: 0;
+    width: 38px;
+    height: 18px;
+    background-color: var(--parchment-dark); /* OFF state bg */
+    /* SVG stroke color: %23b8a07a = var(--border) #b8a07a */
+    background-image: url('data:image/svg+xml;utf8,<svg viewBox="0 0 38 18" xmlns="http://www.w3.org/2000/svg"><path d="M 9.0,0 L 29.1,0 Q 29.1,6.9 38,9 Q 29.1,11.6 29.1,18 L 9.0,18 Q 9.0,11.6 0,9 Q 9.0,6.9 9.0,0 Z" fill="none" stroke="%23b8a07a" stroke-width="0.9" stroke-linejoin="round" stroke-linecap="round"/></svg>');
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    position: relative;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    clip-path: path('M 9.0,0 L 29.1,0 Q 29.1,6.9 38,9 Q 29.1,11.6 29.1,18 L 9.0,18 Q 9.0,11.6 0,9 Q 9.0,6.9 9.0,0 Z');
+    flex-shrink: 0; /* prevent flex shrinking that causes alignment shifts */
+  }
+
+  .toggle-knob {
+    font-size: 22.5px;
+    line-height: 0; /* icon only; no text baseline */
+    font-style: normal;
+    color: var(--accent-gold);
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    pointer-events: none;
+    transition: transform 0.2s;
+    -webkit-text-stroke: 0.5px var(--accent-gold-dark);
+    transform: translate(calc(-50% + -9px), calc(-50% + 1px)); /* OFF state */
+  }
+
+  body.show-design-notes .toggle-knob {
+    transform: translate(calc(-50% + 10px), calc(-50% + 1px)); /* ON state */
+  }
+
+  body.show-design-notes .toggle-track { 
+    background-color: var(--accent-gold-bright); /* ON state bg */
+    /* SVG stroke color: %238a6a1e = var(--accent-gold-dark) #704b1a (different from comment but checking) */
+    background-image: url('data:image/svg+xml;utf8,<svg viewBox="0 0 38 18" xmlns="http://www.w3.org/2000/svg"><path d="M 9.0,0 L 29.1,0 Q 29.1,6.9 38,9 Q 29.1,11.6 29.1,18 L 9.0,18 Q 9.0,11.6 0,9 Q 9.0,6.9 9.0,0 Z" fill="none" stroke="%238a6a1e" stroke-width="0.9" stroke-linejoin="round" stroke-linecap="round"/></svg>');
+  }
+
 </style>
 </head>
 <body>
@@ -1251,7 +1330,13 @@
     </section>
 
     <div class="footer">
-      Domain of Shared Breath &nbsp;·&nbsp; Constitution-primary Cleric &nbsp;·&nbsp; Homebrew &nbsp;·&nbsp; v2.2
+      <div>Domain of Shared Breath &nbsp;·&nbsp; Constitution-primary Cleric &nbsp;·&nbsp; Homebrew &nbsp;·&nbsp; v2.2</div>
+      <button class="design-notes-toggle" id="designNotesToggle" aria-label="Toggle design notes">
+        <span>Notes</span>
+        <div class="toggle-track" id="toggleTrack">
+          <div class="toggle-knob" id="toggleKnob">✦</div>
+        </div>
+      </button>
     </div>
 
   </div>
@@ -1328,6 +1413,29 @@
     window.addEventListener('hashchange', () => {
       const h = location.hash.replace('#', '');
       if (VALID.includes(h)) showChapter(h);
+    });
+  })();
+
+  // Design notes toggle
+  (function() {
+    const toggle = document.getElementById('designNotesToggle');
+    const STORAGE_KEY = 'designNotesOn'; // persists user preference across sessions
+    let isOn = localStorage.getItem(STORAGE_KEY) === 'true';
+    
+    function updateToggle() {
+      if (isOn) {
+        document.body.classList.add('show-design-notes');
+      } else {
+        document.body.classList.remove('show-design-notes');
+      }
+    }
+    
+    updateToggle();
+    
+    toggle.addEventListener('click', () => {
+      isOn = !isOn;
+      localStorage.setItem(STORAGE_KEY, isOn);
+      updateToggle();
     });
   })();
 
