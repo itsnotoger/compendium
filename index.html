@@ -415,6 +415,9 @@
   }
   .overview-table td { padding: 10px 12px; border-bottom: 1px solid var(--border-faint); vertical-align: top; }
   .overview-table tr:last-child td { border-bottom: none; }
+  .overview-table tbody tr[data-target] { cursor: pointer; }
+  .overview-table tbody tr[data-target]:hover td { background: rgba(0,0,0,0.03); }
+  .overview-table tbody tr[data-target]:active td { background: rgba(0,0,0,0.07); }
   .overview-table td:first-child { font-weight: 600; font-size: 14px; letter-spacing: 0.05em; white-space: nowrap; color: var(--ink-faded); }
   .tier-pill {
     display: inline-block; font-size: 12px; letter-spacing: 0.1em;
@@ -432,10 +435,9 @@
     background: var(--parchment-dark); border-radius: 3px;
     padding: 28px 32px; margin-bottom: 28px;
   }
-  .ability-card.level6 { border-top-color: var(--accent-teal); }
-  .ability-card.level8,
-  .ability-card.level17 { border-top-color: var(--accent-gold); }
-  .ability-card.flaw   { border-top-color: var(--ink-faded); background: #f0e9d8; }
+  .ability-card.tier-deep { border-top-color: var(--accent-teal); }
+  .ability-card.tier-pinnacle { border-top-color: var(--accent-gold); }
+  .ability-card.tier-flaw   { border-top-color: var(--ink-faded); background: #f0e9d8; }
 
   .ability-header { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 4px; flex-wrap: wrap; gap: 8px; }
   /* When no tagline follows, the header draws its own separator (Domain cards) */
@@ -445,10 +447,9 @@
     border-bottom: 1px solid var(--border-faint);
   }
   .ability-name { font-family: 'IM Fell English','Georgia',serif; font-size: 26px; color: var(--accent-red); line-height: 1.15; }
-  .level6 .ability-name { color: var(--accent-teal); }
-  .level8 .ability-name,
-  .level17 .ability-name { color: var(--accent-gold); }
-  .flaw   .ability-name { color: var(--ink-faded); }
+  .tier-deep .ability-name { color: var(--accent-teal); }
+  .tier-pinnacle .ability-name { color: var(--accent-gold); }
+  .tier-flaw   .ability-name { color: var(--ink-faded); }
   .level-badge { font-size: 12px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ink-faded); border: 1px solid var(--border-faint); padding: 2px 9px; border-radius: 2px; white-space: nowrap; }
   .ability-tagline { font-style: italic; color: var(--ink-faded); font-size: 15.5px; margin-bottom: 18px; padding-bottom: 14px; border-bottom: 1px solid var(--border-faint); }
   .ability-body p { margin-bottom: 12px; }
@@ -806,7 +807,7 @@
     <!-- Subtabs: appear below parent tab when that chapter is active (mobile only) -->
     <div class="h-subtabs" data-for-chapter="aspect">
       <div class="h-subtab-spacer"></div>
-      <button class="h-subtab-btn">Anchor</button>
+      <button class="h-subtab-btn" data-modal="modal-anchor">Anchor</button>
     </div>
     <!-- Ornament separator: mobile only, sits at bottom of sticky nav band -->
     <div class="nav-ornament">
@@ -815,7 +816,7 @@
       <div class="nav-ornament-rule r"></div>
     </div>
   </nav>
-  <button class="sidebar-toggle">Anchor</button>
+  <button class="sidebar-toggle" data-modal="modal-anchor">Anchor</button>
 
   <div class="page">
 
@@ -842,19 +843,19 @@
       <tr><th>Level</th><th>Name</th><th>Network</th><th>Core Abilities</th></tr>
     </thead>
     <tbody>
-      <tr>
+      <tr data-chapter="domain" data-target="card-domain-core">
         <td><span class="tier-pill t4">Lv. 3</span></td>
         <td>The Breathing Network</td>
         <td>Touch to forge; 2 links max; unlimited range once forged</td>
         <td>Felt Presence · Steadied by the Link (adv vs Frightened) · Felt Across the Distance · Interpose (Reaction, CD, halve damage)</td>
       </tr>
-      <tr>
+      <tr data-chapter="domain" data-target="card-domain-deep">
         <td><span class="tier-pill t6">Lv. 6</span></td>
         <td>The Network Deepens</td>
         <td>30 ft range on re-link (prior touch required)</td>
         <td>Wordless Impressions (emotional texture) · Conduit (free object transfer, 60 ft, no LoS)</td>
       </tr>
-      <tr>
+      <tr data-chapter="domain" data-target="card-domain-pinnacle">
         <td><span class="tier-pill t8">Lv. 17</span></td>
         <td>The Last Breath</td>
         <td>—</td>
@@ -866,7 +867,7 @@
   <div class="ornament-divider">✦ &nbsp; ✦ &nbsp; ✦</div>
 
   <!-- Level 3 -->
-  <div class="ability-card">
+  <div class="ability-card" id="card-domain-core">
     <div class="ability-header">
       <div class="ability-name">The Breathing Network</div>
       <div class="level-badge">Level 3 &nbsp;·&nbsp; Domain Ability</div>
@@ -934,7 +935,7 @@
   </div>
 
   <!-- Level 6 -->
-  <div class="ability-card level6">
+  <div class="ability-card tier-deep" id="card-domain-deep">
     <div class="ability-header">
       <div class="ability-name">The Network Deepens</div>
       <div class="level-badge">Level 6 &nbsp;·&nbsp; Domain Ability</div>
@@ -969,7 +970,7 @@
   </div>
 
   <!-- Level 17 -->
-  <div class="ability-card level17">
+  <div class="ability-card tier-pinnacle" id="card-domain-pinnacle">
     <div class="ability-header">
       <div class="ability-name">The Last Breath</div>
       <div class="level-badge">Level 17 &nbsp;·&nbsp; Domain Ability</div>
@@ -1056,25 +1057,25 @@
       <tr><th>Level</th><th>Name</th><th>Bond Mechanic</th><th>Core Ability</th></tr>
     </thead>
     <tbody>
-      <tr>
+      <tr data-chapter="aspect" data-target="card-aspect-core">
         <td><span class="tier-pill t4">Lv. 4</span></td>
         <td>The Anchor's Exchange</td>
         <td>Touch to establish; 60 ft range</td>
         <td>Life Transfer: intercept Anchor's damage as Psychic; Bond shatters on extreme hits</td>
       </tr>
-      <tr>
+      <tr data-chapter="aspect" data-target="card-aspect-deep">
         <td><span class="tier-pill t6">Lv. 6</span></td>
         <td>Shared Vitality Pool</td>
         <td>30 ft range (prior touch required)</td>
         <td>Pool absorbs Life Transfer first; collapses on voluntary breaks; death save adv. while non-empty</td>
       </tr>
-      <tr>
+      <tr data-chapter="aspect" data-target="card-aspect-pinnacle">
         <td><span class="tier-pill t8">Lv. 8</span></td>
         <td>The Eternal Tether</td>
         <td>Permanent; no range limit — via The Asking</td>
         <td>Stasis replaces 0 HP; Resonance + Shared Fortitude; risk of Eternal Stasis</td>
       </tr>
-      <tr>
+      <tr data-chapter="aspect" data-target="card-aspect-flaw">
         <td><span class="tier-pill flaw">Flaw</span></td>
         <td>Hollow Without You</td>
         <td>Aspect-granted; always active</td>
@@ -1089,7 +1090,7 @@
   <div class="cards-anchor">
 
   <!-- Sidebar: absolute right on wide screens, toggle overlay on narrow -->
-  <div class="anchor-sidebar">
+  <div class="anchor-sidebar modal-panel" id="modal-anchor">
     <div class="sidebar-header">
       <div class="sidebar-eyebrow">What the Anchor knows</div>
       <button class="sidebar-close" aria-label="Close">✕</button>
@@ -1120,7 +1121,7 @@
   </div><!-- end anchor-sidebar -->
 
   <!-- ═══════════════════ LEVEL 4 ═══════════════════ -->
-  <div class="ability-card">
+  <div class="ability-card" id="card-aspect-core">
     <div class="ability-header">
       <div class="ability-name">The Anchor's Exchange</div>
       <div class="level-badge">Level 4 &nbsp;·&nbsp; Aspect Ability</div>
@@ -1150,7 +1151,7 @@
   </div>
 
   <!-- ═══════════════════ LEVEL 6 ═══════════════════ -->
-  <div class="ability-card level6">
+  <div class="ability-card tier-deep" id="card-aspect-deep">
     <div class="ability-header">
       <div class="ability-name">Shared Vitality Pool</div>
       <div class="level-badge">Level 6 &nbsp;·&nbsp; Aspect Ability</div>
@@ -1198,7 +1199,7 @@
   </div>
 
   <!-- ═══════════════════ LEVEL 8 ═══════════════════ -->
-  <div class="ability-card level8">
+  <div class="ability-card tier-pinnacle" id="card-aspect-pinnacle">
     <div class="ability-header">
       <div class="ability-name">The Eternal Tether</div>
       <div class="level-badge">Level 8 &nbsp;·&nbsp; Aspect Ability</div>
@@ -1301,7 +1302,7 @@
   <div class="ornament-divider">✦ &nbsp; ✦ &nbsp; ✦</div>
 
   <!-- ═══════════════════ FLAW ═══════════════════ -->
-  <div class="ability-card flaw">
+  <div class="ability-card tier-flaw" id="card-aspect-flaw">
     <div class="ability-header">
       <div class="ability-name">Flaw: Hollow Without You</div>
       <div class="level-badge">Aspect-Granted &nbsp;·&nbsp; Permanent</div>
@@ -1360,25 +1361,43 @@
     const VALID = ['domain', 'aspect'];
     const DEFAULT = 'domain';
 
-    function openSidebar() {
-      document.querySelector('.anchor-sidebar')?.classList.add('open');
-      document.querySelector('.sidebar-toggle')?.classList.add('open');
-      document.querySelector('.h-subtab-btn')?.classList.add('open');
+    // Scroll memory: keyed by chapter name, populated on each tab switch.
+    // scrollTarget (future xref use): an element id that overrides saved scroll.
+    const scrollMemory = {};
+    // Modal memory: keyed by chapter name; stores the open modal's id, or null.
+    // Only one modal may be open at a time across the whole document.
+    const modalMemory = {};
+    let currentChapter = null;
+
+    function getOpenModal() {
+      return document.querySelector('.modal-panel.open')?.id ?? null;
     }
 
-    function closeSidebar() {
-      document.querySelector('.anchor-sidebar')?.classList.remove('open');
-      document.querySelector('.sidebar-toggle')?.classList.remove('open');
-      document.querySelector('.h-subtab-btn')?.classList.remove('open');
+    function openModal(id) {
+      closeModal(); // enforce one-at-a-time
+      document.getElementById(id)?.classList.add('open');
+      document.querySelectorAll(`[data-modal="${id}"]`).forEach(b => b.classList.add('open'));
     }
 
-    function toggleSidebar() {
-      document.querySelector('.anchor-sidebar')?.classList.contains('open')
-        ? closeSidebar() : openSidebar();
+    function closeModal() {
+      const id = getOpenModal();
+      if (!id) return;
+      document.getElementById(id)?.classList.remove('open');
+      document.querySelectorAll(`[data-modal="${id}"]`).forEach(b => b.classList.remove('open'));
     }
 
-    function showChapter(name) {
+    function toggleModal(id) {
+      getOpenModal() === id ? closeModal() : openModal(id);
+    }
+
+    function showChapter(name, scrollTarget = null) {
       if (!VALID.includes(name)) name = DEFAULT;
+
+      // Save scroll position and open modal for the chapter we're leaving
+      if (currentChapter) {
+        scrollMemory[currentChapter] = window.scrollY;
+        modalMemory[currentChapter] = getOpenModal();
+      }
 
       document.querySelectorAll('section[data-chapter]').forEach(s => {
         s.classList.toggle('is-active', s.id === name);
@@ -1387,7 +1406,10 @@
         b.classList.toggle('active', b.dataset.chapter === name);
       });
 
-      closeSidebar();
+      // Close any open modal, then restore the one remembered for the incoming chapter
+      closeModal();
+      const remembered = modalMemory[name] ?? null;
+      if (remembered) openModal(remembered);
 
       // Show subtab row for the active chapter; hide all others
       document.querySelectorAll('.h-subtabs').forEach(el => {
@@ -1402,6 +1424,18 @@
         const currentHash = location.hash.replace('#', '');
         if (currentHash !== name) history.replaceState(null, '', '#' + name);
       } catch(e) {}
+
+      currentChapter = name;
+
+      // Scroll: explicit target overrides memory; otherwise restore saved position or top.
+      // rAF ensures the incoming section is visible before we scroll.
+      requestAnimationFrame(() => {
+        if (scrollTarget) {
+          document.getElementById(scrollTarget)?.scrollIntoView({ block: 'start' });
+        } else {
+          window.scrollTo(0, scrollMemory[name] ?? 0);
+        }
+      });
     }
 
     const initial = (location.hash || '').replace('#', '');
@@ -1410,18 +1444,23 @@
     document.querySelectorAll('button[data-chapter]').forEach(b => {
       b.addEventListener('click', () => {
         showChapter(b.dataset.chapter);
-        window.scrollTo(0, 0);
       });
     });
 
-    // Narrow rail toggle and mobile subtab — both act as open/close toggles
-    const railToggleBtn = document.querySelector('.sidebar-toggle');
-    if (railToggleBtn) railToggleBtn.addEventListener('click', toggleSidebar);
+    // Overview table rows: click to jump to the corresponding ability card
+    document.querySelectorAll('.overview-table tbody tr[data-target]').forEach(row => {
+      row.addEventListener('click', () => {
+        showChapter(row.dataset.chapter, row.dataset.target);
+      });
+    });
+    document.querySelectorAll('[data-modal]').forEach(btn => {
+      // Skip chapter nav buttons that happen to have data-chapter (none do, but be safe)
+      if (btn.dataset.chapter) return;
+      btn.addEventListener('click', () => toggleModal(btn.dataset.modal));
+    });
 
-    document.querySelector('.h-subtab-btn')?.addEventListener('click', toggleSidebar);
-
-    // Internal ✕ button closes from any scroll position
-    document.querySelector('.sidebar-close')?.addEventListener('click', closeSidebar);
+    // Internal ✕ button closes whatever modal is open
+    document.querySelector('.sidebar-close')?.addEventListener('click', closeModal);
 
     window.addEventListener('hashchange', () => {
       const h = location.hash.replace('#', '');
