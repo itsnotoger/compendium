@@ -303,8 +303,13 @@
   .anchor-sidebar th { text-align: left; padding: 5px 6px; border-bottom: 1px solid var(--border); color: var(--ink-faded); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 600; }
   .anchor-sidebar td { padding: 6px 6px; border-bottom: 1px solid var(--border-faint); vertical-align: top; line-height: 1.4; color: var(--ink-faded); }
   .anchor-sidebar td.felt { color: var(--ink); }
+  .anchor-sidebar td.secret { color: var(--accent-red-light); }
   .anchor-sidebar td:first-child { white-space: nowrap; font-size: 11px; font-weight: 600; letter-spacing: 0.05em; }
   .anchor-sidebar tr:last-child td { border-bottom: none; }
+  .sidebar-legend { font-size: 11px !important; letter-spacing: 0.1em; margin-top: 10px !important; margin-bottom: 0 !important; }
+  .legend-dot { font-size: 13px; line-height: 1; vertical-align: middle; }
+  .legend-dot.secret { color: var(--accent-red-light); }
+  .legend-dot.open   { color: var(--ink-faded); }
 
   /* ── Wide (≥ --breakpoint): sidebar auto-expands; left rail becomes floating TOC box ── */
   @media (min-width: 1395px) { /* --breakpoint */
@@ -1014,16 +1019,6 @@
         <p><em>Mechanical detail for (b) and (c): while the Bond is active, the network rides on the Bond rather than the Anchor's consciousness — the "Anchor becomes unconscious" termination is replaced by "Bond breaks," and the Anchor may be unconscious without disrupting the network. When the Bond breaks for any reason, all Breath Links shatter; the Anchor rebuilds from scratch on re-establishment.</em></p>
       </div>
 
-      <div class="q-item">
-        <span class="q-label">Aspect Doc · Anchor Sidebar Update</span>
-        <p>The "What the Anchor knows" sidebar in the Aspect section needs a domain row or annotation. The Anchor (post-Aspect) discovers Breath Link creation as a felt capacity at Level 4, when it transfers. They feel something genuinely good they can extend to others, without needing to know the cleric powers it. At later levels they witness Interpose halve damage to linked allies, observe Wordless Impressions and Conduit emerge, and at Level 17 see Catch put someone in temporary stasis. None of this discovers the Flaw — the domain layer is exactly the layer the cleric gives without hiding. Decide whether this belongs in the sidebar or a separate domain-side note.</p>
-      </div>
-      <div class="q-item">
-        <span class="q-label">Navigation · Cross-Chapter Anchor Links</span>
-        <p>Tabs are in place; intra-doc and cross-tab anchor links are not. Should be a small JS handler that intercepts <code>#anchor</code> clicks, checks if the target lives in the inactive chapter, switches chapter if needed, then scrolls to the anchor. Useful for forward refs between Aspect mechanics and Domain abilities (e.g. Catch DM note referencing Stasis in the Aspect chapter).</p>
-      </div>
-
-
     </div>
   </div>
 
@@ -1108,27 +1103,33 @@
       <button class="sidebar-close" aria-label="Close">✕</button>
     </div>
     <div class="sidebar-body">
-    <p>The Anchor's understanding grows only through observation and felt sense — never through explanation. Discovery consequences under The Secret apply when the Anchor learns beyond their current tier.</p>
+    <p>The cleric hides how the Bond works and what it costs them—they want to be seen as helpful, not burdensome. The Anchor learns only what they feel directly, but may discover mechanics through observation.</p>
     <table>
       <thead><tr><th>Tier</th><th>Feels</th><th>Does not know</th></tr></thead>
       <tbody>
         <tr>
+          <td>Lv. 3</td>
+          <td class="felt">A touch leaving something behind. A faint directional sense of anyone linked. The capacity, from Lv. 4, to extend this to others.</td>
+          <td>The mechanics behind it. Can ask.</td>
+        </tr>
+        <tr>
           <td>Lv. 4</td>
-          <td class="felt">A vague warmth from the touch. Nothing more — unless they notice they took no damage from a hit.</td>
-          <td>That the cleric is absorbing their damage. That it becomes Psychic. That the Bond can shatter.</td>
+          <td class="felt">Warmth from the Bond. The cleric may visibly react when a hit lands — a flinch, a sharp intake, or bleed — but tries to hide it. The Anchor feels nothing.</td>
+          <td class="secret">That the cleric is taking the damage. What it costs them.</td>
         </tr>
         <tr>
           <td>Lv. 6</td>
-          <td class="felt">The Pool instinctively — like knowing how full their lungs are. The ability to Donate and Withdraw.</td>
-          <td>Where the Pool comes from. What it costs to maintain. That Pool Collapse harms them both.</td>
+          <td class="felt">The Pool and its current value. How to Donate and Withdraw. Objects arriving through the network. The emotional state of linked allies.</td>
+          <td class="secret">Where the Pool comes from. That collapse is mutual.</td>
         </tr>
         <tr>
           <td>Lv. 8</td>
-          <td class="felt">That something permanent happened during The Asking. The weight of it. In Stasis: the bond going one-directional, impressions of calm and <em>not yet</em>. That reaching in costs something real.</td>
-          <td>That the Bond cannot be dissolved. That Eternal Stasis is the failure condition. The exact cost of Breaking Stasis. What they agreed to.</td>
+          <td class="felt">That something permanent happened during The Asking. In Stasis: one-directional connection, calm, <em>not yet</em>.</td>
+          <td class="secret">That it cannot be undone. The failure condition. What they agreed to.</td>
         </tr>
       </tbody>
     </table>
+    <p class="sidebar-legend"><span class="legend-dot secret">●</span> Must be kept secret<br><span class="legend-dot open">●</span> Can be explained</p>
   </div><!-- end sidebar-body -->
   </div><!-- end anchor-sidebar -->
 
@@ -1356,7 +1357,7 @@
     </section>
 
     <div class="footer">
-      <div>Domain of Shared Breath &nbsp;·&nbsp; Constitution-primary Cleric &nbsp;·&nbsp; Homebrew &nbsp;·&nbsp; v2.3</div>
+      <div>Domain of Shared Breath &nbsp;·&nbsp; Constitution-primary Cleric &nbsp;·&nbsp; Homebrew &nbsp;·&nbsp; v2.4</div>
       <button class="design-notes-toggle" id="designNotesToggle" aria-label="Toggle design notes">
         <span>Notes</span>
         <div class="toggle-track" id="toggleTrack">
