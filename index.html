@@ -105,7 +105,9 @@
   .header-meta {
     font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase;
     color: var(--ink-faded); margin-bottom: 12px;
+    display: flex; flex-wrap: wrap; justify-content: center;
   }
+  .header-meta > span { white-space: break-spaces; }
   .header-flavor {
     font-style: italic; color: var(--ink-faded); font-size: 15.5px;
     margin-bottom: 0;
@@ -793,7 +795,7 @@
   <div class="shared-header">
     <div class="domain-eyebrow">Cleric — Subclass</div>
     <h1 class="domain-title">Domain of Shared Breath</h1>
-    <div class="header-meta">Primary Stat: Constitution &nbsp;·&nbsp; Custom Domain &amp; Aspect</div>
+    <div class="header-meta"><span>Primary Stat: Constitution</span><span>&nbsp;·&nbsp;</span><span>Custom Domain &amp; Aspect</span></div>
     <div class="header-flavor">“Strength that lives between people, not within them.”</div>
   </div>
 
