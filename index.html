@@ -227,8 +227,10 @@
   .chapter-nav-h button[data-chapter="domain"].active { border-top-color: var(--accent-teal); }
   .chapter-nav-h button[data-chapter="aspect"].active { border-top-color: var(--accent-gold); }
 
-  /* Subtab row: always reserves its height (visibility, not display) so nav bar never jumps.
-     Spacer takes the left slot; button is content-width only, right-aligned. */
+  /* Subtab row: visibility (not display) toggles so the parent button's
+     aria-expanded state stays meaningful even when hidden. On mobile this
+     row is absolutely positioned and overlaps the tabs (see mobile block);
+     on desktop the entire nav is hidden so this rule has no visible effect. */
   .chapter-nav-h .h-subtabs { display: flex; visibility: hidden; }
   .chapter-nav-h .h-subtabs.is-active { visibility: visible; }
   .chapter-nav-h .h-subtab-spacer { flex: 1; }
@@ -656,8 +658,18 @@
     .nav-ornament-rule { flex: 1; height: 1px; opacity: 0.7; }
     .nav-ornament-rule.l { background: linear-gradient(to right, var(--nav-bg-mobile), var(--rule) 40%); }
     .nav-ornament-rule.r { background: linear-gradient(to left, var(--nav-bg-mobile), var(--rule) 40%); }
-    .nav-ornament-glyph { padding: 0 12px; opacity: 0.75; }
-    .chapter-nav-h button[data-chapter] { font-size: 15px; padding: 6px 10px 8px; }
+    .nav-ornament-glyph { padding: 0 12px; padding-top: 2px; opacity: 0.75; translate: 1.4px; }
+    .chapter-nav-h button[data-chapter] { font-size: 15px; padding: 6px 10px 33px; }
+    /* Subtab overlays the bottom-right of the (now taller) tabs.
+       The tabs reach down into what was the reserved subtab row; the subtab
+       pill sits in that newly-tab-shaped space, above the ornament. */
+    .chapter-nav-h .h-subtabs {
+      display: block;          /* override base flex; no spacer needed when absolute */
+      position: absolute;
+      bottom: 12px;            /* clears the ornament (~11px) with a small inset */
+      right: 14px;             /* matches nav padding-inline */
+    }
+    .chapter-nav-h .h-subtab-spacer { display: none; }
     .chapter-nav-v { display: none; }
     /* Fixed rail toggle hidden on mobile — subtab handles opening the sidebar */
     .sidebar-toggle { display: none; }
