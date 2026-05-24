@@ -570,9 +570,9 @@
     color: var(--ink-faded); margin-bottom: 18px; padding-bottom: 14px; 
     border-bottom: 1px solid var(--border-faint);
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    flex-wrap: wrap;
   }
+  .ritual-subtitle > span { white-space: break-spaces; }
   .ritual-block p { font-size: 15.5px; color: var(--ink-faded); margin-bottom: 12px; }
   .ritual-block p:last-child { margin-bottom: 0; }
   /* Only padding-top actually differs from the general .flavor rule;
@@ -1217,7 +1217,7 @@
 
       <div class="ritual-block">
         <h4 class="ritual-title">The Asking</h4>
-        <div class="ritual-subtitle"><span>Ritual</span><span>·</span><span>10 minutes</span><span>·</span><span>Completes the Permanent Bond</span></div>
+        <div class="ritual-subtitle"><span>Ritual</span><span>&nbsp;·&nbsp;</span><span>10&nbsp;minutes</span><span>&nbsp;·&nbsp;</span><span>Completes&nbsp;Permanent&nbsp;Bond</span></div>
         <p>The cleric must have an active Bond before beginning. The ritual transforms an existing Bond — it cannot create a new one.</p>
         <p>The cleric initiates by making a small wound on their palm and extending their open hand toward the Anchor without a word. If the Anchor takes the hand and mirrors the wound, the ritual begins. Neither character needs to understand what is happening. One of them does.</p>
         <p>The cleric then performs a gesture of their choosing — tracing a symbol on the Anchor's wrist, pressing joined hands to their chest, holding the silence. What matters is that it feels like a threshold. Something offered that cannot be taken back. There are no words, because the cleric cannot speak the truth of what this is.</p>
