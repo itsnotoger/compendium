@@ -213,7 +213,11 @@
     font-family: 'IM Fell English', 'Georgia', serif;
     font-size: 17px;
     letter-spacing: 0.06em;
-    background: var(--parchment-dark);
+    background: linear-gradient(180deg, var(--parchment) 0%, var(--nav-bg-mobile) 150%);
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.72),
+      inset 0 -1px 0 rgba(0,0,0,0.07),
+      0 2px 5px rgba(0,0,0,0.08);
     border: 1px solid var(--border-faint);
     border-bottom: none;
     border-top: 3px solid transparent;
@@ -221,13 +225,41 @@
     cursor: pointer;
     color: var(--ink-faded);
     border-radius: 3px 3px 0 0;
-    transition: background 0.15s, color 0.15s;
+    transition: background 0.15s, color 0.15s, box-shadow 0.15s;
   }
-  .chapter-nav-h button[data-chapter]:hover { background: var(--button-hover); color: var(--ink); }
-  .chapter-nav-h button[data-chapter]:active { background: var(--button-press); color: var(--ink); }
-  .chapter-nav-h button[data-chapter].active { background: var(--button-hover); color: var(--ink); }
+  .chapter-nav-h button[data-chapter]:hover {
+    background:
+      linear-gradient(180deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.12) 150%),
+      linear-gradient(180deg, var(--parchment) 0%, var(--nav-bg-mobile) 150%);
+    color: var(--ink);
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.88),
+      inset 0 -1px 0 rgba(0,0,0,0.09),
+      0 5px 12px rgba(0,0,0,0.13);
+  }
+  .chapter-nav-h button[data-chapter]:active {
+    background:
+      linear-gradient(180deg, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0.22) 150%),
+      linear-gradient(180deg, var(--parchment) 0%, var(--nav-bg-mobile) 150%);
+    color: var(--ink);
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.97),
+      inset 0 -1px 0 rgba(0,0,0,0.11),
+      0 8px 18px rgba(0,0,0,0.17);
+  }
+  .chapter-nav-h button[data-chapter].active {
+    background:
+      linear-gradient(180deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.12) 150%),
+      linear-gradient(180deg, var(--parchment) 0%, var(--nav-bg-mobile) 140%);
+    color: var(--ink);
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.88),
+      inset 0 -1px 0 rgba(0,0,0,0.09),
+      0 5px 12px rgba(0,0,0,0.13);
+  }
   .chapter-nav-h button[data-chapter="domain"].active { border-top-color: var(--accent-teal); }
   .chapter-nav-h button[data-chapter="aspect"].active { border-top-color: var(--accent-gold); }
+
 
   /* Subtab row: visibility (not display) toggles so the parent button's
      aria-expanded state stays meaningful even when hidden. On mobile this
