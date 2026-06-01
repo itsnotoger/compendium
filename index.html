@@ -555,6 +555,15 @@
     font-style: normal;
   }
 
+  /* Multi-paragraph note: a second consecutive xref continues the one above it —
+     no repeated divider rule, no repeated "DM note:" label, just a paragraph gap. */
+  p.xref + p.xref {
+    border-top: none;
+    padding-top: 0;
+    margin-top: 0.7em !important;
+  }
+  p.xref[data-type="dm"] + p.xref[data-type="dm"]::before { content: none; }
+
   /* Inline cross-reference link within xref paragraphs */
   .xref-link {
     cursor: pointer;
@@ -905,7 +914,7 @@
       <h3 class="ability-name">The Breathing Network</h3>
       <div class="level-badge">Level 3 &nbsp;·&nbsp; Domain Ability</div>
     </div>
-    <div class="ability-tagline">The habit of watching over everyone, made into a mechanism — and given the cap that habit always quietly carried.</div>
+    <div class="ability-tagline">“Someone has to keep track of everyone. It may as well be me — I don't mind.”</div>
     <div class="ability-body">
       <p>At Level 3 the cleric is the Anchor: the one who forges the network. A touch leaves a link behind, and through it the cleric feels the others — their direction, their distress, the half-instant before a blow lands. The reach is unlimited once made; the hands are not. Two links at a time, and someone is always left outside the breath.</p>
     </div>
@@ -916,7 +925,7 @@
           <h4 class="rule-name">Forge Breath Link</h4>
           <span class="rule-pill active">Active · Bonus Action</span>
         </div>
-        <p>As a <kw>Bonus Action</kw>, <span class="xref-link" data-chapter="aspect" data-target="card-aspect-core">the Anchor</span> touches a willing creature within reach to forge a <kw>Breath Link</kw>. The Anchor may maintain up to <kw>2 Breath Links</kw> at once; forging a new one at cap drops an existing link of the Anchor's choice (no action required). A link persists indefinitely until severed by the Anchor (no action required), the linked creature dies, or the cleric falls unconscious or dies. Once forged, a Breath Link's effects function regardless of distance, so long as the link persists.</p>
+        <p>As a <kw>Bonus Action</kw>, <span class="xref-link" data-chapter="aspect" data-target="card-aspect-core">the Anchor</span> touches a willing creature within reach to forge a <kw>Breath Link</kw>. The Anchor may maintain up to <kw>2 Breath Links</kw> at once; forging a new one at cap drops an existing link of the Anchor's choice (no action required). A link persists indefinitely until severed by the Anchor (no action required), the linked creature dies, or you fall unconscious or die. Once forged, a Breath Link's effects function regardless of distance, so long as the link persists.</p>
       </div>
 
       <div class="rule-block dark">
@@ -948,8 +957,8 @@
           <h4 class="rule-name">Felt Across the Distance</h4>
           <span class="rule-pill passive">Passive</span>
         </div>
-        <p>The cleric senses through the network at all times — a sense that is theirs alone and does not pass with the Anchor role. Whenever a Breath-linked creature is hurt, the cleric feels it: not numbers, just impact, direction, severity, distress. Distance is no barrier to this. If a linked creature is harmed, the cleric knows the moment it happens, however far away they are.</p>
-        <p>Nearer to the cleric, the sense gains an edge. Within <kw>60 feet</kw> the cleric feels not only the harm but the body's anticipation of it — the flinch, the brace, the half-instant in which a creature registers a blow before it lands. Past that range the network still carries the distress, but this live edge is gone: the cleric feels that someone is in danger, never quite in time to do anything but grieve it.</p>
+        <p>You sense through the network at all times — a sense that is yours alone and does not pass with the Anchor role. Whenever a Breath-linked creature is hurt, you feel it: not numbers, just impact, direction, severity, distress. Distance is no barrier to this. If a linked creature is harmed, you know the moment it happens, however far away you are.</p>
+        <p>Nearer to you, the sense gains an edge. Within <kw>60 feet</kw> you feel not only the harm but the body's anticipation of it — the flinch, the brace, the half-instant in which a creature registers a blow before it lands. Past that range the network still carries the distress, but this live edge is gone: you feel that someone is in danger, never quite in time to do anything but grieve it.</p>
       </div>
 
       <div class="rule-block danger">
@@ -957,9 +966,9 @@
           <h4 class="rule-name">Interpose</h4>
           <span class="rule-pill active">Active · Reaction · CD Use</span>
         </div>
-        <p>Interpose carries that network sense into action. When the cleric feels a Breath-linked creature <kw>within 60 feet</kw> brace against an incoming hit — or sees the blow coming — they may spend a <kw>Channel Divinity use</kw> as a <kw>Reaction</kw> to grant that creature <kw>resistance</kw> to the triggering damage. It is halved as any resistance halves it, type unchanged. The trigger is the blow itself, in the instant it lands.</p>
-        <p><span class="rule-lead">What the cleric cannot feel, they cannot catch.</span> If the creature is unaware of the blow <em>and</em> the cleric cannot see it, there is no brace to step into — the hit lands. Beyond 60 feet the same is true for a different reason: the network carries the distress, but too dull and too late to act on. In both cases the cleric feels the harm afterward, like any blow that finds someone they are tied to.</p>
+        <p>Interpose carries that network sense into action. When you feel a Breath-linked creature <kw>within 60 feet</kw> brace against an incoming hit — or see the blow coming — you may spend a <kw>Channel Divinity use</kw> as a <kw>Reaction</kw> to grant that creature <kw>resistance</kw> to the triggering damage. It is halved as any resistance halves it, type unchanged. The trigger is the blow itself, in the instant it lands.</p>
         <p class="flavor">The cleric keeps no sense of their own in reserve. They borrow everyone else's — and only as far as the breath still reaches.</p>
+        <p class="xref" data-type="dm">What the cleric cannot feel, they cannot catch. If the creature is unaware of the blow <em>and</em> the cleric cannot see it, there is no brace to step into — the hit lands. Beyond 60 feet the same is true for a different reason: the network carries the distress, but too dull and too late to act on. In both cases the cleric feels the harm afterward, like any blow that finds someone they are tied to.</p>
         <p class="xref" data-type="dm">Strictly, the call comes as the blow lands, before its number is known. In practice it plays cleaner to let it come once the damage is announced — allow either. What stays fixed is the sense: something has to register the blow coming, or there is nothing to step into.</p>
       </div>
 
@@ -990,7 +999,7 @@
       <h3 class="ability-name">The Network Deepens</h3>
       <div class="level-badge">Level 6 &nbsp;·&nbsp; Domain Ability</div>
     </div>
-    <div class="ability-tagline">The link stops being only direction. It learns to carry feeling — and to hand things across the gap it once only sensed.</div>
+    <div class="ability-tagline">“If I can feel that you're hurting, distance isn't a real excuse not to come.”</div>
     <div class="ability-body">
       <p>The network widens without becoming anything new. Links can be re-formed at a distance, the emotional weather of the bound now travels alongside the old directional sense, and a held object can cross to whoever needs it — presence thickening, slowly, toward use.</p>
     </div>
@@ -1001,7 +1010,7 @@
           <h4 class="rule-name">Extended Reach</h4>
           <span class="rule-pill passive">Passive · Range</span>
         </div>
-        <p>The Anchor may establish a Breath Link as a <kw>Bonus Action</kw> with a willing creature up to <kw>30 feet</kw> away, provided the current Anchor has previously touched that creature to form a Breath Link (or, in the cleric's case, a Bond). For an entirely new creature, physical contact is still required to form the first link.</p>
+        <p>The Anchor may establish a Breath Link as a <kw>Bonus Action</kw> with a willing creature up to <kw>30 feet</kw> away, provided the current Anchor has previously touched that creature to form a Breath Link (or, in your case, a Bond). For an entirely new creature, physical contact is still required to form the first link.</p>
       </div>
 
       <div class="rule-block good">
@@ -1030,7 +1039,7 @@
       <h3 class="ability-name">The Last Breath</h3>
       <div class="level-badge">Level 17 &nbsp;·&nbsp; Domain Ability</div>
     </div>
-    <div class="ability-tagline">Everything the network reached toward, arriving at the only moment that matters — the instant before someone is lost.</div>
+    <div class="ability-tagline">“I can keep them right at the edge a little longer. Just don't ask me to let go — not yet.”</div>
     <div class="ability-body">
       <p>The monitoring instinct reaches its limit and refuses it. When a linked creature would drop — even to something that would kill outright — the cleric can hold them suspended, untouchable, just beyond death's reach, and return them a breath later. Not a healing. A refusal to let go, for two rounds.</p>
     </div>
@@ -1041,7 +1050,7 @@
           <h4 class="rule-name">Catch</h4>
           <span class="rule-pill active">Active · Reaction · CD Use</span>
         </div>
-        <p>When a Breath-linked creature would be reduced to <kw>0 HP</kw> — including by effects that would kill outright — the cleric may spend a <kw>Channel Divinity use</kw> as a <kw>Reaction</kw>. The creature enters a temporary <kw>Stasis</kw> instead: <kw>Paralyzed</kw>, immune to all damage, untargetable. No death saving throws.</p>
+        <p>When a Breath-linked creature would be reduced to <kw>0 HP</kw> — including by effects that would kill outright — you may spend a <kw>Channel Divinity use</kw> as a <kw>Reaction</kw>. The creature enters a temporary <kw>Stasis</kw> instead: <kw>Paralyzed</kw>, immune to all damage, untargetable. No death saving throws.</p>
         <p>Stasis lasts <kw>2 rounds</kw>. At the end of the second round, the creature exits automatically at <kw>1 HP</kw>, all prior conditions removed. This ability may be used <kw>once per creature per long rest</kw>.</p>
         <p><span class="rule-lead">While in Stasis.</span> The creature is suspended — aware, but unable to act or speak. Something reaches them from outside: steady, wordless, not urgent.</p>
         <p class="xref" data-type="dm">this is the same Stasis described in <span class="xref-link" data-chapter="aspect" data-target="card-aspect-pinnacle">the Aspect section</span>. The experience notes there apply generally, except that the Stased creature cannot push impressions outward (that requires an active Bond). Everything else — including what the outside character feels through the connection — applies as written.</p>
@@ -1058,7 +1067,7 @@
   <!-- About the Aspect -->
   <h2 class="section-eyebrow">About the Aspect</h2>
   <div class="domain-intro">
-    <p>A cleric naturally has breadth — a wide spell list, abilities across roles. The Domain is already a specialization, but a clean one: it adds without taking away. The Aspect goes further. It narrows your spell access to what the domain truly represents, leans you fully into its spirit, and attaches the Flaw — rule-enforced compulsions that come with that commitment. The Domain alone is already complete; the Aspect is how far this character is willing to go.</p>
+    <p>A cleric naturally has breadth — a wide spell list, abilities across roles. The Domain is already a specialization, but a clean one: it adds without taking away. The Aspect goes further. It narrows the cleric's spell access to what the domain truly represents, leans fully into its spirit, and attaches the Flaw — rule-enforced compulsions that come with that commitment. The Domain alone is already complete; the Aspect is how far this character is willing to go.</p>
   </div>
 
   <!-- Who this person already was -->
@@ -1081,7 +1090,7 @@
     <div class="rule-block open">
       <p><strong>The Flaw</strong> — Mechanics make the character fail saves, shatter bonds, freeze when their Anchor walks away. No opting out at the table.</p>
       <p><strong>The Spell Restriction</strong> — The cleric draws from a narrow field: protection, sustain, connection. Damage and coercion were never learned.</p>
-      <p><strong>The Psychology</strong> — You are playing a specific type of person now. The rules don't enforce the characterization, but it is part of the package.</p>
+      <p><strong>The Psychology</strong> — This is a specific kind of person to play. The rules don't enforce the characterization, but it is part of the package.</p>
     </div>
   </div>
 
@@ -1169,9 +1178,9 @@
       <h3 class="ability-name">The Anchor's Exchange</h3>
       <div class="level-badge">Level 4 &nbsp;·&nbsp; Aspect Ability</div>
     </div>
-    <div class="ability-tagline">People-pleasing as self-harm. You give your life force freely, and call it love.</div>
+    <div class="ability-tagline">“I'd rather it were me. I'm fine — really. Let me take this one.”</div>
     <div class="ability-body">
-      <p>The network's wide reach narrows here to a single person. You take one Anchor — and begin stepping in front of what would have struck them, paying its price in your own body.</p>
+      <p>The network's wide reach narrows here to a single person. The cleric takes one Anchor — and begins stepping in front of what would have struck them, paying its price in their own body.</p>
       <div class="sub-rules">
         <div class="rule-block danger">
           <div class="rule-head"><h4 class="rule-name">Forge the Bond</h4><span class="rule-pill active">Active · Action</span></div>
@@ -1197,7 +1206,7 @@
             <h4 class="rule-name">Breath Links</h4>
             <span class="rule-pill open">Domain Interaction</span>
           </div>
-          <p>While the Bond is active, <strong>the Anchor takes over the <span class="xref-link" data-chapter="domain" data-target="card-domain-core">Breath Link network</span></strong>. The cleric can no longer forge Breath Links. Only the Anchor can.</p>
+          <p>While the Bond is active, <strong>the Anchor takes over the <span class="xref-link" data-chapter="domain" data-target="card-domain-core">Breath Link network</span></strong>. You can no longer forge Breath Links. Only the Anchor can.</p>
           <p>If the Bond breaks, all Breath Links shatter.</p>
         </div>
       </div>
@@ -1211,9 +1220,9 @@
       <h3 class="ability-name">Shared Vitality Pool</h3>
       <div class="level-badge">Level 6 &nbsp;·&nbsp; Aspect Ability</div>
     </div>
-    <div class="ability-tagline">You learn that love does not have to mean destruction. But you haven't learned to stop yet.</div>
+    <div class="ability-tagline">“See? I don't have to bleed for it anymore. I'm being good about this.”</div>
     <div class="ability-body">
-      <p>Your understanding of the Bond deepens. You no longer need proximity to initiate it — and you learn to weave a third presence into the connection: a living reserve of shared vitality drawn from both of you at once.</p>
+      <p>The cleric's understanding of the Bond deepens. Proximity is no longer needed to initiate it — and the cleric learns to weave a third presence into the connection: a living reserve of shared vitality drawn from both of them at once.</p>
       <div class="sub-rules">
         <div class="rule-block good">
           <div class="rule-head"><h4 class="rule-name">Extended Range</h4><span class="rule-pill passive">Passive · Range</span></div>
@@ -1221,7 +1230,7 @@
         </div>
         <div class="rule-block good">
           <div class="rule-head"><h4 class="rule-name">The Vitality Pool</h4><span class="rule-pill passive">Passive · Resource</span></div>
-          <p>The cleric carries a <kw>Shared Vitality Pool</kw> — a third resource, separate from either character's hit points. Maximum = <kw>(your CON modifier + Anchor's CON modifier) × proficiency bonus</kw>; recalculates whenever a new Anchor is bonded. Starts <kw>empty</kw> when first gained and persists across Anchor changes, rests, and combat. Both characters sense its current value instinctively — no explanation required.</p>
+          <p>You carry a <kw>Shared Vitality Pool</kw> — a third resource, separate from either character's hit points. Maximum = <kw>(your CON modifier + Anchor's CON modifier) × proficiency bonus</kw>; recalculates whenever a new Anchor is bonded. Starts <kw>empty</kw> when first gained and persists across Anchor changes, rests, and combat. Both characters sense its current value instinctively — no explanation required.</p>
         </div>
         <div class="rule-block good">
           <div class="rule-head"><h4 class="rule-name">Life Transfer (Upgraded)</h4><span class="rule-pill active">Active · Reaction</span></div>
@@ -1238,9 +1247,9 @@
         </div>
         <div class="rule-block danger">
           <div class="rule-head"><h4 class="rule-name">Pool Collapse</h4><span class="rule-pill passive">Passive · Trigger</span></div>
-          <p>If the Bond breaks while the Pool holds any HP, both the cleric and the former Anchor immediately take <kw>Psychic damage equal to the Pool's current HP</kw> (no saving throw). The Pool empties. A Pool at 2 HP barely stings. A Pool at 15 is a genuine detonation.</p>
+          <p>If the Bond breaks while the Pool holds any HP, both you and the former Anchor immediately take <kw>Psychic damage equal to the Pool's current HP</kw> (no saving throw). The Pool empties. A Pool at 2 HP barely stings. A Pool at 15 is a genuine detonation.</p>
           <p>Collapse triggers on: <kw>voluntary dissolution with no new Bond established in the same Action</kw>; and <kw>Flaw-triggered breaks</kw> — the Breaking Point shattering the Bond, or the Ache of Absence dissolving it at dawn.</p>
-          <p>Collapse does <em>not</em> trigger if the cleric dissolves the Bond and establishes a new one in the same Action — the Pool carries across intact. Breath Links shatter regardless; the new Anchor rebuilds the network from scratch. Collapse also does not trigger on involuntary breaks from outside forces (enemy dispels, forced movement, environmental effects). It is reserved for breaks that come from within.</p>
+          <p>Collapse does <em>not</em> trigger if you dissolve the Bond and establish a new one in the same Action — the Pool carries across intact. Breath Links shatter regardless; the new Anchor rebuilds the network from scratch. Collapse also does not trigger on involuntary breaks from outside forces (enemy dispels, forced movement, environmental effects). It is reserved for breaks that come from within.</p>
           <p class="flavor">A cleric who needs to switch Anchors mid-combat can do so freely — but one who simply lets go, with no one to reach toward, pays the price of that emptiness.</p>
         </div>
         <div class="rule-block good">
@@ -1259,9 +1268,9 @@
       <h3 class="ability-name">The Eternal Tether</h3>
       <div class="level-badge">Level 8 &nbsp;·&nbsp; Aspect Ability</div>
     </div>
-    <div class="ability-tagline">You wanted someone who would never leave. You found a way to make it impossible.</div>
+    <div class="ability-tagline">“This way neither of us ever has to be alone again. I'd never let that happen to you.”</div>
     <div class="ability-body">
-      <p>The Bond transcends choice. It settles into the fabric of you both — permanent, unbreakable by distance or circumstance.</p>
+      <p>The Bond transcends choice. It settles into the fabric of them both — permanent, unbreakable by distance or circumstance.</p>
       <div class="sub-rules">
         <div class="rule-block gold">
           <div class="rule-head"><h4 class="rule-name">Permanent Bond</h4><span class="rule-pill passive">Passive · State</span></div>
@@ -1285,17 +1294,17 @@
             <div class="beat">[ evening. a fire. a long quiet. ]</div>
             <div class="cleric">
               <span class="speaker">— the cleric —</span>
-              "There is something I want to give you. I need you to let me."
+              “There is something I want to give you. I need you to let me.”
             </div>
             <div class="beat">[ the cleric draws the blade. extends their hand. the anchor takes it, mirrors the wound. joined hands, a gesture, and then the cleric goes still. ]</div>
             <div>
               <span class="speaker">— the anchor —</span>
-              "I don't know what this means."
+              “I don't know what this means.”
             </div>
             <div class="beat">[ silence. the cleric does not fill it. they have been trained their whole life not to. ]</div>
             <div>
               <span class="speaker">— the anchor —</span>
-              "...are you alright?"
+              “...are you alright?”
             </div>
             <div class="beat">[ the ritual completes. ]</div>
           </div>
@@ -1319,13 +1328,13 @@
         <div class="rule-block good">
           <div class="rule-head"><h4 class="rule-name">Into Stasis</h4><span class="rule-pill passive">Passive · Trigger</span></div>
           <p>When either bonded character reaches <kw>0 HP</kw>, they do not fall unconscious. They enter <kw>Stasis</kw> instead. While in Stasis: <kw>Paralyzed</kw>, immune to all damage, untargetable by spells and abilities, no death saving throws. They persist indefinitely.</p>
-          <p>If both bonded characters would be reduced to 0 HP by the <kw>same triggering effect</kw>, only the one with fewer current HP enters Stasis; the other is reduced to <kw>1 HP</kw> instead. If both have equal HP, the cleric enters Stasis. The Bond cannot suspend both at once.</p>
+          <p>If both bonded characters would be reduced to 0 HP by the <kw>same triggering effect</kw>, only the one with fewer current HP enters Stasis; the other is reduced to <kw>1 HP</kw> instead. If both have equal HP, you enter Stasis. The Bond cannot suspend both at once.</p>
           <h5 class="sub-head">What the Stased character experiences</h5>
           <p>The Stased character is present and aware — held, unable to act or reach anyone. Whatever was pressing before grows distant. Something reaches them from outside: presence. Not urgency. Weight that expects nothing in return.</p>
           <p>If the Stased character has an active Bond, they may push impressions outward through it — not words or images, but emotional texture. Calm. Waiting. They cannot demand, warn, or instruct. Whatever they emit arrives as mood, not message.</p>
           <p class="flavor">For the cleric: the monitoring stops. The Anchor exists somewhere beyond reach — warm, continuous — and the cleric cannot lose them from here, cannot fail them, cannot perform. They would describe it later, if asked, as restful. Which is the most complicated thing they could say.</p>
           <h5 class="sub-head">On signaling</h5>
-          <p>If the cleric is the Stased character, they may choose to emit <em>not yet</em> — meaning: I am safe here; the cost of reaching in is real; wait. This is a choice, not a feature of Stasis itself. The cleric knows what Breaking Stasis costs. Whether they want to be retrieved, and when, is theirs to decide.</p>
+          <p>If you are the Stased character, you may choose to emit <em>not yet</em> — meaning: I am safe here; the cost of reaching in is real; wait. This is a choice, not a feature of Stasis itself. You know what Breaking Stasis costs. Whether you want to be retrieved, and when, is yours to decide.</p>
           <h5 class="sub-head">What the outside character experiences</h5>
           <p>The connection changes texture — two-way current becomes one-directional. The Stased character is present but unreachable.</p>
           <p class="flavor">The connection communicates this without words. It always has.</p>
@@ -1333,7 +1342,7 @@
         </div>
         <div class="rule-block danger">
           <div class="rule-head"><h4 class="rule-name">Breaking Stasis</h4><span class="rule-pill active">Active · Action</span></div>
-          <p>A bonded character uses their <kw>Action</kw> and makes physical contact. The rescuer immediately takes <kw>Psychic damage equal to 3d10 + the cleric's CON modifier</kw>. The Stased character exits Stasis at <kw>1 HP</kw>, all prior conditions removed.</p>
+          <p>A bonded character uses their <kw>Action</kw> and makes physical contact. The rescuer immediately takes <kw>Psychic damage equal to 3d10 + your CON modifier</kw>. The Stased character exits Stasis at <kw>1 HP</kw>, all prior conditions removed.</p>
           <h5 class="sub-head">On timing</h5>
           <p>Breaking Stasis mid-combat is almost never the correct decision. The Stased character is immune to all damage and untargetable — safer inside Stasis than anywhere on the battlefield. The risk: if the rescuer takes more damage than their remaining HP, they enter Stasis themselves. If the now-freed character then drops to 0, both are in Stasis simultaneously — Eternal Stasis. Before attempting rescue, confirm your HP comfortably exceeds the maximum possible cost (30 + CON modifier).</p>
           <p class="flavor">The bond's felt weight during Stasis is itself a warning. Trust it.</p>
@@ -1362,9 +1371,9 @@
       <h3 class="ability-name">Flaw: Hollow Without You</h3>
       <div class="level-badge">Aspect-Granted &nbsp;·&nbsp; Permanent</div>
     </div>
-    <div class="ability-tagline">Gained at the Aspect. Cannot be removed. Offsets the power of all three Bond abilities.</div>
+    <div class="ability-tagline">“I'm only really myself when there's someone who needs me. Everyone's like that, aren't they?”</div>
     <div class="ability-body">
-      <p>The Aspect did not give the cleric their abilities cleanly. It revealed the pattern already there, and made it mechanical. The Flaw has four manifestations — each covering a different context, ensuring the cleric cannot optimise around it.</p>
+      <p>The Aspect did not give the cleric their abilities cleanly. It revealed the pattern already there and made it mechanical: the permanent counterweight to all three Bond abilities. The Flaw has four manifestations — each covering a different context, ensuring the cleric cannot optimise around it.</p>
       <div class="sub-rules">
         <div class="rule-block dark">
           <div class="rule-head"><h4 class="rule-name">Compulsive Sacrifice</h4><span class="rule-pill passive">Passive · Compulsion</span></div>
@@ -1373,21 +1382,21 @@
         </div>
         <div class="rule-block dark">
           <div class="rule-head"><h4 class="rule-name">The Ache of Absence</h4><span class="rule-pill passive">Passive · State</span></div>
-          <p>The Bond requires the Anchor to ask the cleric something <em>personal</em> at least once per long rest — their opinion, their feelings, whether they are alright. A logistical question does not qualify. If a long rest passes without it, the Bond breaks silently at dawn.</p>
-          <p>While no Bond is active: <kw>hit point maximum</kw> is reduced by <kw>proficiency bonus × 2</kw>, and the cleric has <kw>disadvantage on Wisdom saving throws</kw>. These penalties lift only when a new Bond is established.</p>
+          <p>The Bond requires the Anchor to ask you something <em>personal</em> at least once per long rest — your opinion, your feelings, whether you are alright. A logistical question does not qualify. If a long rest passes without it, the Bond breaks silently at dawn.</p>
+          <p>While no Bond is active: <kw>hit point maximum</kw> is reduced by <kw>proficiency bonus × 2</kw>, and you have <kw>disadvantage on Wisdom saving throws</kw>. These penalties lift only when a new Bond is established.</p>
           <p class="flavor">The cleric cannot ask for this question. Asking dissolves the thing they need. They have to wait. They are very good at waiting.</p>
         </div>
         <div class="rule-block dark">
           <div class="rule-head"><h4 class="rule-name">Separation Anxiety</h4><span class="rule-pill passive">Passive · Trigger</span></div>
           <p>While bonded, if the Anchor has been more than <kw>30 feet</kw> away for longer than <kw>1 minute</kw> (10 rounds), make a <kw>DC 12 Wisdom saving throw</kw> or become <kw>Frightened</kw> — the Anchor is the source. Repeat at the end of each of your turns; on a success, the effect ends.</p>
-          <p>Note: Frightened prevents willingly moving <em>closer</em> to the fear's source — the cleric freezes rather than pursues.</p>
+          <p>Note: Frightened prevents willingly moving <em>closer</em> to the fear's source — you freeze rather than pursue.</p>
           <p class="flavor">The person they fear losing most is the one who locks them in place by walking away.</p>
           <p class="xref">At <span class="xref-link" data-chapter="aspect" data-target="card-aspect-pinnacle">Level 8</span>, the Permanent Bond removes the distance-break condition, so the Bond never shatters — but Separation Anxiety still fires. The cleric will periodically become frightened of their bonded partner whenever they step too far away, save out of it after a turn or two, and carry on. This is not a bug.</p>
         </div>
         <div class="rule-block dark">
           <div class="rule-head"><h4 class="rule-name">The Secret</h4><span class="rule-pill passive">Passive · Compulsion</span></div>
-          <p>The cleric cannot directly explain the Flaw — the compulsions, the bond, the need — to anyone. If they attempt to, they are immediately <kw>Silenced</kw> until the end of their next turn.</p>
-          <p>If an Anchor <em>discovers</em> the Flaw on their own — witnesses Compulsive Sacrifice trigger, pieces together the pattern, or the cleric confesses despite the silence — the Bond's dynamic shifts permanently. From that point, the cleric cannot establish the Bond with that Anchor unilaterally: the Anchor must <kw>consciously and verbally consent</kw> each time. Any hesitation, refusal, or "I need a moment" causes the Bond to fail. No save. No retry until the Anchor is willing.</p>
+          <p>You cannot directly explain the Flaw — the compulsions, the bond, the need — to anyone. If you attempt to, you are immediately <kw>Silenced</kw> until the end of your next turn.</p>
+          <p>If an Anchor <em>discovers</em> the Flaw on their own — witnesses Compulsive Sacrifice trigger, pieces together the pattern, or you confess despite the silence — the Bond's dynamic shifts permanently. From that point, you cannot establish the Bond with that Anchor unilaterally: the Anchor must <kw>consciously and verbally consent</kw> each time. Any hesitation, refusal, or “I need a moment” causes the Bond to fail. No save. No retry until the Anchor is willing.</p>
           <p class="flavor">The cleric used to be able to simply reach out and take the connection. Now they have to ask for it, without being able to explain why, and wait to see if the answer is yes.</p>
         </div>
       </div>
@@ -1399,7 +1408,7 @@
     </section>
 
     <div class="footer">
-      <div>Domain of Shared Breath &nbsp;·&nbsp; Constitution-primary Cleric &nbsp;·&nbsp; Homebrew &nbsp;·&nbsp; v2.10</div>
+      <div>Domain of Shared Breath &nbsp;·&nbsp; Constitution-primary Cleric &nbsp;·&nbsp; Homebrew &nbsp;·&nbsp; v2.11</div>
       <button class="design-notes-toggle" id="designNotesToggle" aria-pressed="false">
         <span>Notes</span>
         <span class="toggle-track" id="toggleTrack">
