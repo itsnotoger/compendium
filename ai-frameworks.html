@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sample, Judge, Improve — Test-Time Sampling Frameworks for LLMs</title>
+<meta name="description" content="A design writeup of hand-rolled test-time compute frameworks for LLMs: best-of-N selection, semantic majority voting, validator loops, and an elimination tournament where losers are improved instead of discarded.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800;900&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #F5F6F2;
+    --card: #FFFFFF;
+    --ink: #1C232B;
+    --muted: #5B6470;
+    --line: #D9DDD5;
+    --win: #1E7A4F;
+    --win-soft: #E3F0E8;
+    --loss: #B5452C;
+    --loss-soft: #F6E7E2;
+    --proc: #3B5B7E;
+    --proc-soft: #E5EBF2;
+    --code-bg: #20262E;
+    --code-ink: #D7DEE6;
+    --maxw: 46rem;
+    --maxw-wide: 60rem;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "Source Serif 4", Georgia, serif;
+    font-size: 1.0625rem;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+  ::selection { background: var(--win-soft); }
+
+  h1, h2, h3 { font-family: "Archivo", system-ui, sans-serif; line-height: 1.12; letter-spacing: -0.015em; }
+  h1 { font-weight: 900; font-size: clamp(2.1rem, 6vw, 3.4rem); margin: 0.4em 0 0.35em; }
+  h2 { font-weight: 800; font-size: clamp(1.5rem, 3.4vw, 2rem); margin: 0 0 0.6em; }
+  h3 { font-weight: 700; font-size: 1.15rem; margin: 2em 0 0.5em; }
+  p { margin: 0 0 1.1em; }
+  a { color: var(--proc); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+  a:focus-visible, button:focus-visible { outline: 2px solid var(--proc); outline-offset: 2px; }
+  strong { font-weight: 600; }
+
+  .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 1.25rem; }
+  .wrap-wide { max-width: var(--maxw-wide); margin: 0 auto; padding: 0 1.25rem; }
+
+  /* ---------- signature: javadoc annotation eyebrow ---------- */
+  .anno {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.78rem;
+    color: var(--muted);
+    display: inline-block;
+    border: 1px solid var(--line);
+    background: var(--card);
+    border-radius: 4px;
+    padding: 0.3rem 0.6rem;
+    margin-bottom: 0.9rem;
+    white-space: nowrap;
+    max-width: 100%;
+    overflow-x: auto;
+  }
+  .anno .at { color: var(--loss); }
+  .anno .k { color: var(--proc); }
+  .anno .v { color: var(--win); }
+
+  /* ---------- header / hero ---------- */
+  header { border-bottom: 1px solid var(--line); padding: 4.5rem 0 3rem; }
+  .kicker { font-family: "IBM Plex Mono", monospace; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.14em; color: var(--muted); margin-bottom: 1rem; }
+  .lede { font-size: 1.2rem; max-width: 40rem; }
+  .legend { display: flex; gap: 1.25rem; flex-wrap: wrap; margin-top: 1.6rem; font-family: "IBM Plex Mono", monospace; font-size: 0.78rem; color: var(--muted); }
+  .legend span::before { content: ""; display: inline-block; width: 0.7em; height: 0.7em; border-radius: 2px; margin-right: 0.45em; vertical-align: baseline; }
+  .legend .l-win::before { background: var(--win); }
+  .legend .l-loss::before { background: var(--loss); }
+  .legend .l-proc::before { background: var(--proc); }
+
+  /* ---------- toc ---------- */
+  nav.toc { padding: 1.4rem 0; border-bottom: 1px solid var(--line); }
+  nav.toc ol { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.4rem 1.4rem; font-family: "IBM Plex Mono", monospace; font-size: 0.82rem; }
+  nav.toc a { color: var(--ink); text-decoration: none; border-bottom: 1px solid var(--line); padding-bottom: 1px; }
+  nav.toc a:hover { border-color: var(--ink); }
+
+  section { padding: 3.2rem 0 1.4rem; }
+  section + section { border-top: 1px solid var(--line); }
+
+  /* ---------- figures ---------- */
+  figure { margin: 2rem auto; max-width: var(--maxw-wide); }
+  figure svg { width: 100%; height: auto; display: block; background: var(--card); border: 1px solid var(--line); border-radius: 8px; }
+  figcaption { font-family: "IBM Plex Mono", monospace; font-size: 0.78rem; color: var(--muted); margin-top: 0.6rem; }
+  figcaption b { color: var(--ink); font-weight: 600; }
+
+  /* svg text classes */
+  .smono { font-family: "IBM Plex Mono", monospace; font-size: 12px; fill: var(--ink); }
+  .smono-s { font-family: "IBM Plex Mono", monospace; font-size: 10.5px; fill: var(--muted); }
+  .smono-b { font-family: "IBM Plex Mono", monospace; font-size: 12px; font-weight: 600; fill: var(--ink); }
+
+  /* ---------- code & inline code ---------- */
+  code { font-family: "IBM Plex Mono", monospace; font-size: 0.86em; background: #ECEEE8; border-radius: 3px; padding: 0.08em 0.32em; }
+  pre { background: var(--code-bg); color: var(--code-ink); border-radius: 8px; padding: 1.1rem 1.25rem; overflow-x: auto; font-size: 0.84rem; line-height: 1.55; margin: 1.4rem 0; }
+  pre code { background: none; padding: 0; font-size: inherit; color: inherit; }
+  pre .c { color: #7E8A96; } pre .s { color: #9FCB9A; } pre .k { color: #8FB6E0; }
+
+  /* ---------- param table ---------- */
+  table { width: 100%; border-collapse: collapse; margin: 1.4rem 0; font-size: 0.92rem; }
+  th, td { text-align: left; padding: 0.55rem 0.7rem; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { font-family: "IBM Plex Mono", monospace; font-size: 0.74rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); font-weight: 500; }
+  td:first-child { font-family: "IBM Plex Mono", monospace; font-size: 0.82rem; white-space: nowrap; }
+
+  /* ---------- callout ---------- */
+  .note { background: var(--card); border: 1px solid var(--line); border-left: 3px solid var(--proc); border-radius: 6px; padding: 1rem 1.2rem; margin: 1.6rem 0; font-size: 0.97rem; }
+  .note.warn { border-left-color: var(--loss); }
+  .note.good { border-left-color: var(--win); }
+  .note .tag { font-family: "IBM Plex Mono", monospace; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); display: block; margin-bottom: 0.35rem; }
+
+  footer { border-top: 1px solid var(--line); padding: 2.5rem 0 4rem; color: var(--muted); font-size: 0.92rem; }
+  footer .anno { margin-top: 1rem; }
+
+  @media (max-width: 640px) {
+    body { font-size: 1rem; }
+    header { padding: 3rem 0 2.2rem; }
+    th, td { padding: 0.45rem 0.45rem; }
+    td:first-child { white-space: normal; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <p class="kicker">an engineering writeup · ogerutil / ai.agent.framework</p>
+    <div class="anno"><span class="at">@Article</span>(<span class="k">topic</span> = <span class="v">"test-time compute"</span>, <span class="k">start</span> = <span class="v">"March 2025"</span>, <span class="k">language</span> = <span class="v">"Java"</span>)</div>
+    <h1>Sample, Judge, Improve</h1>
+    <p class="lede">Notes on a family of hand-rolled test-time sampling frameworks for LLMs — best-of-N selection, semantic majority voting, validator loops, and an elimination tournament where the losers don't get discarded. They get coached.</p>
+    <div class="legend">
+      <span class="l-win">winning sample</span>
+      <span class="l-loss">losing sample / critique</span>
+      <span class="l-proc">process step</span>
+    </div>
+  </div>
+</header>
+
+<nav class="toc">
+  <div class="wrap">
+    <ol>
+      <li><a href="#context">Context</a></li>
+      <li><a href="#shape">The shape of the problem</a></li>
+      <li><a href="#selectbest">SelectBest</a></li>
+      <li><a href="#majority">MajorityVote</a></li>
+      <li><a href="#validator">Validator</a></li>
+      <li><a href="#reverse">ReverseElimination</a></li>
+      <li><a href="#sketches">Sketches</a></li>
+      <li><a href="#engineering">Engineering notes</a></li>
+      <li><a href="#status">Status &amp; honesty</a></li>
+    </ol>
+  </div>
+</nav>
+
+<section id="context">
+  <div class="wrap">
+    <div class="anno"><span class="at">@Section</span>(<span class="k">kind</span> = <span class="v">"why this exists"</span>)</div>
+    <h2>Context</h2>
+    <p>This is a writeup of a set of experiments I built before "agentic" was the word for it — back when the API surface of an LLM was a chat completion and nothing else. No tool calling, no structured-output mode, no off-the-shelf orchestration frameworks. If you wanted a model to behave like a system rather than a chatbot, you composed raw completions yourself and parsed what came back.</p>
+    <p>So that's what I did. The result is a small family of <strong>sampling frameworks</strong> in Java, built on my own utility and client library (<code>ogerutil</code>), with zero external LLM dependencies. Each framework wraps the same primitive — <em>generate N candidate completions, then reduce them to one</em> — with a different reduction strategy, and each strategy encodes a different theory about where quality comes from.</p>
+    <p>I never ran these through a large-scale evaluation; that's stated up front and revisited honestly at <a href="#status">the end</a>. What this document covers is the part that I think is worth reading anyway: the design space, the architecture, the failure modes I anticipated and designed around, and the parts that made it into a real project.</p>
+  </div>
+</section>
+
+<section id="shape">
+  <div class="wrap">
+    <div class="anno"><span class="at">@Section</span>(<span class="k">kind</span> = <span class="v">"core primitive"</span>)</div>
+    <h2>The shape of the problem</h2>
+    <p>A single LLM completion is a lottery ticket. Temperature gives you variance; variance means some samples are great and some are junk, and a one-shot caller just takes whatever comes out. The whole premise of test-time compute is that you can <strong>trade inference budget for output quality</strong> — buy several tickets, then spend a little more compute deciding which one to cash.</p>
+    <p>Every framework here is a different answer to the second half of that sentence. Selection can be a single judgment, a tournament, a vote, a checklist of validators, or — the most ambitious version — an iterative loop where candidates are not only ranked but <em>revised</em>.</p>
+
+    <figure>
+      <svg viewBox="0 0 860 240" role="img" aria-label="Diagram: one prompt fans out to N samples, a reduction step selects one winner">
+        <defs>
+          <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#5B6470"/></marker>
+          <marker id="arrW" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#1E7A4F"/></marker>
+          <marker id="arrL" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#B5452C"/></marker>
+        </defs>
+        <!-- prompt -->
+        <rect x="30" y="95" width="140" height="50" rx="6" fill="#E5EBF2" stroke="#3B5B7E"/>
+        <text x="100" y="116" text-anchor="middle" class="smono-b">generation</text>
+        <text x="100" y="132" text-anchor="middle" class="smono-s">prompt P</text>
+        <!-- fanout -->
+        <line x1="170" y1="120" x2="250" y2="40"  stroke="#5B6470" stroke-width="1.5" marker-end="url(#arr)"/>
+        <line x1="170" y1="120" x2="250" y2="93"  stroke="#5B6470" stroke-width="1.5" marker-end="url(#arr)"/>
+        <line x1="170" y1="120" x2="250" y2="147" stroke="#5B6470" stroke-width="1.5" marker-end="url(#arr)"/>
+        <line x1="170" y1="120" x2="250" y2="200" stroke="#5B6470" stroke-width="1.5" marker-end="url(#arr)"/>
+        <!-- samples -->
+        <g>
+          <rect x="255" y="20"  width="120" height="40" rx="6" fill="#FFFFFF" stroke="#5B6470"/><text x="315" y="44" text-anchor="middle" class="smono">sample 0</text>
+          <rect x="255" y="73"  width="120" height="40" rx="6" fill="#E3F0E8" stroke="#1E7A4F"/><text x="315" y="97" text-anchor="middle" class="smono">sample 1</text>
+          <rect x="255" y="127" width="120" height="40" rx="6" fill="#FFFFFF" stroke="#5B6470"/><text x="315" y="151" text-anchor="middle" class="smono">sample 2</text>
+          <rect x="255" y="180" width="120" height="40" rx="6" fill="#FFFFFF" stroke="#5B6470"/><text x="315" y="204" text-anchor="middle" class="smono">sample …N</text>
+        </g>
+        <!-- converge -->
+        <line x1="375" y1="40"  x2="455" y2="115" stroke="#5B6470" stroke-width="1.5" marker-end="url(#arr)"/>
+        <line x1="375" y1="93"  x2="455" y2="118" stroke="#5B6470" stroke-width="1.5" marker-end="url(#arr)"/>
+        <line x1="375" y1="147" x2="455" y2="122" stroke="#5B6470" stroke-width="1.5" marker-end="url(#arr)"/>
+        <line x1="375" y1="200" x2="455" y2="125" stroke="#5B6470" stroke-width="1.5" marker-end="url(#arr)"/>
+        <!-- reduce -->
+        <rect x="460" y="90" width="190" height="60" rx="6" fill="#E5EBF2" stroke="#3B5B7E"/>
+        <text x="555" y="114" text-anchor="middle" class="smono-b">reduce</text>
+        <text x="555" y="131" text-anchor="middle" class="smono-s">judge · vote · tournament</text>
+        <!-- winner -->
+        <line x1="650" y1="120" x2="715" y2="120" stroke="#1E7A4F" stroke-width="2" marker-end="url(#arrW)"/>
+        <rect x="720" y="95" width="115" height="50" rx="6" fill="#E3F0E8" stroke="#1E7A4F" stroke-width="1.5"/>
+        <text x="777" y="116" text-anchor="middle" class="smono-b" fill="#1E7A4F">winner</text>
+        <text x="777" y="132" text-anchor="middle" class="smono-s">sample 1</text>
+      </svg>
+      <figcaption><b>fig. 1</b> — the shared primitive: fan out N samples, reduce to one. Everything below is a variation on the reduce box.</figcaption>
+    </figure>
+
+    <p>One design decision is shared by all frameworks and worth stating once: <strong>the output is always a single, ordinary assistant message.</strong> Whatever tournament happened internally, the caller gets back something it can append to a chat history as if it were a normal completion. The frameworks are drop-in replacements for a single model call, which is exactly what made it trivial to slot one into a real application later.</p>
+  </div>
+</section>
+
+<section id="selectbest">
+  <div class="wrap">
+    <div class="anno"><span class="at">@Framework</span>(<span class="k">name</span> = <span class="v">"SelectBest"</span>, <span class="k">status</span> = <span class="v">"implemented"</span>, <span class="k">since</span> = <span class="v">"April 2025"</span>)</div>
+    <h2>SelectBestFramework</h2>
+    <p>The baseline: generate N samples from a free-form prompt ("write a joke"), then run a <strong>selection phase</strong> with a second prompt ("select the best joke"). Generation and selection are decoupled — separate model, separate request settings — because they want different things. Generation wants a capable, high-temperature model; selection is a comparison task that a smaller, cheaper, low-temperature model can often handle, which matters when you're paying the selection cost over many samples.</p>
+    <p>The interesting design surface is <em>how</em> to reduce N samples to one. I implemented three modes behind a single <code>ReduceSettings</code> switch:</p>
+
+    <figure>
+      <svg viewBox="0 0 880 270" role="img" aria-label="Three reduction modes: all at once, one by one, elimination bracket">
+        <!-- panel 1 -->
+        <text x="140" y="28" text-anchor="middle" class="smono-b">ALL_AT_ONCE</text>
+        <rect x="40" y="45" width="60" height="26" rx="4" fill="#FFF" stroke="#5B6470"/><text x="70" y="62" text-anchor="middle" class="smono-s">s0</text>
+        <rect x="110" y="45" width="60" height="26" rx="4" fill="#FFF" stroke="#5B6470"/><text x="140" y="62" text-anchor="middle" class="smono-s">s1</text>
+        <rect x="180" y="45" width="60" height="26" rx="4" fill="#FFF" stroke="#5B6470"/><text x="210" y="62" text-anchor="middle" class="smono-s">s2</text>
+        <rect x="40" y="100" width="200" height="46" rx="6" fill="#E5EBF2" stroke="#3B5B7E"/>
+        <text x="140" y="120" text-anchor="middle" class="smono-s">one judging prompt,</text>
+        <text x="140" y="136" text-anchor="middle" class="smono-s">all samples in context</text>
+        <line x1="140" y1="71" x2="140" y2="96" stroke="#5B6470" stroke-width="1.5" marker-end="url(#arr)"/>
+        <line x1="140" y1="146" x2="140" y2="178" stroke="#1E7A4F" stroke-width="2" marker-end="url(#arrW)"/>
+        <rect x="105" y="182" width="70" height="28" rx="4" fill="#E3F0E8" stroke="#1E7A4F"/><text x="140" y="200" text-anchor="middle" class="smono-s">best</text>
+        <text x="140" y="240" text-anchor="middle" class="smono-s">1 call · direct comparison</text>
+        <text x="140" y="256" text-anchor="middle" class="smono-s">context grows with N</text>
+
+        <!-- panel 2 -->
+        <text x="440" y="28" text-anchor="middle" class="smono-b">ONE_BY_ONE</text>
+        <g>
+          <rect x="340" y="45" width="56" height="26" rx="4" fill="#FFF" stroke="#5B6470"/><text x="368" y="62" text-anchor="middle" class="smono-s">s0</text>
+          <rect x="412" y="45" width="56" height="26" rx="4" fill="#FFF" stroke="#5B6470"/><text x="440" y="62" text-anchor="middle" class="smono-s">s1</text>
+          <rect x="484" y="45" width="56" height="26" rx="4" fill="#FFF" stroke="#5B6470"/><text x="512" y="62" text-anchor="middle" class="smono-s">s2</text>
+        </g>
+        <g>
+          <rect x="340" y="100" width="56" height="30" rx="4" fill="#E5EBF2" stroke="#3B5B7E"/><text x="368" y="119" text-anchor="middle" class="smono-s">7/10</text>
+          <rect x="412" y="100" width="56" height="30" rx="4" fill="#E5EBF2" stroke="#3B5B7E"/><text x="440" y="119" text-anchor="middle" class="smono-s">9/10</text>
+          <rect x="484" y="100" width="56" height="30" rx="4" fill="#E5EBF2" stroke="#3B5B7E"/><text x="512" y="119" text-anchor="middle" class="smono-s">6/10</text>
+        </g>
+        <line x1="368" y1="71" x2="368" y2="96" stroke="#5B6470" stroke-width="1.5" marker-end="url(#arr)"/>
+        <line x1="440" y1="71" x2="440" y2="96" stroke="#5B6470" stroke-width="1.5" marker-end="url(#arr)"/>
+        <line x1="512" y1="71" x2="512" y2="96" stroke="#5B6470" stroke-width="1.5" marker-end="url(#arr)"/>
+        <line x1="440" y1="130" x2="440" y2="178" stroke="#1E7A4F" stroke-width="2" marker-end="url(#arrW)"/>
+        <rect x="405" y="182" width="70" height="28" rx="4" fill="#E3F0E8" stroke="#1E7A4F"/><text x="440" y="200" text-anchor="middle" class="smono-s">max</text>
+        <text x="440" y="240" text-anchor="middle" class="smono-s">N calls · small context</text>
+        <text x="440" y="256" text-anchor="middle" class="smono-s">no direct comparison</text>
+
+        <!-- panel 3 -->
+        <text x="740" y="28" text-anchor="middle" class="smono-b">ELIMINATION_BRACKET</text>
+        <rect x="640" y="45" width="44" height="24" rx="4" fill="#FFF" stroke="#5B6470"/><text x="662" y="61" text-anchor="middle" class="smono-s">s0</text>
+        <rect x="640" y="79" width="44" height="24" rx="4" fill="#F6E7E2" stroke="#B5452C"/><text x="662" y="95" text-anchor="middle" class="smono-s">s1</text>
+        <rect x="640" y="125" width="44" height="24" rx="4" fill="#F6E7E2" stroke="#B5452C"/><text x="662" y="141" text-anchor="middle" class="smono-s">s2</text>
+        <rect x="640" y="159" width="44" height="24" rx="4" fill="#FFF" stroke="#5B6470"/><text x="662" y="175" text-anchor="middle" class="smono-s">s3</text>
+        <path d="M684 57 h22 v18" fill="none" stroke="#5B6470" stroke-width="1.5"/>
+        <path d="M684 91 h22 v-16" fill="none" stroke="#5B6470" stroke-width="1.5"/>
+        <path d="M684 137 h22 v17" fill="none" stroke="#5B6470" stroke-width="1.5"/>
+        <path d="M684 171 h22 v-17" fill="none" stroke="#5B6470" stroke-width="1.5"/>
+        <rect x="710" y="62" width="44" height="24" rx="4" fill="#FFF" stroke="#5B6470"/><text x="732" y="78" text-anchor="middle" class="smono-s">s0</text>
+        <rect x="710" y="142" width="44" height="24" rx="4" fill="#FFF" stroke="#5B6470"/><text x="732" y="158" text-anchor="middle" class="smono-s">s3</text>
+        <path d="M754 74 h22 v32" fill="none" stroke="#5B6470" stroke-width="1.5"/>
+        <path d="M754 154 h22 v-32" fill="none" stroke="#5B6470" stroke-width="1.5"/>
+        <line x1="776" y1="114" x2="794" y2="114" stroke="#1E7A4F" stroke-width="2" marker-end="url(#arrW)"/>
+        <rect x="798" y="100" width="52" height="28" rx="4" fill="#E3F0E8" stroke="#1E7A4F"/><text x="824" y="118" text-anchor="middle" class="smono-s">s3</text>
+        <text x="740" y="240" text-anchor="middle" class="smono-s">~N comparisons · chunkSize k</text>
+        <text x="740" y="256" text-anchor="middle" class="smono-s">N must be a power of k</text>
+      </svg>
+      <figcaption><b>fig. 2</b> — the three reduce modes of SelectBestFramework. Each trades context size against comparison quality.</figcaption>
+    </figure>
+
+    <p><code>ALL_AT_ONCE</code> puts every sample into one judging prompt. Direct comparison is the strongest signal a judge can have, but the context grows linearly with N, and past some point you're not judging samples anymore, you're testing the model's long-context recall. <code>ONE_BY_ONE</code> grades each sample in isolation against criteria — it scales to any N and reinforces objectivity, but the judge can never say "this one is better than that one," so the grading rubric in the prompt has to carry all the weight. <code>ELIMINATION_BRACKET</code> is the compromise: compare <code>chunkSize</code> samples at a time, tournament style, keeping direct comparison <em>and</em> small contexts at the cost of more selection calls and the constraint that N must be a power of the chunk size (which the config validation enforces up front, not at round three of a tournament).</p>
+    <p>The selection prompt is user-supplied but contract-checked: it must contain <code>{{samples}}</code> and <code>{{format_instruction}}</code> template slots, which the framework fills with XML-wrapped samples and mode-specific output instructions. Getting structured choices out of a model without tool calling is its own story — covered in the <a href="#engineering">engineering notes</a>.</p>
+  </div>
+</section>
+
+<section id="majority">
+  <div class="wrap">
+    <div class="anno"><span class="at">@Framework</span>(<span class="k">name</span> = <span class="v">"MajorityVote"</span>, <span class="k">status</span> = <span class="v">"implemented"</span>, <span class="k">builtOn</span> = <span class="v">"SelectBest"</span>)</div>
+    <h2>MajorityVoteFramework</h2>
+    <p>Self-consistency — sample N times, take the majority answer — is one of the oldest reliable tricks for reasoning tasks. The classic version needs a parseable final answer so you can count votes mechanically. Mine doesn't: instead of counting strings, it hands all N samples to a judge with a fixed prompt to <strong>select the sample representing the most common train of thought</strong>.</p>
+    <p>That makes it a <em>semantic</em> majority vote. Two samples that reach the same conclusion through different wording still count toward the same cluster, and it works on free-form output — prose, plans, code — where there is no single token to extract and tally. Architecturally it's a thin specialization of SelectBestFramework: it synthesizes the reduction prompt (preserving the original system messages so the judge keeps the same framing as the generator), pins the mode to <code>ALL_AT_ONCE</code>, and optionally threads through an assistant prefill to steer the judge's output format. One framework expressed in about thirty lines on top of another — which was the point of building these as composable pieces rather than scripts.</p>
+  </div>
+</section>
+
+<section id="validator">
+  <div class="wrap">
+    <div class="anno"><span class="at">@Framework</span>(<span class="k">name</span> = <span class="v">"Validator"</span>, <span class="k">status</span> = <span class="v">"design study"</span>)</div>
+    <h2>ValidatorFramework</h2>
+    <p>The previous frameworks pick the best of what the lottery produced. This one asks a different question: what if you have hard <em>requirements</em>? The ValidatorFramework targets outputs that must pass a checklist of V independent validators, each phrased as a binary question with a user-controlled suggested fix ("is this a dad joke? if not, why?"). The loop:</p>
+    <ol>
+      <li>Generate N samples from the initial prompt P.</li>
+      <li>Grade every sample against all V validators; each failed check attaches its fix to the sample.</li>
+      <li>If any sample passes everything, return it — done.</li>
+      <li>Otherwise feed each sample plus its accumulated fixes into a refinement prompt R, get N revised samples, and loop — up to I iterations.</li>
+    </ol>
+
+    <figure>
+      <svg viewBox="0 0 860 300" role="img" aria-label="Validator loop: generate, validate, pass or refine">
+        <rect x="40" y="120" width="140" height="56" rx="6" fill="#E5EBF2" stroke="#3B5B7E"/>
+        <text x="110" y="143" text-anchor="middle" class="smono-b">generate</text>
+        <text x="110" y="160" text-anchor="middle" class="smono-s">N samples ← P</text>
+        <line x1="180" y1="148" x2="248" y2="148" stroke="#5B6470" stroke-width="1.5" marker-end="url(#arr)"/>
+        <rect x="252" y="106" width="180" height="84" rx="6" fill="#FFFFFF" stroke="#5B6470"/>
+        <text x="342" y="130" text-anchor="middle" class="smono-b">validate</text>
+        <text x="342" y="148" text-anchor="middle" class="smono-s">V binary checks</text>
+        <text x="342" y="164" text-anchor="middle" class="smono-s">per sample,</text>
+        <text x="342" y="180" text-anchor="middle" class="smono-s">fixes attached on fail</text>
+        <line x1="432" y1="148" x2="500" y2="148" stroke="#5B6470" stroke-width="1.5" marker-end="url(#arr)"/>
+        <!-- decision -->
+        <path d="M560 110 L640 148 L560 186 L480 148 Z" fill="#FFFFFF" stroke="#5B6470"/>
+        <text x="560" y="143" text-anchor="middle" class="smono-s">any sample</text>
+        <text x="560" y="159" text-anchor="middle" class="smono-s">passes all?</text>
+        <!-- yes -->
+        <line x1="640" y1="148" x2="712" y2="148" stroke="#1E7A4F" stroke-width="2" marker-end="url(#arrW)"/>
+        <text x="672" y="138" text-anchor="middle" class="smono-s" fill="#1E7A4F">yes</text>
+        <rect x="716" y="123" width="110" height="50" rx="6" fill="#E3F0E8" stroke="#1E7A4F" stroke-width="1.5"/>
+        <text x="771" y="153" text-anchor="middle" class="smono-b" fill="#1E7A4F">return</text>
+        <!-- no, loop down -->
+        <path d="M560 186 v46 h-218" fill="none" stroke="#B5452C" stroke-width="2" marker-end="url(#arrL)"/>
+        <text x="585" y="214" class="smono-s" fill="#B5452C">no</text>
+        <rect x="160" y="206" width="180" height="52" rx="6" fill="#F6E7E2" stroke="#B5452C"/>
+        <text x="250" y="228" text-anchor="middle" class="smono-b" fill="#B5452C">refine</text>
+        <text x="250" y="245" text-anchor="middle" class="smono-s">R + attached fixes</text>
+        <path d="M160 232 h-50 v-56" fill="none" stroke="#B5452C" stroke-width="2" marker-end="url(#arrL)"/>
+        <text x="118" y="282" class="smono-s">≤ I iterations · topV culling: worst samples replaced by fresh generations from P</text>
+      </svg>
+      <figcaption><b>fig. 3</b> — the validation loop. Cost is O(N·V·I): samples × validators × iterations.</figcaption>
+    </figure>
+
+    <p>The cost is O(N·V·I), and the documentation in the source spends most of its length on the failure mode that budget buys you: <strong>cyclic toggling</strong>. With too many validators, each refinement fixes one criterion and quietly breaks another that previously passed, and the loop oscillates forever. The design notes around this became the most interesting part of the framework — among them: always re-list <em>passing</em> validations during refinement so the model knows what not to break; give validations names (and let a model generate the name as its first structured output, since naming a check seems to sharpen the judgment of the check itself); run generation hot and validation cold; consider <em>hiding the true goal from the initial prompt entirely</em> to maximize diversity, then let validators steer; and treat fragile criteria as resample-only, never refine, because a refiner under pressure will happily make the minimal adversarial edit that tricks a validator without honoring its intent.</p>
+    <p>Two release valves are specified for when the loop doesn't converge: a <code>topV</code> parameter that keeps only the best-validated fraction of samples and replaces the rest with <em>fresh</em> generations (cheaper than refining a sample dragging an ever-growing list of issues), and a failure mode choosing between <code>KEEP_BEST_ATTEMPT</code> and <code>EMPTY_HANDED</code> when I iterations expire.</p>
+    <div class="note">
+      <span class="tag">status</span>
+      This framework exists as a fully specified design — configuration surface, phase model, and a long backlog of parameter ideas in the source — rather than finished code. I'm including it because the failure analysis (toggling, adversarial refinement, validation throttling) is the part of the work I'd defend most strongly, and it directly shaped the frameworks that were finished.
+    </div>
+  </div>
+</section>
+
+<section id="reverse">
+  <div class="wrap">
+    <div class="anno"><span class="at">@Framework</span>(<span class="k">name</span> = <span class="v">"ReverseElimination"</span>, <span class="k">status</span> = <span class="v">"implemented"</span>, <span class="k">since</span> = <span class="v">"April 2025"</span>)</div>
+    <h2>ReverseEliminationFramework</h2>
+    <p>This is the centerpiece, and the inversion in the name is the whole idea. A normal elimination tournament asks the judge to pick the <em>best</em> sample and discards the rest. This one asks the judge to pick the <strong>worst</strong> — because the loser is the sample we're about to do something with.</p>
+    <p>When a sample loses a match, the judge must also emit a structured critique of <em>why</em> it lost. That critique, born from direct comparison against a superior sample, is the highest-quality improvement signal available anywhere in the system — far better than asking a model "make this better" in a vacuum. The losing sample is sent to an improvement step that revises it against the critique, and then it gets a <strong>rematch</strong>. Only after <code>maxLosses</code> defeats is a sample actually eliminated and the winner advances. Rounds recurse, bracket-style, until one sample remains.</p>
+
+    <figure>
+      <svg viewBox="0 0 880 330" role="img" aria-label="The reverse elimination match loop: judge picks worst, critique flows to improvement, revised sample rematches, winner advances after maxLosses">
+        <!-- match -->
+        <rect x="30" y="60" width="84" height="40" rx="6" fill="#FFFFFF" stroke="#5B6470"/><text x="72" y="85" text-anchor="middle" class="smono">A</text>
+        <rect x="30" y="150" width="84" height="40" rx="6" fill="#FFFFFF" stroke="#5B6470"/><text x="72" y="175" text-anchor="middle" class="smono">B</text>
+        <path d="M114 80 h36 v36" fill="none" stroke="#5B6470" stroke-width="1.5"/>
+        <path d="M114 170 h36 v-34" fill="none" stroke="#5B6470" stroke-width="1.5"/>
+        <line x1="150" y1="125" x2="186" y2="125" stroke="#5B6470" stroke-width="1.5" marker-end="url(#arr)"/>
+        <rect x="190" y="93" width="150" height="64" rx="6" fill="#E5EBF2" stroke="#3B5B7E"/>
+        <text x="265" y="117" text-anchor="middle" class="smono-b">judge</text>
+        <text x="265" y="134" text-anchor="middle" class="smono-s">"pick the WORST"</text>
+        <text x="265" y="148" text-anchor="middle" class="smono-s">+ critique tag</text>
+        <!-- loser path -->
+        <path d="M340 140 h60 v74" fill="none" stroke="#B5452C" stroke-width="2" marker-end="url(#arrL)"/>
+        <text x="370" y="132" class="smono-s" fill="#B5452C">loser + critique</text>
+        <rect x="330" y="218" width="160" height="58" rx="6" fill="#F6E7E2" stroke="#B5452C"/>
+        <text x="410" y="241" text-anchor="middle" class="smono-b" fill="#B5452C">improve</text>
+        <text x="410" y="258" text-anchor="middle" class="smono-s">revise against critique</text>
+        <!-- rematch loop -->
+        <path d="M330 247 h-258 v-53" fill="none" stroke="#B5452C" stroke-width="2" marker-end="url(#arrL)"/>
+        <text x="105" y="268" class="smono-s" fill="#B5452C">rematch (vs comparable opponent)</text>
+        <!-- losses counter -->
+        <rect x="520" y="222" width="158" height="50" rx="6" fill="#FFFFFF" stroke="#5B6470" stroke-dasharray="4 3"/>
+        <text x="599" y="243" text-anchor="middle" class="smono-s">losses + 1</text>
+        <text x="599" y="259" text-anchor="middle" class="smono-s">≥ maxLosses → out</text>
+        <line x1="490" y1="247" x2="516" y2="247" stroke="#5B6470" stroke-width="1.5" marker-end="url(#arr)"/>
+        <!-- winner path -->
+        <path d="M340 110 h120" fill="none" stroke="#1E7A4F" stroke-width="2" marker-end="url(#arrW)"/>
+        <text x="398" y="100" class="smono-s" fill="#1E7A4F">winner</text>
+        <rect x="464" y="86" width="172" height="48" rx="6" fill="#E3F0E8" stroke="#1E7A4F" stroke-width="1.5"/>
+        <text x="550" y="106" text-anchor="middle" class="smono-b" fill="#1E7A4F">match completed</text>
+        <text x="550" y="122" text-anchor="middle" class="smono-s">when loser is out</text>
+        <line x1="636" y1="110" x2="700" y2="110" stroke="#1E7A4F" stroke-width="2" marker-end="url(#arrW)"/>
+        <rect x="704" y="86" width="146" height="48" rx="6" fill="#E3F0E8" stroke="#1E7A4F" stroke-width="1.5"/>
+        <text x="777" y="106" text-anchor="middle" class="smono-b" fill="#1E7A4F">next round</text>
+        <text x="777" y="122" text-anchor="middle" class="smono-s">winners re-paired</text>
+        <text x="30" y="34" class="smono-b">one bracket, inside one round:</text>
+      </svg>
+      <figcaption><b>fig. 4</b> — the loser-improvement loop. Critique flows from the judgment into the revision; a sample is only out after <b>maxLosses</b> defeats.</figcaption>
+    </figure>
+
+    <p>Two refinements keep the tournament honest. First, the <strong>rematch is a stability mechanism</strong>, not just a second chance: a winner has to beat the same opponent repeatedly, across minor perturbations, before its win counts — guarding against the single noisy judgment that plagues naive single-elimination. Second, an optional <strong>match shuffler</strong> reseeds rematches: instead of replaying the exact same pairing, losers are grouped by identical win/loss records and rotated among matches with comparable opponents, with the rotation constructed so no contestant can land back in its own seat. Fair matchmaking, derived from the standings.</p>
+    <p>The score semantics fork the framework's personality. With <code>resetScoreAfterRound = false</code>, losses are global, strong initial samples tend to carry through, and the run finishes fast. With <code>true</code>, every round wipes the slate — which means the <em>weakest</em> samples accumulate the most improvement steps, and a sample that started as junk can, in principle, be coached into the eventual winner. Whether that's a feature or a budget fire depends entirely on your prompt.</p>
+    <div class="note warn">
+      <span class="tag">known risk · by design</span>
+      There is no mechanism guaranteeing a revision is an improvement. Revising samples is a double-edged sword: it can make good ideas great, or degrade a many-time winner into junk at the last moment. The documented mitigations live in the improvement prompt — ask for minor edits, restate the original goal so revisions can't drift off-theme over many iterations, and consider disabling shuffling for a stable arena within a round. A planned-but-unbuilt refinement: scale how much change is permitted by tournament progress, so late-round revisions become nearly conservative.
+    </div>
+    <p>Everything is traced. A per-sample <strong>revision history</strong> records every version of every sample alongside its win/loss record and accumulated critiques, so after a run you can read exactly which critiques moved a sample forward and which revisions sent it sideways. That traceability is the honest selling point of the framework: even without formal evals, a run produces an inspectable record of what the judge rewards — which is precisely what you want while iterating on generation and selection prompts, before "locking them in" and switching back to the cheaper SelectBestFramework for production use.</p>
+  </div>
+</section>
+
+<section id="sketches">
+  <div class="wrap">
+    <div class="anno"><span class="at">@Planned</span>(<span class="v">"scratchpads of ideas"</span>)</div>
+    <h2>Sketches: where the idea wants to go</h2>
+    <p>Two further frameworks exist as design notes, and both fall out of pushing ReverseElimination to its logical limits.</p>
+    <p><strong>EloFramework.</strong> If you keep granting losers rematches, you eventually lose the guaranteed exit condition — win-trading between samples could cycle forever, and rounds stop making sense because you can't promise fair pairings or equal match counts. At which point the honest conclusion is: stop pretending it's a bracket. It's a <em>matchmaking system</em>. Give every sample an Elo rating, let matches run until ratings settle, and return the top-rated sample. You trade a bounded runtime for the ability to fill any compute budget you have.</p>
+    <p><strong>ConsensusFramework.</strong> Majority voting, but adversarial: samples don't just sit in a context waiting to be counted — each one steelmans itself and argues why it beats the others, and crucially, a sample may <em>concede</em> or <em>alter itself</em> to merge with a stronger position. The vote isn't taken over the initial population but over the population after negotiation. Intended for decision-making tasks where the goal is the right answer rather than the best artifact — majority vote on steroids.</p>
+  </div>
+</section>
+
+<section id="engineering">
+  <div class="wrap">
+    <div class="anno"><span class="at">@Section</span>(<span class="k">kind</span> = <span class="v">"the unglamorous parts"</span>)</div>
+    <h2>Engineering notes</h2>
+
+    <h3>Structured output before structured output</h3>
+    <p>Every judgment in these frameworks needs a machine-readable answer from a model that only emits prose. The convention: format instructions are injected into the user-supplied template, samples are wrapped in indexed XML (<code>&lt;sample index="3"&gt;</code>), and the model is told to emit its verdict in tags — a <code>&lt;critique&gt;</code> with a summarized copy of why the loser lost (worded so it can be handed to the improver), then a <code>&lt;choice&gt;</code> containing the losing index. Parsing is defensive at every step: the tag must exist and be complete, the choice must parse as an integer, and it must be a member of the set of indices actually present in <em>this</em> match — a hallucinated index is rejected as <code>InvalidChoice</code>, not silently mapped to a contestant.</p>
+
+<pre><code><span class="c">// the judge's contract, injected via {{format_instruction}}:</span>
+Always refer to the samples with their original index from the XML attribute.
+After thinking, include a summarized *copy* of your critique of the losing
+sample within a <span class="s">&lt;critique&gt;&lt;/critique&gt;</span> tag (so that it can be improved).
+Output the sample index of the losing sample within a <span class="s">&lt;choice&gt;&lt;/choice&gt;</span> tag.</code></pre>
+
+    <h3>Feeding the exception back to the model</h3>
+    <p>My favorite small idea in the codebase. When a parse fails — malformed tag, out-of-range index — the framework doesn't just blindly retry the identical prompt and hope the dice land differently. The retry <strong>splices the Java exception into the conversation</strong> as an additional user message ("during your previous evaluation, the following error occurred: …"), carefully re-ordering around any assistant prefill, and asks again. The model gets to see what it did wrong. Flagged as experimental in the source, but it's recognizably the same pattern that later became standard in agent loops: tool error in, corrected call out — implemented here against a bare chat-completion API because there was nothing else to implement it against.</p>
+
+    <h3>Failure as a first-class parameter</h3>
+    <p>A tournament is a long chain of network calls and fallible parses, and the right reaction to a failure depends on what failed. A lost <em>improvement</em> is non-critical — the unrevised sample can simply rematch as-is. A lost <em>match verdict</em> is structural and must be retried regardless, because the bracket can't proceed without it. So retry policy is a four-mode enum on the config (<code>RETRY_OR_THROW</code>, <code>RETRY_OR_SKIP</code>, <code>SKIP_FAILURES</code>, <code>THROW_ON_FAILURE</code>), and each call site declares whether it's critical. Configs are validated eagerly and loudly — template slots present, sample counts power-of-chunk-size, contradictory settings (an improvement model with no improvement prompt) rejected — because the worst place to discover a config error is three rounds and two hundred completions into a tournament.</p>
+
+    <h3>Measuring whether the judge means it</h3>
+    <p>For <code>ONE_BY_ONE</code> grading I prototyped a small statistical check on the scores themselves: a normalized standard deviation, scaled by a uniqueness factor that punishes degenerate distributions (a judge that answers "7" for everything), with Shannon entropy computed alongside for comparison. The motivating question: is the judge actually <em>discriminating</em> between samples, or rubber-stamping? If every sample scores within noise of every other, the reduction step is theater and the signal has to come from somewhere else. Exploratory, but it's the seed of judge-calibration tooling.</p>
+
+    <h3>Everything composes</h3>
+    <p>Generation, selection, and improvement each take their own model and request settings, because the phases want different things — and because a tournament's cost center is selection calls, where a small fast model is often enough once the prompts are stable. Thinking blocks are handled explicitly everywhere (include in judging or not; strip from final output; preserve through synthetic revision messages so a revised sample remains indistinguishable in shape from a generated one). And one disclosure made in the source itself, kept here in the same spirit: the match-shuffler helper was pair-programmed with an LLM — fitting, for a library whose entire purpose is putting models to work on models.</p>
+  </div>
+</section>
+
+<section id="status">
+  <div class="wrap">
+    <div class="anno"><span class="at">@Section</span>(<span class="k">kind</span> = <span class="v">"status &amp; honesty"</span>)</div>
+    <h2>Status, real use, and what I'd do differently</h2>
+    <p>Straightforwardly: <strong>there are no benchmark results here.</strong> The frameworks were tested manually — enough to debug the machinery, watch tournaments resolve, and read revision histories — but never run through an evaluation at a scope where I'd stand behind quantitative claims. SelectBest, MajorityVote, and ReverseElimination are implemented and working; Validator is a fully specified design; Elo and Consensus are sketches. The writeup is honest about which is which, because the design reasoning is the part I'm presenting, not measured wins.</p>
+    <p>One piece did graduate into production use: the sampling core powers a separate project of mine — a multi-user chat where an LLM participates as one of the chatters — where it handles the core sample generation behind the persona's messages. The drop-in-replacement property paid off exactly as intended: to the rest of that application, the framework is just a function that returns one assistant message.</p>
+    <p>If I rebuilt this today, the structured-output layer would sit on native tool calling and JSON schemas instead of XML tag parsing, the exception-splicing retry would be a standard tool-error loop, and the first milestone would be an eval harness <em>before</em> a fourth framework — the revision histories were crying out to be aggregated into actual statistics. But the questions the frameworks encode haven't aged: where selection signal comes from, how to spend critique, when revision helps and when it corrodes, and how much structure a judgment needs before you can trust it. Those are the same questions every agent system is answering now — these were my answers from before the vocabulary existed.</p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p>Built in Java on <code>ogerutil</code>, my own utility and AI-client library — no external LLM frameworks. Diagrams are hand-drawn SVG. Source available on request.</p>
+    <div class="anno"><span class="at">@End</span>(<span class="k">thanks</span> = <span class="v">"for reading"</span>)</div>
+  </div>
+</footer>
+
+</body>
+</html>
