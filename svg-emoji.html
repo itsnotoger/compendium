@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Universal Favicon Preview</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #f5efe3;
+    color: #1a1612;
+    font-family: 'Crimson Text', Georgia, serif;
+    font-size: 16px;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 32px 16px;
+  }
+
+  .layout {
+    display: flex;
+    gap: 48px;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .preview-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    position: sticky;
+    top: 32px;
+  }
+
+  .favicon-box {
+    width: 128px;
+    height: 128px;
+    border: 2px solid #b8a07a;
+    border-radius: 10px;
+    background: #f5efe3;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+  .favicon-box svg { width: 100%; height: 100%; }
+
+  .sizes-row { display: flex; gap: 16px; }
+  .size-thumb { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+  .size-thumb .box {
+    border: 1.5px solid #b8a07a;
+    border-radius: 4px;
+    background: #f5efe3;
+    overflow: hidden;
+  }
+  .size-thumb .box svg { display: block; }
+  .size-thumb .dim {
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #8a7456;
+  }
+
+  .controls-col {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    min-width: 280px;
+  }
+
+  .emoji-selectors {
+    display: flex;
+    gap: 16px;
+    background: #ede3d1;
+    padding: 12px;
+    border-radius: 6px;
+    border: 1px solid #d4c5ab;
+  }
+  .emoji-input-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+  }
+  .emoji-input-wrap label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #8a7456;
+  }
+  .emoji-input-wrap input {
+    font-size: 20px;
+    padding: 4px;
+    text-align: center;
+    border: 1px solid #b8a07a;
+    border-radius: 4px;
+    background: #f5efe3;
+  }
+
+  .group-label {
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #8a6a1e;
+    font-weight: 600;
+    margin-bottom: 10px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid #d4c5ab;
+  }
+
+  .slider-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+  .slider-row label {
+    width: 28px;
+    font-size: 13px;
+    color: #4a3f36;
+    letter-spacing: 0.05em;
+    flex-shrink: 0;
+  }
+  .slider-row input[type=range] {
+    flex: 1;
+    accent-color: #8a6a1e;
+    cursor: pointer;
+  }
+  .slider-row .val {
+    width: 34px;
+    text-align: right;
+    font-size: 13px;
+    color: #1a1612;
+    font-variant-numeric: tabular-nums;
+    flex-shrink: 0;
+  }
+
+  .code-block {
+    background: #ede3d1;
+    border: 1px solid #d4c5ab;
+    border-radius: 4px;
+    padding: 12px 14px 24px;
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    color: #4a3f36;
+    line-height: 1.6;
+    word-break: break-all;
+    cursor: pointer;
+    position: relative;
+    user-select: none;
+  }
+  .code-block::after {
+    content: 'click to copy';
+    position: absolute;
+    bottom: 6px;
+    right: 10px;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #b8a07a;
+    font-family: 'Crimson Text', Georgia, serif;
+  }
+  .code-block.copied::after { content: 'copied!'; color: #1e5a5a; }
+</style>
+</head>
+<body>
+<div class="layout">
+
+  <div class="preview-col">
+    <div class="favicon-box">
+      <svg id="svg-main" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"></svg>
+    </div>
+    <div class="sizes-row">
+      <div class="size-thumb">
+        <div class="box" style="width:32px;height:32px">
+          <svg id="svg-32" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="32" height="32"></svg>
+        </div>
+        <div class="dim">32 px</div>
+      </div>
+      <div class="size-thumb">
+        <div class="box" style="width:16px;height:16px">
+          <svg id="svg-16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="16" height="16"></svg>
+        </div>
+        <div class="dim">16 px</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="controls-col">
+    
+    <div class="emoji-selectors">
+      <div class="emoji-input-wrap">
+        <label for="emoji1">Emoji 1</label>
+        <input type="text" id="emoji1" value="🖤" maxlength="4">
+      </div>
+      <div class="emoji-input-wrap">
+        <label for="emoji2">Emoji 2</label>
+        <input type="text" id="emoji2" value="🔗" maxlength="4">
+      </div>
+    </div>
+
+    <div>
+      <div class="group-label" id="label-e1">Emoji 1</div>
+      <div class="slider-row">
+        <label>X</label>
+        <input type="range" id="hx" min="-30" max="60" value="-10">
+        <span class="val" id="hx-val">-10</span>
+      </div>
+      <div class="slider-row">
+        <label>Y</label>
+        <input type="range" id="hy" min="30" max="120" value="95">
+        <span class="val" id="hy-val">95</span>
+      </div>
+      <div class="slider-row">
+        <label>Sz</label>
+        <input type="range" id="hs" min="30" max="110" value="82">
+        <span class="val" id="hs-val">82</span>
+      </div>
+    </div>
+
+    <div>
+      <div class="group-label" id="label-e2">Emoji 2</div>
+      <div class="slider-row">
+        <label>X</label>
+        <input type="range" id="cx" min="-30" max="80" value="32">
+        <span class="val" id="cx-val">32</span>
+      </div>
+      <div class="slider-row">
+        <label>Y</label>
+        <input type="range" id="cy" min="20" max="110" value="68">
+        <span class="val" id="cy-val">68</span>
+      </div>
+      <div class="slider-row">
+        <label>Sz</label>
+        <input type="range" id="cs" min="20" max="100" value="52">
+        <span class="val" id="cs-val">52</span>
+      </div>
+    </div>
+
+    <div id="code" class="code-block"></div>
+
+  </div>
+</div>
+
+<script>
+  const sliders = ['hx','hy','hs','cx','cy','cs'];
+  const emojiInputs = ['emoji1', 'emoji2'];
+
+  function vals() {
+    return Object.fromEntries(sliders.map(id => [id, +document.getElementById(id).value]));
+  }
+
+  function innerSVG(v, e1, e2) {
+    return `<text x='${v.hx}' y='${v.hy}' font-size='${v.hs}'>${e1}</text>` +
+           `<text x='${v.cx}' y='${v.cy}' font-size='${v.cs}'>${e2}</text>`;
+  }
+
+  function update() {
+    const v = vals();
+    const e1 = document.getElementById('emoji1').value || ' ';
+    const e2 = document.getElementById('emoji2').value || ' ';
+
+    // Update Slider Value Text
+    sliders.forEach(id => {
+      document.getElementById(id + '-val').textContent = v[id];
+    });
+
+    // Update Group Titles dynamically
+    document.getElementById('label-e1').textContent = `${e1} Emoji 1`;
+    document.getElementById('label-e2').textContent = `${e2} Emoji 2`;
+
+    // Inject SVG code
+    const inner = innerSVG(v, e1, e2);
+    ['svg-main','svg-32','svg-16'].forEach(id => {
+      document.getElementById(id).innerHTML = inner;
+    });
+
+    // Generate link tag text
+    const href = `data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'>${inner}</svg>`;
+    document.getElementById('code').textContent = `<link rel="icon" href="${href}">`;
+  }
+
+  // Set up listeners for sliders
+  sliders.forEach(id => {
+    document.getElementById(id).addEventListener('input', update);
+  });
+
+  // Set up listeners for new emoji inputs
+  emojiInputs.forEach(id => {
+    document.getElementById(id).addEventListener('input', update);
+  });
+
+  // Copy functionality
+  document.getElementById('code').addEventListener('click', function() {
+    navigator.clipboard.writeText(this.textContent).then(() => {
+      this.classList.add('copied');
+      setTimeout(() => this.classList.remove('copied'), 1500);
+    });
+  });
+
+  // Initial render
+  update();
+</script>
+</body>
+</html>
